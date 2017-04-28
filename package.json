@@ -23,7 +23,6 @@
       "promise-polyfill": "npm:promise-polyfill@^6.0.2",
       "reload": "npm:systemjs-reload@^2.0.0",
       "stats.js": "npm:stats.js@^0.17.0",
-      "three": "github:mrdoob/three.js@master",
       "whatwg-fetch": "npm:whatwg-fetch@^2.0.3"
     },
     "devDependencies": {
