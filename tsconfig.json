@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "system",
+        "removeComments": true,
+        "sourceMap": true,
+        "outDir": "out",
+        "allowJs": true,
+        "baseUrl": ".",
+        "paths": {
+            "image-promise":[
+                "jspm_packages/image-promise"
+            ],
+            "*": [
+                "jspm_packages/*",
+                "jspm_packages/npm/*",
+                "jspm_packages/github/*",
+                "node_modules/*"
+            ]
+        }
+    },
+    "typeAcquisition": {
+        "enable": true
+    },
+    "include": [
+        "src/*.ts"
+    ],
+    "exclude": [
+        "node_modules/*",
+        "jspm_packages/*"
+    ]
+}

@@ -1,0 +1,15 @@
+body{
+  font-size:1.1em;
+}
+
+
+#footer-notice{
+  font-size:.7em;
+  position:absolute;
+  line-height: normal;
+  right:0;
+  opacity:.5;
+  text-align: right;
+  top:0;
+  margin:.5em;
+}

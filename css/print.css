@@ -1,0 +1,28 @@
+nav, hr{
+display: none;
+}
+
+h1{
+    size:2em;
+}
+
+a, a.after{
+    text-decoration: none;
+    color:inherit;
+}
+
+a:after{
+    color:#3232cd;
+    content:' (link: ' attr(href) ')';
+}
+
+#footer-notice{
+display:block;
+position:fixed;
+right:0;
+    text-align: right;
+bottom:0;}
+
+canvas{
+    display:none;
+}

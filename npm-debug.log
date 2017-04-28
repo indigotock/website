@@ -1,0 +1,78 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '@types/three',
+1 verbose cli   '--save' ]
+2 info using npm@1.3.10
+3 info using node@v0.10.25
+4 warn package.json world@0.0.1 No description
+5 warn package.json world@0.0.1 No repository field.
+6 warn package.json world@0.0.1 No README data
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ '@types/three', null ]
+9 verbose cache add name=undefined spec="@types/three" args=["@types/three",null]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: '@types/three',
+10 verbose parsed url   path: '@types/three',
+10 verbose parsed url   href: '@types/three' }
+11 verbose cache add name="" spec="types/three" args=["","types/three"]
+12 verbose parsed url { protocol: null,
+12 verbose parsed url   slashes: null,
+12 verbose parsed url   auth: null,
+12 verbose parsed url   host: null,
+12 verbose parsed url   port: null,
+12 verbose parsed url   hostname: null,
+12 verbose parsed url   hash: null,
+12 verbose parsed url   search: null,
+12 verbose parsed url   query: null,
+12 verbose parsed url   pathname: 'types/three',
+12 verbose parsed url   path: 'types/three',
+12 verbose parsed url   href: 'types/three' }
+13 silly lockFile aabf6591-types-three types/three
+14 verbose lock types/three /home/kyleh/.npm/aabf6591-types-three.lock
+15 info maybeGithub Attempting types/three from git://github.com/types/three
+16 silly lockFile aac5658c-git-github-com-types-three git://github.com/types/three
+17 verbose lock git://github.com/types/three /home/kyleh/.npm/aac5658c-git-github-com-types-three.lock
+18 verbose addRemoteGit [ 'git://github.com/types/three', 'master' ]
+19 verbose git clone git://github.com/types/three Cloning into bare repository '/home/kyleh/.npm/_git-remotes/git-github-com-types-three-aac5658c'...
+19 verbose git clone git://github.com/types/three fatal: remote error:
+19 verbose git clone git://github.com/types/three   Repository not found.
+20 silly lockFile aac5658c-git-github-com-types-three git://github.com/types/three
+21 silly lockFile aac5658c-git-github-com-types-three git://github.com/types/three
+22 info maybeGithub Attempting types/three from git+ssh://git@github.com:types/three
+23 silly lockFile bf831f24-t-ssh-git-github-com-types-three git+ssh://git@github.com:types/three
+24 verbose lock git+ssh://git@github.com:types/three /home/kyleh/.npm/bf831f24-t-ssh-git-github-com-types-three.lock
+25 verbose addRemoteGit [ 'git@github.com:types/three', 'master' ]
+26 error git clone git@github.com:types/three Cloning into bare repository '/home/kyleh/.npm/_git-remotes/git-github-com-types-three-80f00afc'...
+26 error git clone git@github.com:types/three Permission denied (publickey).
+26 error git clone git@github.com:types/three fatal: Could not read from remote repository.
+26 error git clone git@github.com:types/three
+26 error git clone git@github.com:types/three Please make sure you have the correct access rights
+26 error git clone git@github.com:types/three and the repository exists.
+27 silly lockFile 80f00afc-git-github-com-types-three git@github.com:types/three
+28 silly lockFile aabf6591-types-three types/three
+29 silly lockFile aabf6591-types-three types/three
+30 error addLocal Could not install types/three
+31 error Error: ENOENT, stat 'types/three'
+32 error If you need help, you may report this log at:
+32 error     <http://github.com/isaacs/npm/issues>
+32 error or email it to:
+32 error     <npm-@googlegroups.com>
+33 error System Linux 3.4.0+
+34 error command "/usr/bin/nodejs" "/usr/bin/npm" "install" "@types/three" "--save"
+35 error cwd /mnt/c/Users/kyleh/Desktop/Remote
+36 error node -v v0.10.25
+37 error npm -v 1.3.10
+38 error path types/three
+39 error code ENOENT
+40 error errno 34
+41 verbose exit [ 34, true ]

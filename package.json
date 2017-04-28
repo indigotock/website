@@ -1,0 +1,35 @@
+{
+  "name": "world",
+  "version": "0.0.1",
+  "scripts": {
+    "clean": "rm -rf out",
+    "tsc": "tsc",
+    "prebuild": "mkdir -p out && cp -R lib/* out/",
+    "build": "mkdir -p out && npm run copylib && tsc -p ."
+  },
+  "dependencies": {
+    "systemjs": "^0.20.12",
+    "three": "0.85.2"
+  },
+  "devDependencies": {
+    "@types/three": "^0.84.7",
+    "jspm": "~0.16.53"
+  },
+  "jspm": {
+    "dependencies": {
+      "es6-promise": "npm:es6-promise@^4.1.0",
+      "image-promise": "npm:image-promise@^5.0.0",
+      "noisejs": "npm:noisejs@^2.1.0",
+      "promise-polyfill": "npm:promise-polyfill@^6.0.2",
+      "reload": "npm:systemjs-reload@^2.0.0",
+      "stats.js": "npm:stats.js@^0.17.0",
+      "three": "github:mrdoob/three.js@master",
+      "whatwg-fetch": "npm:whatwg-fetch@^2.0.3"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}
