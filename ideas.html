@@ -9,7 +9,7 @@
                    initial-scale=1.0,
                    maximum-scale=1.0,
                    user-scalable=no">
-    <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' media='screen'>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600" media="screen">
     <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen">
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
     <link rel="stylesheet" type="text/css" href="css/small.css" media="screen and (max-width: 550px)">
@@ -34,24 +34,28 @@
 
 <body class="body">
     <header>
-        <div id='container'></div>
+        <div id="container"></div>
         <h1>Kyle Hughes</h1>
-        <ul class='horizontal'>
+        <ul class="horizontal">
             <li><a>ideas</a></li>
-            <li><a href='mailto:kyle.hughes@outlook.com'>email</a></li>
-            <li><a href='http://github.com/indigotock'>github</a></li>
+            <li><a href="mailto:kyle.hughes@outlook.com">email</a></li>
+            <li><a href="http://github.com/indigotock">github</a></li>
         </ul>
     </header>
+    <hr class="large" />
     <main>
-        <div>Empty head</div>
+        <ul>
+            <li><a href="/ideas/clock/index.html">clock</a></li>
+            <li><a href="mailto:kyle.hughes@outlook.com">email</a></li>
+            <li><a href="http://github.com/indigotock">github</a></li>
+        </ul>
     </main>
-    <hr class='large' />
     <footer>
     </footer>
     <script src="./jspm_packages/system.js"></script>
     <script>
         System
-            .import('out/main.js')
+            .import("out/main.js")
             .then(null, console.error.bind(console));
     </script>
 </body>
