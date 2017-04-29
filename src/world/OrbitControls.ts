@@ -387,9 +387,6 @@ export class OrbitControls extends THREE.EventDispatcher {
     // event handlers - FSM: listen for events and reset state
     //
     public onMouseDown(event) {
-        console.log(this,
-            this.mouseButtons,
-            event.button)
         if (this.enabled === false) return;
         event.preventDefault();
         if (event.button === this.mouseButtons.Orbit) {
