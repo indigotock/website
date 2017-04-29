@@ -1,6 +1,7 @@
-import * as ShaderLibrary from './ShaderLibrary'
-import { AjaxShader } from '../Util/AjaxShader'
-import { Engine } from "../Engine";
+import * as ShaderLibrary from 'ShaderLibrary'
+import { AjaxShader } from 'AjaxShader'
+import { Engine } from "Engine";
+import * as THREE from "three";
 
 
 export class CloudsMaterial extends THREE.ShaderMaterial {
@@ -10,8 +11,8 @@ export class CloudsMaterial extends THREE.ShaderMaterial {
             uniforms: {
                 radius: { type: "float", value: radius },
                 time: { type: "float", value: new Date().getSeconds() },
-                seed1: { type: "float", value: Math.random()*100 },
-                seed2: { type: "float", value: Math.random()*100 },
+                seed1: { type: "float", value: Math.random() * 100 },
+                seed2: { type: "float", value: Math.random() * 100 },
             },
             side: THREE.DoubleSide
         });
@@ -23,13 +24,12 @@ export class CloudsMaterial extends THREE.ShaderMaterial {
             Engine.Instance.markLoaded(that);
         });
         Engine.Instance.addLoadRequirement(that);
-        this.transparent = true;
 
         Engine.Instance.addUpdateHandler((dt) => {
             this.uniforms.time.value += dt;
         })
     }
-    public toString(){
+    public toString() {
         return `CloudsMaterial`
     }
 }

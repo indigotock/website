@@ -1,6 +1,7 @@
-import { StarMaterial } from '../Materials/StarMaterial'
-import { ICelestialBody } from './ICelestialBody'
-import { PerlinNoise } from "../Util/Noise";
+import { StarMaterial } from 'StarMaterial'
+import { PerlinNoise } from "Noise";
+import { ICelestialBody } from 'ICelestialBody';
+import * as THREE from 'three';
 
 export class Star implements ICelestialBody {
     public readonly geometry: THREE.BufferGeometry;

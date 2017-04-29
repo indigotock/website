@@ -44,8 +44,8 @@ export class AjaxShader {
             var req = new XMLHttpRequest();
 
             req.onreadystatechange = function () {
-                if (req.readyState == XMLHttpRequest.DONE) {
-                    if (req.status == 200) {
+                if (req.readyState === XMLHttpRequest.DONE) {
+                    if (req.status === 200) {
                         callback.call(null, req.responseText);
                     }
                     else {

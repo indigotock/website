@@ -4,29 +4,19 @@
         "module": "system",
         "removeComments": true,
         "sourceMap": true,
-        "outDir": "out",
         "allowJs": true,
-        "baseUrl": ".",
-        "paths": {
-            "image-promise":[
-                "jspm_packages/image-promise"
-            ],
-            "*": [
-                "jspm_packages/*",
-                "jspm_packages/npm/*",
-                "jspm_packages/github/*",
-                "node_modules/*"
-            ]
-        }
+        "outDir": "out",
+        "moduleResolution": "classic",
+        "baseUrl": "."
     },
     "typeAcquisition": {
         "enable": true
     },
     "include": [
-        "src/*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
-        "node_modules/*",
-        "jspm_packages/*"
+        "node_modules/",
+        "jspm_packages/"
     ]
 }

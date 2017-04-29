@@ -1,8 +1,9 @@
-import { SimplexNoise, PerlinNoise } from "../Util/Noise";
-import { ICelestialBody } from '../Bodies/ICelestialBody';
-import { CloudsMaterial } from '../Materials/CloudsMaterial';
-import { PlanetMaterial } from '../Materials/PlanetMaterial';
-import { Engine } from "../Engine";
+import { SimplexNoise, PerlinNoise } from "Noise";
+import { ICelestialBody } from 'ICelestialBody';
+import { CloudsMaterial } from 'CloudsMaterial';
+import { PlanetMaterial } from 'PlanetMaterial';
+import { Engine } from "Engine";
+import * as THREE from 'three';
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value))

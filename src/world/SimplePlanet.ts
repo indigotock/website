@@ -1,7 +1,8 @@
-import { SimplexNoise, PerlinNoise } from "../Util/Noise";
-import { ICelestialBody } from '../Bodies/ICelestialBody';
-import { Engine } from "../Engine";
-import { Environment } from "../Environment";
+import { SimplexNoise, PerlinNoise } from "Noise";
+import { ICelestialBody } from 'ICelestialBody';
+import { Engine } from "Engine";
+import { Environment } from "Environment";
+import * as THREE from 'three';
 
 export class SimplePlanet implements ICelestialBody {
     private readonly noise = new SimplexNoise();

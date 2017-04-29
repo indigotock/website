@@ -1,9 +1,11 @@
-import { Star } from "./Bodies/Star";
-import { Planet } from "./Bodies/Planet";
-import { SimplePlanet } from "./Bodies/SimplePlanet";
-import { Environment } from "./Environment";
-import { ICelestialBody } from "./Bodies/ICelestialBody";
-import { StarMaterial } from "./Materials/StarMaterial";
+import { Star } from "world/Star";
+import { Planet } from "Planet";
+import { SimplePlanet } from "SimplePlanet";
+import { Environment } from "Environment";
+import { ICelestialBody } from "ICelestialBody";
+import { StarMaterial } from "StarMaterial";
+import { OrbitControls } from 'OrbitControls';
+import * as THREE from 'three';
 
 export class Engine {
     private readyHandlers: Function[] = [];
@@ -20,7 +22,7 @@ export class Engine {
     public static Instance: Engine;
     private readonly clock: THREE.Clock;
     public readonly camera: THREE.PerspectiveCamera;
-    public readonly controls: THREE.OrbitControls;
+    public readonly controls: OrbitControls;
     public readonly renderer: THREE.Renderer;
     public readonly scene: THREE.Scene;
     public readonly window: Window;
@@ -44,7 +46,7 @@ export class Engine {
             this.renderer = new THREE.CanvasRenderer();
 
         this.container = this.window.document.getElementsByTagName('main')[0];
-        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enablePan = false;
         this.controls.enableZoom = false;
         this.controls.rotateSpeed /= 10;
@@ -56,7 +58,7 @@ export class Engine {
         this.raycaster = new THREE.Raycaster();
 
         function makeplanet() {
-            if (that.planet != null) {
+            if (that.planet !== null) {
                 that.planet.mesh.children.forEach(element => {
                     element.parent.remove(element);
                 });
@@ -125,7 +127,7 @@ export class Engine {
         console.debug(`Loaded ${obj}`)
         this.loadRequirements.delete(obj);
 
-        if (this.loadRequirements.size == 0) {
+        if (this.loadRequirements.size === 0) {
             this.readyHandlers.map(e => e(this));
         }
     }

@@ -1,6 +1,7 @@
-import * as ShaderLibrary from './ShaderLibrary'
-import { AjaxShader } from '../Util/AjaxShader'
-import { Engine } from '../Engine'
+import * as ShaderLibrary from 'ShaderLibrary'
+import { AjaxShader } from 'AjaxShader'
+import { Engine } from 'Engine'
+import * as THREE from 'three';
 
 export class StarMaterial extends THREE.ShaderMaterial {
     constructor(radius: number) {

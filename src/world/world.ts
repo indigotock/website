@@ -1,15 +1,19 @@
-import { Star } from './Bodies/Star'
-import { Planet } from './Bodies/Planet'
-import { Engine } from './Engine'
-import { ICelestialBody } from "./Bodies/ICelestialBody";
-import { Environment } from "./Environment";
-import Stats from 'stats.js';
+import { Star } from 'Star'
+import { Planet } from 'Planet'
+import { Engine } from 'Engine'
+import { ICelestialBody } from "ICelestialBody";
+import { Environment } from "Environment";
+import * as THREE from 'three';
+import * as $ from 'jquery';
+import Stats from 'stats.js'
 
 var engine: Engine;
 
 var stats = new Stats();
-if (Environment.QueryVariable('dev'))
+if (Environment.devMode) {
+    console.debug('Running in dev mode')
     document.body.appendChild(stats.dom);
+}
 
 function animate() {
     stats.begin();
@@ -20,7 +24,7 @@ function animate() {
 
 
 function start() {
-    if (Environment.supportsWebGL == false) {
+    if (Environment.supportsWebGL === false) {
         document.getElementsByClassName('spinner')[0].classList.add('hidden');
         return;
     }

@@ -282,7 +282,7 @@ export class PerlinNoise extends Noise {
         return (1 - t) * a + t * b;
     }
     public getN(...ins: number[]): number {
-        if (ins.length == 1) {
+        if (ins.length === 1) {
             // Just use 2D noise with a fixed Y coordinate in the
             // 1D instance
             ins.push(0);
