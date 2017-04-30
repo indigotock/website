@@ -9,16 +9,13 @@ export class AjaxShader {
     private fragreq: XMLHttpRequest;
     private vertreq: XMLHttpRequest;
 
-    private finalise() {
-        this.doneCallback.call(this, this.fragmentSource, this.vertexSource);
-    }
 
     constructor(_vertexPath: string, _fragmentPath: string, callback: (f: string, v: string) => void) {
         this.fragreq = new XMLHttpRequest();
         this.doneCallback = callback;
 
-        this.vertexPath = './shaders/' + _vertexPath;
-        this.fragmentPath = './shaders/' + _fragmentPath;
+        this.vertexPath = '../shaders/' + _vertexPath;
+        this.fragmentPath = '../shaders/' + _fragmentPath;
 
         this.setupRequest(this.vertexPath, (val) => {
             this.vertexSource = val;
@@ -35,20 +32,23 @@ export class AjaxShader {
         });
     }
 
-    public toString(){
+    public toString() {
         return `AjaxShader to ${[this.fragmentPath, this.vertexPath]}`
     }
 
-    private setupRequest(dest: string, callback: Function) {
-        if (fetch === undefined) {
-            var req = new XMLHttpRequest();
+    private finalise() {
+        this.doneCallback.call(this, this.fragmentSource, this.vertexSource);
+    }
 
-            req.onreadystatechange = function () {
+    private setupRequest(dest: string, callback: (src: any) => void) {
+        if (fetch === undefined) {
+            const req = new XMLHttpRequest();
+
+            req.onreadystatechange = () => {
                 if (req.readyState === XMLHttpRequest.DONE) {
                     if (req.status === 200) {
                         callback.call(null, req.responseText);
-                    }
-                    else {
+                    } else {
                         console.error(`Non-success HTTP response ${req.status} from shader request to ${dest}`);
                     }
                 }
@@ -58,12 +58,12 @@ export class AjaxShader {
             req.send();
         } else {
             fetch(dest, {
-                method: 'get'
-            }).then((r)=>{
-                return r.text()
-            }).then(function (response) {
+                method: 'get',
+            }).then((r) => {
+                return r.text();
+            }).then((response) => {
                 callback.call(null, response);
-            }).catch(function (err) {
+            }).catch((err) => {
                 console.error(`Non-success HTTP response from shader request to ${dest}`);
             });
         }

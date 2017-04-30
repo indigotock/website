@@ -1,0 +1,38 @@
+{
+  "lintOptions": {
+    "typeCheck": true
+  },
+  "extends": "tslint:latest",
+  "rules": {
+    "ban": [true, ["describe", "only"],
+      ["it", "only"],
+      ["Object", "assign"]
+    ],
+    "no-console": [
+      true, "log"
+    ],
+    "callable-types": true,
+    "interface-name": [true, "always-prefix"],
+    "interface-over-type-literal": true,
+    "max-line-length": [true, 140],
+    "member-ordering": [true,
+      "public-before-private",
+      "static-before-instance",
+      "variables-before-functions"
+    ],
+    "no-angle-bracket-type-assertion": true,
+    "no-unsafe-any": true,
+    "prefer-const": true,
+    "switch-default": false,
+    "quotemark": [
+      "single", "double"
+    ],
+    "curly": false,
+    "variable-name": [true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ]
+  }
+}

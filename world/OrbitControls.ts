@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 /**
  * @author Kyle H / http://kylehughes.co.uk
  * @author qiao / https://github.com/qiao
@@ -15,7 +15,7 @@ import * as THREE from 'three';
 //    Pan - right mouse, or arrow keys / touch: three finger swipe
 
 const enum OrbitControlsKey {
-    Left = 37, Up = 38, Right = 39, Bottom = 40
+    Left = 37, Up = 38, Right = 39, Bottom = 40,
 }
 const enum OrbitControlsState {
     None = -1,
@@ -24,7 +24,7 @@ const enum OrbitControlsState {
     Pan = 2,
     TouchRotate = 3,
     TouchDolly = 4,
-    TouchPan = 5
+    TouchPan = 5,
 }
 export class OrbitControls extends THREE.EventDispatcher {
     private static EPS = 0.000001;
@@ -66,14 +66,14 @@ export class OrbitControls extends THREE.EventDispatcher {
     // Mouse buttons
     public readonly mouseButtons = {
         Orbit: THREE.MOUSE.LEFT,
+        Pan: THREE.MOUSE.RIGHT,
         Zoom: THREE.MOUSE.MIDDLE,
-        Pan: THREE.MOUSE.RIGHT
-    }
+    };
 
     private readonly resets = {
+        position: new THREE.Vector3(),
         target: new THREE.Vector3(),
-        position: new THREE.Vector3()
-    }
+    };
 
     private spherical = new THREE.Spherical();
     private sphericalDelta = new THREE.Spherical();
@@ -81,14 +81,14 @@ export class OrbitControls extends THREE.EventDispatcher {
     private state = OrbitControlsState.None;
 
     private changeEvent = {
-        type: 'change'
-    }
+        type: "change",
+    };
     private startEvent = {
-        type: 'start'
-    }
+        type: "start",
+    };
     private endEvent = {
-        type: 'end'
-    }
+        type: "end",
+    };
 
     private scale = 1;
     private panOffset = new THREE.Vector3();
@@ -103,38 +103,33 @@ export class OrbitControls extends THREE.EventDispatcher {
     private dollyEnd = new THREE.Vector2();
     private dollyDelta = new THREE.Vector2();
 
-
-    private makeDomElement(element: HTMLElement | Document): HTMLElement {
-        if (element instanceof Document) {
-            return element.body;
-        } else
-            return element;
-    }
-    
-
     constructor(public readonly object: THREE.PerspectiveCamera, _domElement: HTMLElement | Document = document) {
         super();
         this.domElement = this.makeDomElement(_domElement);
         this.resets.target = this.target.clone();
         this.resets.position = this.object.position.clone();
-        //
-        this.domElement.addEventListener('contextmenu', this.onContextMenu.bind(this), false);
-        this.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
-        this.domElement.addEventListener('wheel', this.onMouseWheel.bind(this), false);
-        this.domElement.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-        this.domElement.addEventListener('touchend', this.onTouchEnd.bind(this), false);
-        this.domElement.addEventListener('touchmove', this.onTouchMove.bind(this), false);
-        window.addEventListener('keydown', this.onKeyDown.bind(this), false);
+        this.domElement.addEventListener("contextmenu", this.onContextMenu.bind(this), false);
+        this.domElement.addEventListener("mousedown", this.onMouseDown.bind(this), false);
+        this.domElement.addEventListener("wheel", this.onMouseWheel.bind(this), false);
+        this.domElement.addEventListener("touchstart", this.onTouchStart.bind(this), false);
+        this.domElement.addEventListener("touchend", this.onTouchEnd.bind(this), false);
+        this.domElement.addEventListener("touchmove", this.onTouchMove.bind(this), false);
+        window.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
         // force an update at start
         this.update();
     }
 
-    getPolarAngle() {
-        return this.spherical.phi;
-    }
-    getAzimuthalAngle() {
-        return this.spherical.theta;
+    public dispose() {
+        this.domElement.removeEventListener("contextmenu", this.onContextMenu.bind(this), false);
+        this.domElement.removeEventListener("mousedown", this.onMouseDown.bind(this), false);
+        this.domElement.removeEventListener("wheel", this.onMouseWheel.bind(this), false);
+        this.domElement.removeEventListener("touchstart", this.onTouchStart.bind(this), false);
+        this.domElement.removeEventListener("touchend", this.onTouchEnd.bind(this), false);
+        this.domElement.removeEventListener("touchmove", this.onTouchMove.bind(this), false);
+        document.removeEventListener("mousemove", this.onMouseMove.bind(this), false);
+        document.removeEventListener("mouseup", this.onMouseUp.bind(this), false);
+        window.removeEventListener("keydown", this.onKeyDown.bind(this), false);
     }
 
     public reset() {
@@ -145,16 +140,29 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
         this.state = OrbitControlsState.None;
     }
+    private makeDomElement(element: HTMLElement | Document): HTMLElement {
+        if (element instanceof Document) {
+            return element.body;
+        } else
+            return element;
+    }
 
-    update() {
-        var offset = new THREE.Vector3();
+    private getPolarAngle() {
+        return this.spherical.phi;
+    }
+    private getAzimuthalAngle() {
+        return this.spherical.theta;
+    }
+
+    private update() {
+        const offset = new THREE.Vector3();
         // so camera.up is the orbit axis
-        var quat = new THREE.Quaternion().setFromUnitVectors(this.object.up, new THREE.Vector3(0, 1, 0));
-        var quatInverse = quat.clone().inverse();
-        var lastPosition = new THREE.Vector3();
-        var lastQuaternion = new THREE.Quaternion();
+        const quat = new THREE.Quaternion().setFromUnitVectors(this.object.up, new THREE.Vector3(0, 1, 0));
+        const quatInverse = quat.clone().inverse();
+        const lastPosition = new THREE.Vector3();
+        const lastQuaternion = new THREE.Quaternion();
 
-        var position = this.object.position;
+        const position = this.object.position;
         offset.copy(position).sub(this.target);
         // rotate offset to "y-axis-is-up" space
         offset.applyQuaternion(quat);
@@ -169,7 +177,6 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.spherical.theta = Math.max(this.minAzimuthAngle, Math.min(this.maxAzimuthAngle, this.spherical.theta));
         // restrict phi to be between desired limits
         this.spherical.phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, this.spherical.phi));
-
 
         this.spherical.makeSafe();
 
@@ -203,98 +210,86 @@ export class OrbitControls extends THREE.EventDispatcher {
             this.zoomChanged = false;
         }
     }
-    public dispose() {
-        this.domElement.removeEventListener('contextmenu', this.onContextMenu.bind(this), false);
-        this.domElement.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
-        this.domElement.removeEventListener('wheel', this.onMouseWheel.bind(this), false);
-        this.domElement.removeEventListener('touchstart', this.onTouchStart.bind(this), false);
-        this.domElement.removeEventListener('touchend', this.onTouchEnd.bind(this), false);
-        this.domElement.removeEventListener('touchmove', this.onTouchMove.bind(this), false);
-        document.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-        document.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
-        window.removeEventListener('keydown', this.onKeyDown.bind(this), false);
-        //this.dispatchEvent( { type: 'dispose' } ); // should this be added here?
-    }
 
-    getAutoRotationAngle() {
+    private getAutoRotationAngle() {
         return 2 * Math.PI / 60 / 60 * this.autoRotateSpeed;
     }
 
-    getZoomScale() {
+    private getZoomScale() {
         return Math.pow(0.95, this.zoomSpeed);
     }
 
-    public rotateLeft(angle) {
+    private rotateLeft(angle) {
         this.sphericalDelta.theta -= angle;
     }
 
-    public rotateUp(angle) {
+    private rotateUp(angle) {
         this.sphericalDelta.phi -= angle;
     }
-    panLeft(distance, objectMatrix) {
-        var v = new THREE.Vector3();
+    private panLeft(distance, objectMatrix) {
+        const v = new THREE.Vector3();
         v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
         v.multiplyScalar(-distance);
         this.panOffset.add(v);
     }
-    panUp(distance, objectMatrix) {
-        var v = new THREE.Vector3();
+    private panUp(distance, objectMatrix) {
+        const v = new THREE.Vector3();
         v.setFromMatrixColumn(objectMatrix, 1); // get Y column of objectMatrix
         v.multiplyScalar(distance);
         this.panOffset.add(v);
     }
     // deltaX and deltaY are in pixels; right and down are positive
-    pan(deltaX, deltaY) {
-        var offset = new THREE.Vector3();
+    private pan(deltaX, deltaY) {
+        const offset = new THREE.Vector3();
         if (this.object instanceof THREE.PerspectiveCamera) {
             // perspective
-            var position = this.object.position;
+            const position = this.object.position;
             offset.copy(position).sub(this.target);
-            var targetDistance = offset.length();
+            let targetDistance = offset.length();
             // half of the fov is center to top of screen
             targetDistance *= Math.tan((this.object.fov / 2) * Math.PI / 180.0);
             // we actually don't use screenWidth, since perspective camera is fixed to screen height
             this.panLeft(2 * deltaX * targetDistance / this.domElement.clientHeight, this.object.matrix);
             this.panUp(2 * deltaY * targetDistance / this.domElement.clientHeight, this.object.matrix);
         } else {
-            console.warn('WARNING: OrbitControls.ts was made for PerspectiveCamera only. Not sure why, it just was.');
+            console.warn("WARNING: OrbitControls.ts was made for PerspectiveCamera only. Not sure why, it just was.");
             this.enablePan = false;
         }
     }
 
-    dollyIn(dollyScale) {
+    private dollyIn(dollyScale) {
         if (this.object instanceof THREE.PerspectiveCamera) {
             this.scale /= dollyScale;
         } else {
-            console.warn('WARNING: OrbitControls.ts was made for PerspectiveCamera only. Not sure why, it just was.');
+            console.warn("WARNING: OrbitControls.ts was made for PerspectiveCamera only. Not sure why, it just was.");
             this.enableZoom = false;
         }
     }
 
-    dollyOut(dollyScale) {
+    private dollyOut(dollyScale) {
         if (this.object instanceof THREE.PerspectiveCamera) {
             this.scale *= dollyScale;
         } else {
-            console.warn('WARNING: OrbitControls.ts was made for PerspectiveCamera only. Not sure why, it just was.');
+            console.warn("WARNING: OrbitControls.ts was made for PerspectiveCamera only. Not sure why, it just was.");
             this.enableZoom = false;
         }
     }
     //
     // event callbacks - update the object state
     //
-    handleMouseDownRotate(event) {
+    private handleMouseDownRotate(event) {
         this.rotateStart.set(event.clientX, event.clientY);
     }
 
-    handleMouseDownDolly(event) {
+    private handleMouseDownDolly(event) {
         this.dollyStart.set(event.clientX, event.clientY);
     }
 
-    handleMouseDownPan(event) {
+    private handleMouseDownPan(event) {
         this.panStart.set(event.clientX, event.clientY);
     }
 
-    handleMouseMoveRotate(event) {
+    private handleMouseMoveRotate(event) {
         this.rotateEnd.set(event.clientX, event.clientY);
         this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
         // rotating across whole screen goes 360 degrees around
@@ -305,7 +300,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
     }
 
-    handleMouseMoveDolly(event: MouseEvent) {
+    private handleMouseMoveDolly(event: MouseEvent) {
         this.dollyEnd.set(event.clientX, event.clientY);
         this.dollyDelta.subVectors(this.dollyEnd, this.dollyStart);
         if (this.dollyDelta.y > 0) {
@@ -317,7 +312,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
     }
 
-    handleMouseMovePan(event) {
+    private handleMouseMovePan(event) {
         this.panEnd.set(event.clientX, event.clientY);
         this.panDelta.subVectors(this.panEnd, this.panStart);
         this.pan(this.panDelta.x, this.panDelta.y);
@@ -325,7 +320,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
     }
 
-    handleMouseWheel(event) {
+    private handleMouseWheel(event) {
         if (event.deltaY < 0) {
             this.dollyOut(this.getZoomScale());
         } else if (event.deltaY > 0) {
@@ -334,22 +329,22 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
     }
 
-    handleTouchStartRotate(event) {
+    private handleTouchStartRotate(event) {
         this.rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
     }
 
-    handleTouchStartDolly(event) {
-        var dx = event.touches[0].pageX - event.touches[1].pageX;
-        var dy = event.touches[0].pageY - event.touches[1].pageY;
-        var distance = Math.sqrt(dx * dx + dy * dy);
+    private handleTouchStartDolly(event) {
+        const dx = event.touches[0].pageX - event.touches[1].pageX;
+        const dy = event.touches[0].pageY - event.touches[1].pageY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
         this.dollyStart.set(0, distance);
     }
 
-    handleTouchStartPan(event) {
+    private handleTouchStartPan(event) {
         this.panStart.set(event.touches[0].pageX, event.touches[0].pageY);
     }
 
-    handleTouchMoveRotate(event) {
+    private handleTouchMoveRotate(event) {
         this.rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
         this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
         // rotating across whole screen goes 360 degrees around
@@ -360,10 +355,10 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
     }
 
-    handleTouchMoveDolly(event) {
-        var dx = event.touches[0].pageX - event.touches[1].pageX;
-        var dy = event.touches[0].pageY - event.touches[1].pageY;
-        var distance = Math.sqrt(dx * dx + dy * dy);
+    private handleTouchMoveDolly(event) {
+        const dx = event.touches[0].pageX - event.touches[1].pageX;
+        const dy = event.touches[0].pageY - event.touches[1].pageY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
         this.dollyEnd.set(0, distance);
         this.dollyDelta.subVectors(this.dollyEnd, this.dollyStart);
         if (this.dollyDelta.y > 0) {
@@ -375,7 +370,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.update();
     }
 
-    handleTouchMovePan(event) {
+    private handleTouchMovePan(event) {
         this.panEnd.set(event.touches[0].pageX, event.touches[0].pageY);
         this.panDelta.subVectors(this.panEnd, this.panStart);
         this.pan(this.panDelta.x, this.panDelta.y);
@@ -386,7 +381,7 @@ export class OrbitControls extends THREE.EventDispatcher {
     //
     // event handlers - FSM: listen for events and reset state
     //
-    public onMouseDown(event) {
+    private onMouseDown(event) {
         if (this.enabled === false) return;
         event.preventDefault();
         if (event.button === this.mouseButtons.Orbit) {
@@ -403,13 +398,13 @@ export class OrbitControls extends THREE.EventDispatcher {
             this.state = OrbitControlsState.Pan;
         }
         if (this.state !== OrbitControlsState.None) {
-            document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-            document.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+            document.addEventListener("mousemove", this.onMouseMove.bind(this), false);
+            document.addEventListener("mouseup", this.onMouseUp.bind(this), false);
             this.dispatchEvent(this.startEvent);
         }
     }
 
-    onMouseMove(event) {
+    private onMouseMove(event) {
         if (this.enabled === false) return;
         event.preventDefault();
         if (this.state === OrbitControlsState.Rotate) {
@@ -424,16 +419,17 @@ export class OrbitControls extends THREE.EventDispatcher {
         }
     }
 
-    onMouseUp(event) {
+    private onMouseUp(event) {
         if (this.enabled === false) return;
-        document.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-        document.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+        document.removeEventListener("mousemove", this.onMouseMove.bind(this), false);
+        document.removeEventListener("mouseup", this.onMouseUp.bind(this), false);
         this.dispatchEvent(this.endEvent);
         this.state = OrbitControlsState.None;
     }
 
-    onMouseWheel(event) {
-        if (this.enabled === false || this.enableZoom === false || (this.state !== OrbitControlsState.None && this.state !== OrbitControlsState.Rotate)) return;
+    private onMouseWheel(event) {
+        if (this.enabled === false || this.enableZoom === false ||
+            (this.state !== OrbitControlsState.None && this.state !== OrbitControlsState.Rotate)) return;
         event.preventDefault();
         event.stopPropagation();
         this.handleMouseWheel(event);
@@ -441,7 +437,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.dispatchEvent(this.endEvent);
     }
 
-    onKeyDown(event) {
+    private onKeyDown(event) {
         if (this.enabled === false || this.enableKeys === false || this.enablePan === false) return;
         switch (event.keyCode) {
             case OrbitControlsKey.Up:
@@ -463,7 +459,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         }
     }
 
-    onTouchStart(event) {
+    private onTouchStart(event) {
         if (this.enabled === false) return;
         switch (event.touches.length) {
             case 1: // one-fingered touch: rotate
@@ -489,7 +485,7 @@ export class OrbitControls extends THREE.EventDispatcher {
         }
     }
 
-    onTouchMove(event) {
+    private onTouchMove(event) {
         if (this.enabled === false) return;
         event.preventDefault();
         event.stopPropagation();
@@ -514,13 +510,13 @@ export class OrbitControls extends THREE.EventDispatcher {
         }
     }
 
-    onTouchEnd(event) {
+    private onTouchEnd(event) {
         if (this.enabled === false) return;
         this.dispatchEvent(this.endEvent);
         this.state = OrbitControlsState.None;
     }
 
-    onContextMenu(event) {
+    private onContextMenu(event) {
         event.preventDefault();
     }
 }

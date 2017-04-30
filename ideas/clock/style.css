@@ -1,9 +1,0 @@
-body {
-    margin: 0 auto;
-    max-width: 600px;
-    text-align:center;
-}
-
-#container canvas {
-    max-width: 600px;
-}

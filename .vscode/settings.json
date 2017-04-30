@@ -4,9 +4,10 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/CVS": true,
+        "**/src/*.js": true,
         "out": true,
-        "jspm_packages": true,
-        "node_modules": true,
+        "**/jspm_packages": true,
+        "**/node_modules": true,
         "**/.DS_Store": true,
         "**/*.js.map": true
     }

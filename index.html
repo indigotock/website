@@ -45,11 +45,11 @@
   <script src="./out/jspm_packages/system.js"></script>
   <script src="./node_modules/three/examples/js/renderers/Projector.js"></script>
   <script src="./node_modules/three/examples/js/renderers/CanvasRenderer.js"></script>
-  <script src="config.js"></script>
   <script src="https://threejs.org/examples/js/geometries/ConvexGeometry.js"></script>
+  <script src="world/config.js"></script>
   <script>
     System
-      .import('world')
+      .import('world/world')
       .then(null, console.error.bind(console))
   </script>
 </body>

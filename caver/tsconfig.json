@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "system",
+        "removeComments": true,
+        "sourceMap": true,
+        "allowJs": true,
+        "moduleResolution": "classic",
+        "baseUrl": "src/"
+    },
+    "typeAcquisition": {
+        "enable": true
+    },
+    "include": [
+        "src/*.ts"
+    ],
+    "exclude": [
+        "node_modules/",
+        "jspm_packages/"
+    ]
+}
