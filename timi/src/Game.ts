@@ -117,19 +117,21 @@ export class Game {
             return;
         }
         if (this.isNavigationAvailable(dir)) {
-            this.enterRoom(dir.to)
+            return this.enterRoom(dir.to)
         }
     }
 
     enterRoom(room: Room) {
-        this.currentRoom = room
         let v = this.roomVisitCount.get(this.currentRoom) || 0
         this.roomVisitCount.set(this.currentRoom, v + 1)
+        let navEvent: RoomNavigationEvent = {
+            from: this.currentRoom,
+            to: room,
+            timedEnteredNextRoom: this.roomVisitCount.get(this.currentRoom)
+        }
+        this.currentRoom = room
 
-        if (this.currentRoom.onEnterRoom) { }
-        // this.putText(this.currentRoom.onEnterRoom.call(this.currentRoom,
-        //     { timesEnteredThisRoom: this.roomVisitCount.get(this.currentRoom) }))
-
+        return this.currentRoom.enter(navEvent)
     }
 
     isNavigationAvailable(navigation: Navigation) {

@@ -1,8 +1,12 @@
 import * as uuid from 'uuid'
 import * as Ev from "../Events";
 import { CommandResult } from "../Command";
+import { IItemContainer, ItemContainer } from "../items/Item";
 
-export class Room {
+export default class Room {
+    public things: IItemContainer = new ItemContainer()
+    public readonly identifier: string
+
     constructor(
         public readonly name: string,
         public readonly fullName: string = name) {
@@ -11,14 +15,11 @@ export class Room {
     /**
      * Unique identifier for this room
      */
-    public readonly identifier: string
 
     examine(): CommandResult {
         return { output: '' }
     }
 
-    enter(ev: Ev.RoomNavigationEvent) { }
-    leave(ev: Ev.RoomNavigationEvent) { }
+    enter(ev: Ev.RoomNavigationEvent): CommandResult { return }
+    leave(ev: Ev.RoomNavigationEvent): CommandResult { return }
 }
-
-export default Room
