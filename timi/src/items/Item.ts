@@ -2,7 +2,7 @@ import * as uuid from 'uuid'
 import IndefiniteArticle from '../indefinite_article'
 import { CommandResult } from "../Command";
 import Util from "../Util";
-import { Room } from "../rooms/Room";
+import Room from "../rooms/Room";
 
 type ItemAction = (i: Item, other?: Item) => CommandResult
 
