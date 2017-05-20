@@ -42,7 +42,7 @@ export default class Way {
         }
     }
 
-    public toString = () => {
+    public toString = (): string => {
         return this.value
     }
 }

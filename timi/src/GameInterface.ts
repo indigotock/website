@@ -1,7 +1,7 @@
-import { CommandResult } from "./Command";
-import Util from "./Util";
-import { Game } from "./Game";
-import { Parser } from "./Parser";
+import Util from './Util';
+import { CommandResult } from './Command';
+import { Game } from './Game';
+import { Parser } from './Parser';
 
 export abstract class GameInterface {
     constructor(protected readonly game: Game) {
@@ -29,7 +29,9 @@ export class StandardHTMLGameInterface extends GameInterface {
         private readonly main: HTMLElement,
     ) {
         super(game)
-        input.addEventListener('keydown', this.keyDownEvent)
+        input.addEventListener('keydown', this.keyDownEvent.bind(this))
+        this.updateInventory()
+        this.updateNavigator()
     }
 
     private keyDownEvent(ev: KeyboardEvent) {
@@ -72,6 +74,8 @@ export class StandardHTMLGameInterface extends GameInterface {
 
         rooms.forEach(navigation => {
             let roomname = navigation.to.name
+            if (!this.game.hasVisitedRoom(navigation.to))
+                roomname = '???'
             let element = document.createElement('li')
             element.innerText = `${navigation.way.value}:\n${roomname}`
             if (this.game.isNavigationAvailable(navigation))

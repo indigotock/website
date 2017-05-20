@@ -1,7 +1,15 @@
-import * as uuid from 'uuid'
-import * as Ev from "../Events";
-import { CommandResult } from "../Command";
-import { IItemContainer, ItemContainer } from "../items/Item";
+import * as Ev from '../Events';
+import * as uuid from 'uuid';
+import Way from '../Way';
+import { CommandResult } from '../Command';
+import { IItemContainer, ItemContainer } from '../items/Item';
+
+
+export interface Link {
+    room1: string
+    room2: string
+    way: Way
+}
 
 export default class Room {
     public things: IItemContainer = new ItemContainer()

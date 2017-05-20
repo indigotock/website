@@ -15,7 +15,7 @@ let g = new Game()
 let intf = new StandardHTMLGameInterface(
     g,
     document.getElementById('input'),
-    document.getElementById('nav'),
-    document.getElementById('inventory'),
+    document.getElementById('map').children[0],
+    document.getElementById('inventory').children[0],
     document.getElementById('main'),
 )

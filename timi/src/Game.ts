@@ -32,10 +32,6 @@ export const enum CommandFailReason {
 
 export class Game {
     public inventory: IItemContainer = new ItemContainer()
-    /**
-     * Player name
-     */
-    public Player: string;
     currentRoom: Room;
     currentMap = new GameMap()
 
@@ -43,6 +39,7 @@ export class Game {
 
 
     actOnCommand(command: Parser.ParsedCommand): CommandResult {
+        console.log('acting')
         let obj: Item
         if (command.obj)
             obj = this.getThingFromContainerString(command.obj.obj, command.obj.container)
@@ -50,8 +47,14 @@ export class Game {
         if (command.subject)
             subject = this.getThingFromContainerString(command.subject.obj, command.subject.container)
 
+
+        console.log(command, obj, subject)
         //todo: replace old crappy switch with ref to item action array
         return null
+    }
+
+    hasVisitedRoom(room: Room) {
+        return this.roomVisitCount.get(room) && this.roomVisitCount.get(room) >= 0
     }
 
 
@@ -97,10 +100,6 @@ export class Game {
     }
 
     constructor() {
-
-        // Stats['health'].createMeter(document.getElementById('meters'))
-        // Stats['energy'].createMeter(document.getElementById('meters'))
-
         this.enterRoom(this.currentMap.defaultRoom)
 
     }
@@ -130,7 +129,7 @@ export class Game {
             timedEnteredNextRoom: this.roomVisitCount.get(this.currentRoom)
         }
         this.currentRoom = room
-
+        console.log(this.currentRoom)
         return this.currentRoom.enter(navEvent)
     }
 
