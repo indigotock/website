@@ -4,7 +4,7 @@ import { GameMap, Navigation } from './World'
 
 import Way from './Way'
 import { Thing, IThingContainer, ThingContainer } from './ItemDB'
-import './Game.scss'
+import './styles/Game.scss'
 import { Rooms, Room } from './Rooms'
 import * as loremIpsum from 'lorem-ipsum'
 import { EnterRoomEventHandler } from "./Events";
@@ -41,26 +41,21 @@ export class Game {
 
     private roomVisitCount: Map<Room, number> = new Map()
 
-    failCommand(reason: CommandFailReason, thing: string, verb: string = 'do that') {
-        this.putText(Util.randomFrom(Prose.FAILURE_QUOTES[reason]).replace('THING', thing)
-            .replace('VERB', verb))
-    }
-
 
     actOnCommand(command: Parser.ParsedCommand) {
-        let obj:Thing
-        if(command.obj)
+        let obj: Thing
+        if (command.obj)
             obj = this.getThingFromContainerString(command.obj.obj, command.obj.container)
-        let subject:Thing
-        if(command.subject)
+        let subject: Thing
+        if (command.subject)
             subject = this.getThingFromContainerString(command.subject.obj, command.subject.container)
-        
+
         //todo: replace old crappy switch with ref to item action array
 
     }
 
 
-    findThingIn(thingName: string, container:IThingContainer): Thing {
+    findThingIn(thingName: string, container: IThingContainer): Thing {
         // Currently only one-word things are supported
         let item = (container).find(e => {
             let names = (e.aliases).slice()
@@ -71,26 +66,26 @@ export class Game {
             });
             return ret
         })
-        if(item){
+        if (item) {
             item.container = container
             return item
         }
         return null
     }
 
-    getThingFromContainerString(obj:string, container:string): Thing {
+    getThingFromContainerString(obj: string, container: string): Thing {
         let actual: Thing
         if (!obj || !obj)
             return
-        if (container === 'ambient'){
-            let rt =  this.findThingIn(obj, this.currentRoom.things)
-            let it =  this.findThingIn(obj, this.inventory)
+        if (container === 'ambient') {
+            let rt = this.findThingIn(obj, this.currentRoom.things)
+            let it = this.findThingIn(obj, this.inventory)
             actual = rt || it
-        }else if(container==='room'){
+        } else if (container === 'room') {
             actual = this.findThingIn(obj, this.currentRoom.things)
-        }else if(container==='inventory'){
-            actual = this.findThingIn(obj,  this.inventory)
-        }else{
+        } else if (container === 'inventory') {
+            actual = this.findThingIn(obj, this.inventory)
+        } else {
             let con = this.getThingFromContainerString(container, 'ambient')
             actual = this.findThingIn(obj, con['things'])
         }
@@ -108,42 +103,17 @@ export class Game {
 
         this.enterRoom(gameMap.defaultRoom)
 
-        this.update()
-    }
-
-    putInput(text: string) {
-        this.rule()
-        let main = document.getElementById('main')
-        let element = document.createElement('kbd') as HTMLSpanElement
-        element.classList.add('inputQuote')
-        element.innerText = '> ' + text;
-        main.appendChild(element)
-
-    }
-
-    putText(text: string) {
-        if (Util.isStringEmpty(text)) {
-            return
-        }
-        let main = document.getElementById('main')
-        text = '<p>' + (text.trim() || '').split(/[\r\n\t]+/gm).join('</p><p>') + '</p>'
-        main.innerHTML += `${text}`
-    }
-
-    rule() {
-        document.getElementById('main').innerHTML +=
-            `</br><hr/>`
     }
 
     navigate(way: Way) {
         if (!way) {
-            this.failCommand(CommandFailReason.UnknownDirection, way.lowercase)
+            // this.failCommand(CommandFailReason.UnknownDirection, way.lowercase)
             return
         }
         let dir = gameMap.getRoomNavigations(this.currentRoom)
             .find(e => e.way === way)
         if (dir === undefined) {
-            this.putText(`I cannot go ${way.lowercase} from here.`)
+            // this.putText(`I cannot go ${way.lowercase} from here.`)
             return;
         }
         if (this.isNavigationAvailable(dir)) {
@@ -153,16 +123,12 @@ export class Game {
 
     enterRoom(room: Room) {
         this.currentRoom = room
-        let main = document.getElementById('main')
-        main.innerHTML = ''
-        let heading = `<h1>${this.currentRoom.name}</h1><br/>`
-        main.innerHTML += heading
         let v = this.roomVisitCount.get(this.currentRoom) || 0
         this.roomVisitCount.set(this.currentRoom, v + 1)
 
-        if (this.currentRoom.onEnterRoom)
-            this.putText(this.currentRoom.onEnterRoom.call(this.currentRoom,
-                { timesEnteredThisRoom: this.roomVisitCount.get(this.currentRoom) }))
+        if (this.currentRoom.onEnterRoom) { }
+        // this.putText(this.currentRoom.onEnterRoom.call(this.currentRoom,
+        //     { timesEnteredThisRoom: this.roomVisitCount.get(this.currentRoom) }))
 
     }
 
@@ -174,41 +140,5 @@ export class Game {
             avail = navigation.available
         }
         return avail
-    }
-
-    updateNavigator() {
-        let list = document.getElementById('map').getElementsByTagName('ul')[0] as HTMLUListElement
-        while (list.hasChildNodes())
-            list.removeChild(list.lastChild)
-        let rooms = gameMap.getRoomNavigations(this.currentRoom)
-
-        rooms.forEach(navigation => {
-            let roomname = "???"
-            if (this.roomVisitCount.get(navigation.to) >= 1)
-                roomname = navigation.to.name
-            let element = document.createElement('li')
-            element.innerText = `${navigation.way.value}:\n${roomname}`
-            if (this.isNavigationAvailable(navigation))
-                list.appendChild(element)
-        });
-    }
-
-    updateInventory() {
-        let list = document.getElementById('inventory').getElementsByTagName('ul')[0] as HTMLUListElement
-        while (list.hasChildNodes())
-            list.removeChild(list.lastChild)
-        let items = this.inventory
-
-        items.forEach(item => {
-            let roomname = "???"
-            let element = document.createElement('li')
-            element.innerText = `${item.name}`
-            list.appendChild(element)
-        });
-    }
-
-    update() {
-        this.updateNavigator()
-        this.updateInventory()
     }
 }
