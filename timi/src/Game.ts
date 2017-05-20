@@ -5,7 +5,7 @@ import { GameMap, Navigation } from './World'
 import Way from './Way'
 import './styles/Game.scss'
 import Room from './rooms/Room'
-import Item, { ItemContainer, IItemContainer } from './items/Item'
+import Item, { ItemAction, ItemContainer } from './items/Item'
 import * as loremIpsum from 'lorem-ipsum'
 import { RoomNavigationEvent } from "./Events";
 import * as Prose from "./Prose";
@@ -31,7 +31,7 @@ export const enum CommandFailReason {
 }
 
 export class Game {
-    public inventory: IItemContainer = new ItemContainer()
+    public inventory: ItemContainer = new ItemContainer()
     currentRoom: Room;
     currentMap = new GameMap()
 
@@ -61,6 +61,15 @@ export class Game {
                     output: 'Which direction should I go?'
                 }
         }
+
+        if (obj) {
+            let func = obj.actions[command.verb] || obj[command.verb]
+
+            if (func)
+                func
+        }
+
+
         //todo: replace old crappy switch with ref to item action array
         return null
     }
@@ -70,7 +79,7 @@ export class Game {
     }
 
 
-    findThingIn(thingName: string, container: IItemContainer): Item {
+    findThingIn(thingName: string, container: ItemContainer): Item {
         // Currently only one-word things are supported
         let item = (container).find(e => {
             let names = (e.aliases).slice()

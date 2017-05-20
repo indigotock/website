@@ -4,36 +4,9 @@ import { CommandResult } from "../Command";
 import Util from "../Util";
 import Room from "../rooms/Room";
 
-type ItemAction = (i: Item, other?: Item) => CommandResult
+export type ItemAction = (i: Item, other?: Item) => CommandResult
 
-
-export abstract class IItemContainer {
-    abstract add(t: Item[] | Item)
-    abstract find(p: (this: void, value: Item) => boolean): Item | undefined
-    abstract forEach(action: (t: Item) => void)
-    abstract has(t: Item)
-    abstract remove(t: Item)
-    abstract count()
-    abstract array(): Item[]
-
-
-    get containedItemsStringList() {
-        if (this.count() === 0) return "\nIt is empty."
-
-        let itemnames = []
-        this.forEach(e => {
-            console.log('x')
-            let n = e.name
-            itemnames.push(e.withIndefiniteArticle)
-        })
-        let listSentence = 'it contains ' + (Util.toTextualList(itemnames) || "nothing")
-
-        return '\n' + Util.toSentenceCase(listSentence) + '.'
-    }
-
-}
-
-export class ItemContainer extends IItemContainer {
+export class ItemContainer {
     private items: Item[] = []
     add(t: Item[] | Item) {
         this.items.push()
@@ -66,12 +39,25 @@ export class ItemContainer extends IItemContainer {
     array(): Item[] {
         return this.items
     }
+    get containedItemsStringList() {
+        if (this.count() === 0) return "\nIt is empty."
+
+        let itemnames = []
+        this.forEach(e => {
+            console.log('x')
+            let n = e.name
+            itemnames.push(e.withIndefiniteArticle)
+        })
+        let listSentence = 'it contains ' + (Util.toTextualList(itemnames) || "nothing")
+
+        return '\n' + Util.toSentenceCase(listSentence) + '.'
+    }
 }
 
 class Item {
     public readonly identifier: string
     aliases: string[] = []
-    container: IItemContainer | Room
+    container: ItemContainer | Room
     readonly containedItems: ItemContainer
 
     get isContainer() {

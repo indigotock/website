@@ -2,7 +2,7 @@ import * as Ev from '../../Events';
 import * as uuid from 'uuid';
 import Room, { Link } from '../Room';
 import { CommandResult } from '../../Command';
-import { IItemContainer, ItemContainer } from '../../items/Item';
+import { ItemContainer } from '../../items/Item';
 
 
 let rm = new (class Hallway extends Room {

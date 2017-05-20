@@ -37,11 +37,11 @@ export class StandardHTMLGameInterface extends GameInterface {
     private keyDownEvent(ev: KeyboardEvent) {
         let str = this.input.value.trim().toLowerCase()
         if (ev.code == 'Enter') {
+            this.input.value = ''
             if (Util.isStringEmpty(str))
                 return
             this.putInput(str)
             let com = Parser.parse(str)
-            this.input.value = ''
             let result = this.game.actOnCommand(com)
             let mostRecent = this.inputHistory[0]
             if (mostRecent !== str)

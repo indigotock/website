@@ -3,7 +3,7 @@ import * as uuid from 'uuid';
 import Room, { Link } from '../Room';
 import Way from '../../Way';
 import { CommandResult } from '../../Command';
-import { IItemContainer, ItemContainer } from '../../items/Item';
+import { ItemContainer } from '../../items/Item';
 
 
 

@@ -1,4 +1,4 @@
-import { Game, CommandFailReason } from "./Game";
+import { Game } from "./Game";
 
 let Grammar = require("./Grammar.ne")
 
