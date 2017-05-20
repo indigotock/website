@@ -41,8 +41,4 @@ export default class Way {
                 return Way.Up
         }
     }
-
-    public toString = (): string => {
-        return this.value
-    }
 }
