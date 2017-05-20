@@ -5,6 +5,7 @@ import { GameMap, Navigation } from './World'
 import Way from './Way'
 import './styles/Game.scss'
 import Room from './rooms/Room'
+import Item, { ItemContainer, IItemContainer } from './items/Item'
 import * as loremIpsum from 'lorem-ipsum'
 import { RoomNavigationEvent } from "./Events";
 import * as Prose from "./Prose";
@@ -30,7 +31,7 @@ export const enum CommandFailReason {
 }
 
 export class Game {
-    public inventory: IThingContainer = new ThingContainer()
+    public inventory: IItemContainer = new ItemContainer()
     /**
      * Player name
      */
@@ -42,10 +43,10 @@ export class Game {
 
 
     actOnCommand(command: Parser.ParsedCommand): CommandResult {
-        let obj: Thing
+        let obj: Item
         if (command.obj)
             obj = this.getThingFromContainerString(command.obj.obj, command.obj.container)
-        let subject: Thing
+        let subject: Item
         if (command.subject)
             subject = this.getThingFromContainerString(command.subject.obj, command.subject.container)
 
@@ -54,7 +55,7 @@ export class Game {
     }
 
 
-    findThingIn(thingName: string, container: IThingContainer): Thing {
+    findThingIn(thingName: string, container: IItemContainer): Item {
         // Currently only one-word things are supported
         let item = (container).find(e => {
             let names = (e.aliases).slice()
@@ -72,8 +73,8 @@ export class Game {
         return null
     }
 
-    getThingFromContainerString(obj: string, container: string): Thing {
-        let actual: Thing
+    getThingFromContainerString(obj: string, container: string): Item {
+        let actual: Item
         if (!obj || !obj)
             return
         if (container === 'ambient') {
