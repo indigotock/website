@@ -39,7 +39,6 @@ export class Game {
 
 
     actOnCommand(command: Parser.ParsedCommand): CommandResult {
-        console.log('acting')
         let obj: Item
         if (command.obj)
             obj = this.getThingFromContainerString(command.obj.obj, command.obj.container)
@@ -48,11 +47,10 @@ export class Game {
             subject = this.getThingFromContainerString(command.subject.obj, command.subject.container)
 
 
-        console.log(command, obj, subject)
 
+        // Special verbs
         if (command.verb == 'go') {
             let pWay = Way.fromString(command.way)
-            console.log('parsed way', pWay)
             if (pWay)
                 return this.navigate(pWay)
             else
@@ -60,13 +58,16 @@ export class Game {
                     failure: true,
                     output: 'Which direction should I go?'
                 }
+        } else if (command.verb == 'look') {
+            return this.currentRoom.examine()
+        } else if (command.verb === 'help') {
+            return { output: 'Examine your surroundings closely.' }
         }
 
         if (obj) {
-            let func = obj.actions[command.verb] || obj[command.verb]
-
+            let func: ItemAction = obj.actions[command.verb] || obj[command.verb]
             if (func)
-                func
+               return func(obj, subject)
         }
 
 
@@ -156,7 +157,6 @@ export class Game {
             timedEnteredNextRoom: this.roomVisitCount.get(this.currentRoom)
         }
         this.currentRoom = room
-        console.log(this.currentRoom)
         return this.currentRoom.enter(navEvent)
     }
 

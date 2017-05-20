@@ -40,6 +40,10 @@ export class StandardHTMLGameInterface extends GameInterface {
             this.input.value = ''
             if (Util.isStringEmpty(str))
                 return
+            if (str === 'clear' || str === 'cls') {
+                this.main.innerHTML = ''
+                return
+            }
             this.putInput(str)
             let com = Parser.parse(str)
             let result = this.game.actOnCommand(com)

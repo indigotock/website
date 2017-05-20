@@ -1,19 +1,14 @@
 import * as Ev from '../../Events';
 import * as uuid from 'uuid';
 import Room, { Link } from '../Room';
-import Way from '../../Way';
 import { CommandResult } from '../../Command';
-import Item, { ItemContainer } from '../../items/Item';
+import { ItemContainer } from '../../items/Item';
+import Way from '../../Way';
 
 
+let rm = new (class Hallway extends Room {
 
-let rm = new (class Garden extends Room {
-    enter(ev: Ev.RoomNavigationEvent): CommandResult {
-        return {
-            output: 'entered garden'
-        }
-    }
-})('Garden', [Item.getItemFromDb('front_door_key')])
+})('Kitchen')
 
 // export default class Room {
 //     public things: IItemContainer = new ItemContainer()
@@ -32,11 +27,11 @@ let rm = new (class Garden extends Room {
 //         return { output: '' }
 //     }
 
-//     enter(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
-//     leave(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
+//     enter(ev: Ev.RoomNavigationEvent): CommandResult { return }
+//     leave(ev: Ev.RoomNavigationEvent): CommandResult { return }
 // }
 
-export let links: Link[] = [{ room1: rm.name, room2: 'Hallway', way: Way.South }]
+export let links = [{ room1: 'Kitchen', room2: 'Hallway', way: Way.West }]
 
 
 export default rm

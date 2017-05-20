@@ -16,7 +16,6 @@ module Util {
     }
 
     export function toTextualList(input: string[]): string {
-        console.log('list size is', input.length)
         if (input.length === 0) return
         if (input.length === 1) return input[0]
 

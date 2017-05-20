@@ -44,7 +44,6 @@ export class ItemContainer {
 
         let itemnames = []
         this.forEach(e => {
-            console.log('x')
             let n = e.name
             itemnames.push(e.withIndefiniteArticle)
         })
@@ -55,6 +54,9 @@ export class ItemContainer {
 }
 
 class Item {
+    public static getItemFromDb(name: string) {
+        return require(`./db/${name}.ts`).default
+    }
     public readonly identifier: string
     aliases: string[] = []
     container: ItemContainer | Room
@@ -66,11 +68,12 @@ class Item {
 
     constructor(
         public readonly name: string,
-        isContainer: boolean = false,
+        items: Item[] = [],
         public readonly fullName: string = name) {
         this.identifier = uuid.v4()
-        if (isContainer) {
+        if (items) {
             this.containedItems = new ItemContainer()
+            this.containedItems.add(items)
         }
     }
 

@@ -10,7 +10,6 @@ export default class Way {
     public static fromString(inp: string): Way {
         if (!inp)
             return
-        console.log('parsing way', inp)
         inp = inp.trim().toLowerCase()
         return Way.stringMap.get(inp)
     }

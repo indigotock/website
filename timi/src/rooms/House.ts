@@ -1,7 +1,7 @@
 import Way from '../Way';
 import Room, { Link } from './Room';
 
-let roomNames = ['Garden', 'Hallway']
+let roomNames = ['Garden', 'Hallway', 'Kitchen']
 let rooms = []
 let nameIdMap = {}
 let links: Link[] = []
@@ -15,9 +15,5 @@ roomNames.forEach(name => {
     if (imported.links)
         links = links.concat(imported.links)
 });
-
-
-
-console.log('all rooms = ', rooms, links)
 
 export default { rooms, links, nameIdMap }

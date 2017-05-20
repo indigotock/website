@@ -1,19 +1,13 @@
-import * as Ev from '../../Events';
-import * as uuid from 'uuid';
-import Room, { Link } from '../Room';
-import Way from '../../Way';
-import { CommandResult } from '../../Command';
-import Item, { ItemContainer } from '../../items/Item';
+import Item from '../Item'
 
 
-
-let rm = new (class Garden extends Room {
-    enter(ev: Ev.RoomNavigationEvent): CommandResult {
-        return {
-            output: 'entered garden'
+let rm = new (class FrontDoorKey extends Item {
+    actions = {
+        look(i, i2) {
+            return { output: 'THe key is pretty.' }
         }
     }
-})('Garden', [Item.getItemFromDb('front_door_key')])
+})('Key')
 
 // export default class Room {
 //     public things: IItemContainer = new ItemContainer()
@@ -36,7 +30,6 @@ let rm = new (class Garden extends Room {
 //     leave(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
 // }
 
-export let links: Link[] = [{ room1: rm.name, room2: 'Hallway', way: Way.South }]
 
 
 export default rm

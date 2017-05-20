@@ -2,7 +2,7 @@ import * as Ev from '../Events';
 import * as uuid from 'uuid';
 import Way from '../Way';
 import { CommandResult } from '../Command';
-import { ItemContainer } from '../items/Item';
+import Item, { ItemContainer } from '../items/Item';
 
 
 export interface Link {
@@ -17,15 +17,14 @@ export default class Room {
 
     constructor(
         public readonly name: string,
+        items: Item[] = [],
         public readonly fullName: string = name) {
         this.identifier = uuid.v4()
+        this.things.add(items)
     }
-    /**
-     * Unique identifier for this room
-     */
 
     examine(): CommandResult {
-        return { output: '' }
+        return { output: `The ${this.name} is empty.` }
     }
 
     enter(ev: Ev.RoomNavigationEvent): CommandResult { return { output: 'You enter ' + this.fullName + '.' } }

@@ -31,7 +31,6 @@ export class GameMap {
     constructor() {
         this.addRoom(House.rooms)
         House.links.forEach(e => {
-            console.log('link:', e)
             let r1i = House.nameIdMap[e.room1]
             let r2i = House.nameIdMap[e.room2]
             this.linkRoomsById(r1i, r2i, e.way)
@@ -75,7 +74,6 @@ export class GameMap {
         availableBackwards: boolean | (() => boolean) = available) {
         let r1 = this.map.node(r1i)
         let r2 = this.map.node(r2i)
-        console.log('linking', r1, r2, direction)
         return this.linkRooms(r1, r2, direction)
     }
 
