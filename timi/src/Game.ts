@@ -54,54 +54,8 @@ export class Game {
         let subject:Thing
         if(command.subject)
             subject = this.getThingFromContainerString(command.subject.obj, command.subject.container)
-        // These commands require no things
-        switch (command.verb) {
-            case null:
-                this.failCommand(CommandFailReason.UnknownVerb, command.obj.obj, command.verb)
-                return;
-            case 'look':
-                this.lookAtRoom()
-                return;
-            case 'help':
-                this.putText('Yeah, I need help too.')
-                return;
-        }
-
-        // Special case for commands taking a way
-        if (command.verb === 'go') {
-            this.navigate(command.way)
-            return
-        }
-
-        // These commands require a valid thing
-        if (!obj)
-            return this.failCommand(CommandFailReason.UnknownThing, command.obj.obj)
-        switch (command.verb) {
-            case 'examine':
-                this.lookAt(obj)
-                return;
-            case 'open':
-                this.openThing(obj)
-                return;
-            case 'move':
-                this.moveThing(obj)
-                return;
-            case 'close':
-                this.closeThing(obj)
-                return;
-            case 'take':
-                this.takeThing(obj)
-                return;
-        }
-
-        if(!subject)
-            return this.failCommand(CommandFailReason.UnknownThing, command.subject.obj)
-
-        switch(command.verb){
-            case 'place':
-                this.putThingInOther(obj, subject)
-            return;
-        }
+        
+        //todo: replace old crappy switch with ref to item action array
 
     }
 
@@ -147,112 +101,7 @@ export class Game {
         return actual
     }
 
-    lookAt(item: Thing, fallback?: Thing) {
-        if (!item)
-            item = fallback
-        if (item.onLookAt) {
-            this.putText(item.onLookAt());
-        }
-    }
-
-    lookAtRoom() {
-        this.putText(this.currentRoom.onLookAt());
-    }
-    moveThing(item: Thing) {
-        console.log('moving', item)
-        let moveresult = item.onMove(this.currentRoom)
-        if (moveresult) {
-            this.putText(moveresult)
-        } else {
-            this.failCommand(CommandFailReason.CannotMove, item.name)
-        }
-    }
-    closeThing(item: Thing) {
-        let result = item.onClose()
-        if (result) {
-            this.putText(result)
-        } else {
-            this.failCommand(CommandFailReason.CannotClose, item.name)
-        }
-    }
-    openThing(item: Thing) {
-        let result = item.onOpen()
-        if (result) {
-            this.putText(result)
-        } else {
-            this.failCommand(CommandFailReason.CannotOpen, item.name)
-        }
-    }
-    putThingInOther(thing: Thing, other:Thing) {
-        if(!(other instanceof ThingContainer))
-            this.failCommand(CommandFailReason.CannotPutInThing, thing.name)
-        if(thing.container==<ThingContainer>other){
-            this.failCommand(CommandFailReason.CannotPutInSelf, thing.name)
-        }
-        let result = thing.onPutInto(other)
-        if (result ) {
-            this.putText(result)
-            thing.moveToContainer(other)
-        } else {
-            this.failCommand(CommandFailReason.CannotPutInThing, thing.name)
-        }
-    }
-    takeThing(item: Thing) {
-        let container = item.container
-        if(container===this.inventory){
-            this.failCommand(CommandFailReason.AlreadyTakenItem, item.name)
-        }
-        if (item.canPickUp) {
-            this.putText(item.onTake())
-            item.moveToContainer(this.inventory)
-        } else {
-            this.failCommand(CommandFailReason.CannotTake, item.name, 'take')
-        }
-    }
-    useThing(item: Thing, item2: Thing) {
-        if (item.onUse) {
-            if (item.useRequiresSubject && !item2) {
-                this.failCommand(CommandFailReason.CannotUseItemAlone, item.name, 'use')
-            } else {
-
-                this.putText(item.onUse(item2))
-            }
-        } else {
-            this.failCommand(CommandFailReason.CannotTake, item.name, 'use')
-        }
-    }
-
-    inputHistory: string[] = ['']
-    historyIndex = 0;
     constructor() {
-        const that = this
-        let input = document.getElementById('input') as HTMLInputElement
-        let keyevent = (ev: KeyboardEvent) => {
-            let str = input.value.toLowerCase().trim()
-            if (ev.code == 'Enter') {
-                if (Util.isStringEmpty(str))
-                    return
-                this.putInput(str)
-                let com = Parser.parse(str, this)
-                input.value = ''
-                this.actOnCommand(com)
-                let m = document.getElementById('main')
-                m.scrollTop = m.scrollHeight
-                let mostRecent = this.inputHistory[0]
-                if (mostRecent !== str)
-                    this.inputHistory.unshift(str)
-                this.historyIndex = -1
-                this.update()
-
-            } else if (ev.code == 'ArrowUp') {
-                this.historyIndex = Math.min(this.historyIndex + 1, this.inputHistory.length - 2)
-                input.value = this.inputHistory[this.historyIndex] || ''
-            } else if (ev.code == 'ArrowDown') {
-                this.historyIndex = Math.max(this.historyIndex - 1, -1)
-                input.value = this.inputHistory[this.historyIndex] || ''
-            }
-        }
-        input.addEventListener('keyup', keyevent)
 
         // Stats['health'].createMeter(document.getElementById('meters'))
         // Stats['energy'].createMeter(document.getElementById('meters'))
