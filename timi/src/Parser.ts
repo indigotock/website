@@ -21,7 +21,7 @@ function isObject(obj) {
 
 
 
-export type Verb = "go" | "take" | "move" | "look" | "touch" | "help" | "examine" | "use" | "open" | "close" | "examine"|"place"
+export type Verb = "go" | "take" | "move" | "look" | "touch" | "help" | "examine" | "use" | "open" | "close" | "examine" | "place"
 
 export module Parser {
     export class ParsedCommand {
@@ -56,7 +56,7 @@ export module Parser {
         ret.way = Way.fromString(parsed['direction'] || null)
         return ret
     }
-    export function parse(input: string, game: Game): ParsedCommand {
+    export function parse(input: string): ParsedCommand {
         let parser = new Nearley.Parser(Grammar.ParserRules, Grammar.ParserStart)
         let result
         try {
@@ -65,7 +65,6 @@ export module Parser {
 
         } catch (e) {
             result = { verb: null }
-            // game.failCommand(CommandFailReason.UnknownVerb)
         }
         return parseCommand(result)
 
