@@ -1,0 +1,31 @@
+{
+  "name": "timi",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "graphlib": "^2.1.1",
+    "jquery": "^3.2.1",
+    "nearley": "^2.9.2",
+    "nearley-loader": "0.0.2",
+    "two.js": "^0.6.0",
+    "uuid": "^3.0.1"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --env development"
+  },
+  "devDependencies": {
+    "@types/graphlib": "^2.1.4",
+    "@types/lorem-ipsum": "^1.0.2",
+    "@types/uuid": "^2.0.29",
+    "css-loader": "^0.28.1",
+    "lorem-ipsum": "^1.0.4",
+    "node-sass": "^4.5.3",
+    "postcss-import": "^10.0.0",
+    "postcss-loader": "^2.0.5",
+    "sass-loader": "^6.0.5",
+    "style-loader": "^0.17.0",
+    "ts-loader": "^2.0.3",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
+  }
+}

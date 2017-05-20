@@ -1,0 +1,15 @@
+body {
+    font-size: 10pt;
+    background-color: black;
+    font-family: Courier New, Courier, monospace;
+    color: whitesmoke;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+hr {
+    border: none;
+    border-top: dashed 1px currentColor;
+}

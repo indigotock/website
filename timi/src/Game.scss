@@ -1,0 +1,97 @@
+#game {
+    display: flex;
+    width: 80ch;
+    height: 480px;
+    border: solid 2px whitesmoke;
+}
+
+#main {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 2ch;
+    bottom: 1rem;
+    p {
+        margin-top: 0;
+    }
+    h1 {
+        font-size: 14pt;
+        font-weight: bold;
+        text-decoration: none;
+    }
+}
+
+#controls {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    height: 1rem;
+    border-top: solid 2px currentColor;
+}
+
+#left {
+    position: relative;
+    width: 60ch;
+}
+
+#sidebar {
+    width: 30ch;
+    flex-direction: column;
+    border-left: solid 2px whitesmoke;
+    flex-grow: 1;
+    &>* {
+        border-top: solid 2px whitesmoke;
+        &:first-child {
+            border-top: none;
+        }
+    }
+}
+
+#map,
+#inventory {
+    max-height: 20ch;
+    ul {
+        list-style: none;
+        padding: 1ch;
+        margin: 0;
+        li {
+            text-indent: -1ch;
+            padding-left: 1ch;
+            padding-bottom: 1ch;
+        }
+    }
+}
+
+#inventory {
+    flex-grow: 1;
+}
+
+.padded {
+    padding: 1ch;
+}
+
+#meters {
+    padding: 1ch 1ch 0 1ch;
+}
+
+#input {
+    padding: 0;
+    background-color: black;
+    font-family: inherit;
+    font-size: inherit;
+    color: currentColor;
+    margin: 0;
+    width: calc(100% - 2ch); // height: 1em;
+    float: right;
+    border: none;
+    &:focus {
+        outline: none;
+    }
+}
+
+#prompt {
+    width: 2ch;
+}
