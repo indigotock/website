@@ -28,6 +28,6 @@ export default class Room {
         return { output: '' }
     }
 
-    enter(ev: Ev.RoomNavigationEvent): CommandResult { return }
-    leave(ev: Ev.RoomNavigationEvent): CommandResult { return }
+    enter(ev: Ev.RoomNavigationEvent): CommandResult { return { output: 'You enter ' + this.fullName + '.' } }
+    leave(ev: Ev.RoomNavigationEvent): CommandResult { return { output: '' } }
 }

@@ -49,6 +49,18 @@ export class Game {
 
 
         console.log(command, obj, subject)
+
+        if (command.verb == 'go') {
+            let pWay = Way.fromString(command.way)
+            console.log('parsed way', pWay)
+            if (pWay)
+                return this.navigate(pWay)
+            else
+                return {
+                    failure: true,
+                    output: 'Which direction should I go?'
+                }
+        }
         //todo: replace old crappy switch with ref to item action array
         return null
     }
@@ -112,11 +124,17 @@ export class Game {
         let dir = this.currentMap.getRoomNavigations(this.currentRoom)
             .find(e => e.way === way)
         if (dir === undefined) {
-            // this.putText(`I cannot go ${way.lowercase} from here.`)
-            return;
+            // this.putText(``)
+            return {
+                output: `I cannot go ${way.lowercase} from here.`,
+                failure: true
+            };
         }
         if (this.isNavigationAvailable(dir)) {
-            return this.enterRoom(dir.to)
+            let res = this.enterRoom(dir.to)
+            if (!res.outputHeading)
+                res.outputHeading = dir.to.fullName
+            return res
         }
     }
 

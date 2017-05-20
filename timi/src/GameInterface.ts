@@ -65,6 +65,7 @@ export class StandardHTMLGameInterface extends GameInterface {
         element.classList.add('inputQuote')
         element.innerText = '> ' + text
         this.main.appendChild(element)
+        this.main.innerHTML += '</br>'
     }
 
     private updateNavigator() {
@@ -102,6 +103,19 @@ export class StandardHTMLGameInterface extends GameInterface {
     }
 
     commandCompleted(result: CommandResult) {
+        let outputHTML = ''
+        if (result.failure) {
+            outputHTML += Util.toParagraphs(result.output)
+            this.main.innerHTML += outputHTML
+        } else {
+            if (result.outputHeading)
+                outputHTML += `<h1>${result.outputHeading}</h1>`
+            if (result.outputSubheading)
+                outputHTML += `<h2>${result.outputSubheading}</h2>`
+
+            outputHTML += Util.toParagraphs(result.output)
+            this.main.innerHTML += outputHTML
+        }
 
         this.updateInventory()
         this.updateNavigator()

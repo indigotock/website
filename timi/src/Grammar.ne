@@ -35,7 +35,7 @@ VERB_SIMPLE ->  (VERB_MOVE | VERB_EXAMINE | VERB_TOUCH | "open" | "close"){%id%}
 VERB_SINGLE ->  ("help"|"look") {%id%}
 VERB_USE -> "use" {%id%}
 
-DIRECTION -> ("north"|"south"|"west"|"east"|"n"|"s"|"w"|"e") {%function(d){ return d[0][0]; }%}
+DIRECTION -> _object {%id%}  #("north"|"south"|"west"|"east"|"n"|"s"|"w"|"e"|[a-zA-Z]:+) {%function(d){ return d[0][0]; }%}
 
 PUT_PREPOSITION -> ("inside"|"in"|"into"|"in to"|"in side"){%id%}
 CONTAINMENT_PREPOSITION -> ("inside"|"in"|"in side"|"from"|"of"){%id%}

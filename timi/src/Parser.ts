@@ -29,7 +29,7 @@ export module Parser {
         // preposition?: string
         obj?: ParsedObject
         subject?: ParsedObject
-        way?: Way
+        way?: string
     }
     export class ParsedObject {
         obj: string
@@ -53,7 +53,7 @@ export module Parser {
         ret.verb = parsed['verb'] || null
         ret.obj = parseObject(parsed['obj'])
         ret.subject = parseObject(parsed['subject'])
-        ret.way = Way.fromString(parsed['direction'] || null)
+        ret.way = parsed['direction']
         return ret
     }
     export function parse(input: string): ParsedCommand {

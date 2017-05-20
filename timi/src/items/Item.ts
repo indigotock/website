@@ -24,7 +24,7 @@ export abstract class IItemContainer {
         this.forEach(e => {
             console.log('x')
             let n = e.name
-            itemnames.push(`${IndefiniteArticle(e.name)} ${e.name}`)
+            itemnames.push(e.withIndefiniteArticle)
         })
         let listSentence = 'it contains ' + (Util.toTextualList(itemnames) || "nothing")
 

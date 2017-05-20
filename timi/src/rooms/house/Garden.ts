@@ -8,7 +8,11 @@ import { IItemContainer, ItemContainer } from '../../items/Item';
 
 
 let rm = new (class Garden extends Room {
-
+    enter(ev: Ev.RoomNavigationEvent): CommandResult {
+        return {
+            output: 'entered garden'
+        }
+    }
 })('Garden')
 
 // export default class Room {
@@ -28,8 +32,8 @@ let rm = new (class Garden extends Room {
 //         return { output: '' }
 //     }
 
-//     enter(ev: Ev.RoomNavigationEvent): CommandResult { return }
-//     leave(ev: Ev.RoomNavigationEvent): CommandResult { return }
+//     enter(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
+//     leave(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
 // }
 
 export let links: Link[] = [{ room1: rm.name, room2: 'Hallway', way: Way.South }]
