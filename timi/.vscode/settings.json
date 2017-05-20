@@ -9,5 +9,6 @@
         "**/*.js": {
             "when": "$(basename).ts"
         }
-    }
+    },
+    "editor.formatOnSave": true
 }
