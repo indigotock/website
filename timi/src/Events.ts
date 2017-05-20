@@ -1,6 +1,6 @@
-export interface EnterRoomEventHandler {
-    timesEnteredThisRoom: number
-}
-export interface LeaveRoomEventHandler {
-    timesLeavingThisRoom: number
+import Room from './rooms/Room'
+
+export interface RoomNavigationEvent {
+    from: Room,
+    to: Room
 }

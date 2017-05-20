@@ -3,17 +3,15 @@ import Stats from './Stats'
 import { GameMap, Navigation } from './World'
 
 import Way from './Way'
-import { Thing, IThingContainer, ThingContainer } from './ItemDB'
 import './styles/Game.scss'
-import { Rooms, Room } from './Rooms'
+import Room from './rooms/Room'
 import * as loremIpsum from 'lorem-ipsum'
-import { EnterRoomEventHandler } from "./Events";
+import { RoomNavigationEvent } from "./Events";
 import * as Prose from "./Prose";
 import Parser from "./Parser";
 
 import Util from './Util'
-
-let gameMap = new GameMap()
+import { CommandResult } from "./Command";
 
 
 export const enum CommandFailReason {
@@ -37,12 +35,13 @@ export class Game {
      * Player name
      */
     public Player: string;
-    private currentRoom: Room;
+    currentRoom: Room;
+    currentMap = new GameMap()
 
     private roomVisitCount: Map<Room, number> = new Map()
 
 
-    actOnCommand(command: Parser.ParsedCommand) {
+    actOnCommand(command: Parser.ParsedCommand): CommandResult {
         let obj: Thing
         if (command.obj)
             obj = this.getThingFromContainerString(command.obj.obj, command.obj.container)
@@ -51,7 +50,7 @@ export class Game {
             subject = this.getThingFromContainerString(command.subject.obj, command.subject.container)
 
         //todo: replace old crappy switch with ref to item action array
-
+        return null
     }
 
 
@@ -101,7 +100,7 @@ export class Game {
         // Stats['health'].createMeter(document.getElementById('meters'))
         // Stats['energy'].createMeter(document.getElementById('meters'))
 
-        this.enterRoom(gameMap.defaultRoom)
+        this.enterRoom(this.currentMap.defaultRoom)
 
     }
 
@@ -110,7 +109,7 @@ export class Game {
             // this.failCommand(CommandFailReason.UnknownDirection, way.lowercase)
             return
         }
-        let dir = gameMap.getRoomNavigations(this.currentRoom)
+        let dir = this.currentMap.getRoomNavigations(this.currentRoom)
             .find(e => e.way === way)
         if (dir === undefined) {
             // this.putText(`I cannot go ${way.lowercase} from here.`)

@@ -1,8 +1,8 @@
 import * as uuid from 'uuid'
 import * as Ev from "../Events";
+import { CommandResult } from "../Command";
 
-
-abstract class Room {
+export class Room {
     constructor(
         public readonly name: string,
         public readonly fullName: string = name) {
@@ -13,7 +13,9 @@ abstract class Room {
      */
     public readonly identifier: string
 
-    abstract examine()
+    examine(): CommandResult {
+        return { output: '' }
+    }
 
     enter(ev: Ev.RoomNavigationEvent) { }
     leave(ev: Ev.RoomNavigationEvent) { }

@@ -1,7 +1,7 @@
 import { Graph, Edge, GraphOptions, Path } from 'graphlib'
 import * as uuid from 'uuid'
-import { EnterRoomEventHandler } from "./Events";
-import {Room,Rooms} from './Rooms'
+import { RoomNavigationEvent } from "./Events";
+import Room from './rooms/Room'
 import { Game } from "./Game";
 import Way from './Way'
 
@@ -22,20 +22,20 @@ export interface Navigation {
 }
 
 export class GameMap {
-    constructor(){
-        this.addRoom(Rooms.Garden)
+    constructor() {
+        // this.addRoom(Rooms.Garden)
     }
-    _defaultRoom:Room
-    get defaultRoom():Room{
-        if(this._defaultRoom)
+    _defaultRoom: Room
+    get defaultRoom(): Room {
+        if (this._defaultRoom)
             return this.defaultRoom
-        
+
         return this.map.node(this.map.nodes()[0])
     }
     map: Graph = new Graph({ directed: true, compound: false, multigraph: false })
 
     addRoom(room: Room) {
-        this.map.setNode(room.name, room)
+        this.map.setNode(room.identifier, room)
         return room;
     }
 
@@ -49,9 +49,9 @@ export class GameMap {
             available
         }
         let oppositeNav = OppositeNavigation(nav)
-        this.map.setEdge(r1.name, r2.name, nav)
-        this.map.setEdge(r2.name, r1.name, oppositeNav)
-        return this.map.edge(r1.name, r2.name)
+        this.map.setEdge(r1.identifier, r2.identifier, nav)
+        this.map.setEdge(r2.identifier, r1.identifier, oppositeNav)
+        return this.map.edge(r1.identifier, r2.identifier)
     }
 
     getNavigationForEdge(edge: Edge): Navigation {
@@ -60,7 +60,7 @@ export class GameMap {
 
     getRoomNavigations(room: Room): Navigation[] {
         let ret: Navigation[] = []
-        let edges = (this.map.outEdges(room.name) || [])
+        let edges = (this.map.outEdges(room.identifier) || [])
         edges.forEach(edge => {
             let nav = this.getNavigationForEdge(edge)
             ret.push(nav)

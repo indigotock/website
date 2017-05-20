@@ -1,7 +1,7 @@
 import { CommandResult } from "./Command";
 import Util from "./Util";
 import { Game } from "./Game";
-import { Parser } from "src/Parser";
+import { Parser } from "./Parser";
 
 export abstract class GameInterface {
     constructor(protected readonly game: Game) {
@@ -12,24 +12,24 @@ export abstract class GameInterface {
 export class StandardHTMLGameInterface extends GameInterface {
     private inputHistory: string[] = ['']
     private historyIndex: number = 0
+
     /**
      * Instantiates the standard interface
      * @param game The Game instance to attach to
      * @param input The HTML input element to accept input from 
-     * @param roomsList The HTML list element to decorate with adjacent room names
+     * @param navigation The HTML list element to decorate with adjacent room names
      * @param inventory The HTML list element to display inventory on
      * @param main The HTML block element to output main content to
      */
     constructor(
         game: Game,
         private readonly input: HTMLInputElement,
-        private readonly roomsList: HTMLUListElement,
+        private readonly navigation: HTMLUListElement,
         private readonly inventory: HTMLUListElement,
         private readonly main: HTMLElement,
     ) {
         super(game)
-        input.addEventListener('keyup', this.keyDownEvent)
-        input.addEventListener('keydown', this.keyUpEvent)
+        input.addEventListener('keydown', this.keyDownEvent)
     }
 
     private keyDownEvent(ev: KeyboardEvent) {
@@ -41,13 +41,12 @@ export class StandardHTMLGameInterface extends GameInterface {
             let com = Parser.parse(str)
             this.input.value = ''
             let result = this.game.actOnCommand(com)
-            let m = document.getElementById('main')
-            m.scrollTop = m.scrollHeight
             let mostRecent = this.inputHistory[0]
             if (mostRecent !== str)
                 this.inputHistory.unshift(str)
             this.historyIndex = -1
             this.commandCompleted(result)
+            this.main.scrollTop = this.main.scrollHeight
 
         } else if (ev.code == 'ArrowUp') {
             this.historyIndex = Math.min(this.historyIndex + 1, this.inputHistory.length - 2)
@@ -66,14 +65,9 @@ export class StandardHTMLGameInterface extends GameInterface {
         this.main.appendChild(element)
     }
 
-    private keyUpEvent(ev: KeyboardEvent) {
-
-    }
-
     private updateNavigator() {
-        let list = document.getElementById('map').getElementsByTagName('ul')[0]
-        while (list.hasChildNodes())
-            list.removeChild(list.lastChild)
+        while (this.navigation.hasChildNodes())
+            this.navigation.removeChild(this.navigation.lastChild)
         let rooms = this.game.currentMap.getRoomNavigations(this.game.currentRoom)
 
         rooms.forEach(navigation => {
@@ -81,26 +75,25 @@ export class StandardHTMLGameInterface extends GameInterface {
             let element = document.createElement('li')
             element.innerText = `${navigation.way.value}:\n${roomname}`
             if (this.game.isNavigationAvailable(navigation))
-                list.appendChild(element)
+                this.navigation.appendChild(element)
         })
     }
 
     private updateInventory() {
-        let list = document.getElementById('inventory').getElementsByTagName('ul')[0]
-        while (list.hasChildNodes())
-            list.removeChild(list.lastChild)
+        while (this.inventory.hasChildNodes())
+            this.inventory.removeChild(this.inventory.lastChild)
         let items = this.game.inventory
 
         items.forEach(item => {
             let roomname = "???"
             let element = document.createElement('li')
             element.innerText = `${item.name}`
-            list.appendChild(element)
+            this.inventory.appendChild(element)
         })
     }
 
     private rule() {
-        document.getElementById('main').innerHTML +=
+        this.main.innerHTML +=
             `</br><hr/>`
     }
 
