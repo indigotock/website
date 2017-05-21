@@ -4,6 +4,10 @@
     height: 60ch;
     border: solid 2px whitesmoke;
     margin: 0 auto;
+    user-select: none;
+    * {
+        cursor: default;
+    }
 }
 
 #main {
@@ -80,7 +84,7 @@
 
 #input {
     padding: 0;
-    background-color: black;
+    background-color: transparent;
     font-family: inherit;
     font-size: inherit;
     color: currentColor;
@@ -89,6 +93,7 @@
     width: calc(100% - 2ch); // height: 1em;
     float: right;
     border: none;
+    cursor: text;
     &:focus {
         outline: none;
     }

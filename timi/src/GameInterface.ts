@@ -61,17 +61,18 @@ export class StandardHTMLGameInterface extends GameInterface {
             this.commandCompleted(result)
             this.main.scrollTop = this.main.scrollHeight
             return
-        } else if (k == 'ArrowUp') {
+        } else if (k == 'ArrowUp' || k == 'Up') {
             this.historyIndex = Math.min(this.historyIndex + 1, this.inputHistory.length - 2)
             this.input.value = this.inputHistory[this.historyIndex] || ''
             this.input.selectionEnd = this.input.value.length - 1
             this.input.selectionStart = this.input.value.length
             ev.preventDefault()
-        } else if (k == 'ArrowDown') {
+        } else if (k == 'ArrowDown' || k == 'Down') {
             this.historyIndex = Math.max(this.historyIndex - 1, -1)
             this.input.value = this.inputHistory[this.historyIndex] || ''
             this.input.selectionEnd = this.input.value.length - 1
             this.input.selectionStart = this.input.value.length - 1
+            ev.preventDefault()
         }
     }
 
