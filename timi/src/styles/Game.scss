@@ -1,8 +1,9 @@
 #game {
     display: flex;
     width: 80ch;
-    height: 480px;
+    height: 60ch;
     border: solid 2px whitesmoke;
+    margin: 0 auto;
 }
 
 #main {
@@ -13,12 +14,12 @@
     top: 0;
     right: 0;
     padding: 2ch;
-    bottom: 1rem;
+    bottom: 1em;
     p {
         margin-top: 0;
     }
     h1 {
-        font-size: 14pt;
+        font-size: 1.4em;
         font-weight: bold;
         text-decoration: none;
     }
@@ -28,7 +29,7 @@
     width: 100%;
     position: absolute;
     bottom: 0;
-    height: 1rem;
+    height: 1em;
     border-top: solid 2px currentColor;
 }
 
@@ -83,6 +84,7 @@
     font-family: inherit;
     font-size: inherit;
     color: currentColor;
+    height: 1em;
     margin: 0;
     width: calc(100% - 2ch); // height: 1em;
     float: right;
