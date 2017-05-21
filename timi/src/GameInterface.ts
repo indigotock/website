@@ -106,10 +106,10 @@ export class StandardHTMLGameInterface extends GameInterface {
             this.inventory.removeChild(this.inventory.lastChild)
         let items = this.game.inventory
 
-        items.forEach(item => {
+        items.containedItems.forEach(item => {
             let roomname = "???"
             let element = document.createElement('li')
-            element.innerText = `${item.name}`
+            element.innerText = `${item.fullName}`
             this.inventory.appendChild(element)
         })
     }

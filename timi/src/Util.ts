@@ -10,9 +10,13 @@ module Util {
 
     export function toSentenceCase(input: string): string {
         var rg = /(^\w{1}|\.\s*\w{1})/gi;
-        return input.replace(rg, function (char) {
+        let ret = input.replace(rg, function (char) {
             return char.toUpperCase();
         });
+
+        if (!ret.match(/(\?.!)$/))
+            ret += '.'
+        return ret
     }
 
     export function toTextualList(input: string[]): string {

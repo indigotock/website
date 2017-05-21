@@ -31,14 +31,38 @@ export const enum CommandFailReason {
 }
 
 export class Game {
-    public inventory: ItemContainer = new ItemContainer()
+    public inventory: GameObject = new (class Inventory extends GameObject {
+        isOpen = true
+
+    })('inventory', [GameObject.getItemFromDb('keys')], 'backpack'['bag'])
     currentRoom: Room;
     currentMap = new GameMap()
     globalActions: { [action: string]: ItemAction } = {
-        ['take']: function (other) {
+        take: function (other, game) {
+            console.log('taking', this, other, game)
             if (!this.takeable)
                 return { output: 'You can\' take that.', failure: true }
-            return { output: 'You take the ' + this.name.toLowerCase() + '.' }
+
+            if (this.container === game.inventory)
+                return { output: 'You already have the ' + this.name, failure: true }
+            let ft = game.currentRoom == this.container ? '' : ' from the ' + this.container.name
+            this.moveToContainer(game.inventory)
+            return { output: 'You take the ' + this.name.toLowerCase() + ft + '.' }
+        },
+        place: function (other, game) {
+            console.log('putting', this, other, game)
+            if (!this.takeable)
+                return { output: 'You can\' do that.', failure: true }
+
+            if (!other.isContainer)
+                return { output: `You can't put anything in the ${other.name}`, failure: true }
+
+            if (!other.isOpen) {
+                return { output: `The ${other.name} is closed.`, failure: true }
+            }
+
+            this.moveToContainer(other)
+            return { output: `You put the ${this.name} in the ${other.name}.` }
         }
     }
 
@@ -74,12 +98,12 @@ export class Game {
         if (obj) {
             let func: ItemAction = this.globalActions[command.verb] || obj.actions[command.verb] || obj[command.verb]
             if (func)
-                ret = func.call(obj, subject)
+                ret = func.call(obj, subject, this)
         } else if (!command.obj) {
             obj = this.currentRoom
             let func: ItemAction = this.globalActions[command.verb] || obj.actions[command.verb] || obj[command.verb]
             if (func)
-                ret = func.call(obj, subject)
+                ret = func.call(obj, subject, this)
         }
 
         //todo: replace old crappy switch with ref to item action array
@@ -91,21 +115,26 @@ export class Game {
     }
 
 
-    findThingIn(thingName: string, container: ItemContainer): GameObject {
+    findThingIn(thingName: string, container: GameObject): GameObject {
         // Currently only one-word things are supported
         if (!container)
             return null
+        if (!container.isContainer)
+            return null
+        if (!container.isOpen)
+            return null
         //Try to match room
         let roomNames = this.currentRoom.aliases.slice()
-        roomNames.push(this.currentRoom.name)
-        roomNames.push(this.currentRoom.fullName)
+        roomNames.push(this.currentRoom.name.toLowerCase())
+        roomNames.push(this.currentRoom.fullName.toLowerCase())
         if (roomNames.indexOf(thingName) !== -1)
             return this.currentRoom
 
-        let item = container.find(e => {
+        let item = container.containedItems.find(e => {
             let names = (e.aliases).slice()
+            names.push(e.fullName)
             names.push(e.name)
-            names = names.map(e => e.toLocaleLowerCase())
+            names = names.map(e => e.toLowerCase())
             return names.indexOf(thingName) !== -1
         })
         if (item) {
@@ -120,16 +149,19 @@ export class Game {
         if (!obj)
             return
         if (container === 'ambient') {
-            let rt = this.findThingIn(obj, this.currentRoom.containedItems)
+            let potentialThings = this.currentRoom.containedItems.array().map(e =>
+                this.findThingIn(obj, e)).filter(e => e != null) || []
+            let rt = this.findThingIn(obj, this.currentRoom)
             let it = this.findThingIn(obj, this.inventory)
-            actual = rt || it
+            actual = potentialThings[0] || rt || it
+            console.log('matched', obj, potentialThings, rt, it, actual)
         } else if (container === 'room') {
-            actual = this.findThingIn(obj, this.currentRoom.containedItems)
+            actual = this.findThingIn(obj, this.currentRoom)
         } else if (container === 'inventory') {
             actual = this.findThingIn(obj, this.inventory)
         } else {
             let con = this.getThingFromContainerString(container, 'ambient')
-            actual = this.findThingIn(obj, con.containedItems)
+            actual = this.findThingIn(obj, con)
         }
 
         if (!actual) {

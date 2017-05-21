@@ -4,8 +4,9 @@ import { CommandResult } from "../Command";
 import Util from "../Util";
 import Room from "../rooms/Room";
 import Way from "../Way";
+import { Game } from "../Game";
 
-export type ItemAction = (this: GameObject, other?: GameObject) => CommandResult
+export type ItemAction = (this: GameObject, other?: GameObject, game?: Game) => CommandResult
 
 export class ItemContainer {
     private items: GameObject[] = []
@@ -65,12 +66,24 @@ class GameObject {
     }
     public readonly identifier: string
     aliases: string[] = []
-    container: ItemContainer | Room
+    container: GameObject
     takeable = false
     readonly containedItems: ItemContainer
+    isOpen = false
 
     get isContainer() {
-        return this.containedItems
+        return !!this.containedItems
+    }
+
+    consume() {
+        this.container.containedItems.remove(this)
+        this.container = null
+    }
+
+    moveToContainer(obj: GameObject) {
+        this.container.containedItems.remove(this)
+        this.container = obj
+        this.container.containedItems.add(this)
     }
 
     constructor(
@@ -86,19 +99,34 @@ class GameObject {
     }
 
     get withIndefiniteArticle() {
-        return `${this.indefiniteArticle} ${this.name}`
+        return `${this.indefiniteArticle} ${this.fullName}`
     }
     get indefiniteArticle() {
-        return IndefiniteArticle(this.name)
+        return IndefiniteArticle(this.fullName)
     }
     examine(): CommandResult {
-        if (this.isContainer)
-            return { output: 'It contains ' + this.containedItems.containedItemsStringList + '.' }
+        let bc = this.brief ? this.brief + '\n' : ''
+        if (this.isContainer && this.isOpen)
+            return { output: bc + 'You can see ' + this.containedItems.containedItemsStringList + '.' }
         else
-            return { output: this.withIndefiniteArticle + '.' }
+            return { output: bc }
     }
     get textualListEntry() {
         return this.withIndefiniteArticle
+    }
+
+    open(o): CommandResult {
+        if (this.isOpen)
+            return { output: 'It is already open.', failure: true }
+        this.isOpen = true
+        return { output: 'You open the ' + this.name + '.' }
+    }
+
+    close(o) {
+        if (!this.isOpen)
+            return { output: 'It is already closed.', failure: true }
+        this.isOpen = false
+        return { output: 'You close the ' + this.name + '.' }
     }
 
     actions: { [action: string]: ItemAction } = {}
