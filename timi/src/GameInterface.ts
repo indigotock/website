@@ -39,8 +39,9 @@ export class StandardHTMLGameInterface extends GameInterface {
     }
 
     private keyDownEvent(ev: KeyboardEvent) {
+        let k = ev.key || ev.code
         let str = this.input.value.trim().toLowerCase()
-        if (ev.code == 'Enter' || ev.code == 'NumpadEnter') {
+        if (k == 'Enter' || k == 'NumpadEnter') {
             this.input.value = ''
             if (Util.isStringEmpty(str))
                 return
@@ -60,13 +61,13 @@ export class StandardHTMLGameInterface extends GameInterface {
             this.commandCompleted(result)
             this.main.scrollTop = this.main.scrollHeight
             return
-        } else if (ev.code == 'ArrowUp') {
+        } else if (k == 'ArrowUp') {
             this.historyIndex = Math.min(this.historyIndex + 1, this.inputHistory.length - 2)
             this.input.value = this.inputHistory[this.historyIndex] || ''
             this.input.selectionEnd = this.input.value.length - 1
             this.input.selectionStart = this.input.value.length
             ev.preventDefault()
-        } else if (ev.code == 'ArrowDown') {
+        } else if (k == 'ArrowDown') {
             this.historyIndex = Math.max(this.historyIndex - 1, -1)
             this.input.value = this.inputHistory[this.historyIndex] || ''
             this.input.selectionEnd = this.input.value.length - 1
