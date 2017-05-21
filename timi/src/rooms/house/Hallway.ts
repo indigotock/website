@@ -6,7 +6,6 @@ import { ItemContainer } from '../../items/Item';
 
 
 let rm = new (class Hallway extends Room {
-
 })('Hallway')
 
 // export default class Room {

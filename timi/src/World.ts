@@ -17,7 +17,9 @@ export function OppositeNavigation(nav: Navigation): Navigation {
         from: nav.to,
         to: nav.from,
         way: nav.way.opposite,
-        available: nav.available
+        available: nav.available,
+        desc: nav.reverseDesc,
+        reverseDesc: nav.desc
     }
 }
 export interface Navigation {
@@ -25,6 +27,8 @@ export interface Navigation {
     way: Way
     to: Room
     available: boolean | ((n: Navigation, game: Game) => boolean)
+    desc: string
+    reverseDesc: string
 }
 
 export class GameMap {
@@ -33,7 +37,7 @@ export class GameMap {
         House.links.forEach(e => {
             let r1i = House.nameIdMap[e.room1]
             let r2i = House.nameIdMap[e.room2]
-            this.linkRoomsById(r1i, r2i, e.way)
+            this.linkRoomsById(r1i, r2i, e.way, e.description, e.reverseDescription)
         })
     }
     _defaultRoom: Room
@@ -50,18 +54,25 @@ export class GameMap {
             room.forEach(e => {
                 this.addRoom(e)
             })
-        } else
+        } else {
             this.map.setNode(room.identifier, room)
+            room.map = this
+        }
+
+
     }
 
     linkRooms(r1: Room, r2: Room, direction: Way,
+        desc: string, rDesc: string,
         available: boolean | (() => boolean) = true,
         availableBackwards: boolean | (() => boolean) = available) {
         let nav: Navigation = {
             from: r1,
             to: r2,
             way: direction,
-            available
+            available,
+            desc: desc,
+            reverseDesc: rDesc
         }
         let oppositeNav = OppositeNavigation(nav)
         this.map.setEdge(r1.identifier, r2.identifier, nav)
@@ -70,11 +81,12 @@ export class GameMap {
     }
 
     linkRoomsById(r1i: string, r2i: string, direction: Way,
+        desc: string, rDesc: string,
         available: boolean | (() => boolean) = true,
         availableBackwards: boolean | (() => boolean) = available) {
         let r1 = this.map.node(r1i)
         let r2 = this.map.node(r2i)
-        return this.linkRooms(r1, r2, direction)
+        return this.linkRooms(r1, r2, direction, desc, rDesc)
     }
 
     getNavigationForEdge(edge: Edge): Navigation {

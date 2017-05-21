@@ -3,40 +3,38 @@ import * as uuid from 'uuid';
 import Room, { Link } from '../Room';
 import Way from '../../Way';
 import { CommandResult } from '../../Command';
-import Item, { ItemContainer } from '../../items/Item';
+import GameObject, { ItemContainer } from '../../items/Item';
 
+let fd = new (class FrontDoor extends GameObject {
+    actions = {
+        examine(o) {
+            return { output: `A dark oak door at the entrance to the house. Two panes of frosted glass are embedded into it, flanking the screwed-on number eight in it's centre. The letterbox is jammed shut.` }
+        }
+    }
+})('door', null, 'front door')
 
+let fdk = new (class FrontDoorKey extends GameObject {
+    takeable = true
+    actions = {
+        examine(i) {
+            return { output: 'The key is pretty.' }
+        }
+    }
+})('key')
 
 let rm = new (class Garden extends Room {
     enter(ev: Ev.RoomNavigationEvent): CommandResult {
         return {
-            output: 'entered garden'
+            output: 'You are in the front garden of a very ordinary-looking terraced house.'
         }
     }
-})('Garden', [Item.getItemFromDb('front_door_key')])
+})('Garden', [fdk, fd])
 
-// export default class Room {
-//     public things: IItemContainer = new ItemContainer()
-//     public readonly identifier: string
-
-//     constructor(
-//         public readonly name: string,
-//         public readonly fullName: string = name) {
-//         this.identifier = uuid.v4()
-//     }
-//     /**
-//      * Unique identifier for this room
-//      */
-
-//     examine(): CommandResult {
-//         return { output: '' }
-//     }
-
-//     enter(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
-//     leave(ev: Ev.RoomNavigationEvent): CommandResult { return {} }
-// }
-
-export let links: Link[] = [{ room1: rm.name, room2: 'Hallway', way: Way.South }]
+export let links: Link[] = [{
+    room1: rm.name, room2: 'Hallway', way: Way.South,
+    description: 'a door leading into the house',
+    reverseDescription: 'the door to the front garden'
+}]
 
 
 export default rm

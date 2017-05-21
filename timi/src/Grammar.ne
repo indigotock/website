@@ -24,7 +24,7 @@ USE_COMMAND -> VERB_USE _ OBJ {%function(d){return {verb:d[0], obj:d[2]}}%}|
 # Synonyms
 VERB_MOVE -> ("move"|"push"|"pull") {%(d)=>"move"%}
 VERB_NAVIGATE -> ("go" | "walk") {%function(d){return "go"}%}
-VERB_EXAMINE -> ("look at"|"examine") {%function(d){return "examine"}%}
+VERB_EXAMINE -> ("look"|"look at"|"examine") {%function(d){return "examine"}%}
 VERB_TOUCH -> ("touch"|"feel") {%function(d){return "touch"}%}
 VERB_TAKE -> ("take"|"collect"|"pick up")  {%function(d){return "take"}%}
 VERB_PUT -> ("place"|"insert"|"put")  {%function(d){return "place"}%}
@@ -32,7 +32,7 @@ VERB_PUT -> ("place"|"insert"|"put")  {%function(d){return "place"}%}
 VERB_SIMPLE ->  (VERB_MOVE | VERB_EXAMINE | VERB_TOUCH | "open" | "close"){%id%}
 
 
-VERB_SINGLE ->  ("help"|"look") {%id%}
+VERB_SINGLE ->  ("help"|VERB_EXAMINE) {%id%}
 VERB_USE -> "use" {%id%}
 
 DIRECTION -> _object {%id%}  #("north"|"south"|"west"|"east"|"n"|"s"|"w"|"e"|[a-zA-Z]:+) {%function(d){ return d[0][0]; }%}

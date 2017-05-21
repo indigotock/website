@@ -4,39 +4,43 @@ import { CommandResult } from "../Command";
 import Util from "../Util";
 import Room from "../rooms/Room";
 
-export type ItemAction = (i: Item, other?: Item) => CommandResult
+export type ItemAction = (this: GameObject, other?: GameObject) => CommandResult
 
 export class ItemContainer {
-    private items: Item[] = []
-    add(t: Item[] | Item) {
-        this.items.push()
+    private items: GameObject[] = []
+    add(item: GameObject[] | GameObject) {
+        if (Array.isArray(item))
+            item.forEach(e => this.add(e))
+        else
+            this.items.unshift(item)
     }
-    find(p: (this: void, value: Item) => boolean): Item | undefined {
+    find(p: (this: void, value: GameObject) => boolean): GameObject | undefined {
+        let ret = undefined
         this.forEach(e => {
             if (p(e))
-                return e
+                ret = e
         })
 
-        return
+        return ret
     }
-    forEach(action: (t: Item) => void) {
+    forEach(action: (t: GameObject) => void) {
         this.items.forEach(action)
     }
-    has(t: Item) {
+    has(t: GameObject) {
         this.forEach(e => {
             if (e === t)
                 return true
         })
         return false
     }
-    remove(t: Item) {
+    remove(t: GameObject) {
         let idx = this.items.indexOf(t)
         this.items.splice(idx, 1)
     }
     count() {
         return this.items.length
     }
-    array(): Item[] {
+    array(): GameObject[] {
         return this.items
     }
     get containedItemsStringList() {
@@ -53,13 +57,14 @@ export class ItemContainer {
     }
 }
 
-class Item {
+class GameObject {
     public static getItemFromDb(name: string) {
         return require(`./db/${name}.ts`).default
     }
     public readonly identifier: string
     aliases: string[] = []
     container: ItemContainer | Room
+    takeable = false
     readonly containedItems: ItemContainer
 
     get isContainer() {
@@ -68,9 +73,10 @@ class Item {
 
     constructor(
         public readonly name: string,
-        items: Item[] = [],
-        public readonly fullName: string = name) {
-        this.identifier = uuid.v4()
+        items: GameObject[] = undefined,
+        public readonly fullName: string = name,
+        _identifier: string = undefined) {
+        this.identifier = _identifier || uuid.v4()
         if (items) {
             this.containedItems = new ItemContainer()
             this.containedItems.add(items)
@@ -83,16 +89,14 @@ class Item {
     get indefiniteArticle() {
         return IndefiniteArticle(this.name)
     }
-    // Default action implementations
-    examine(a, b): CommandResult {
-        return {
-            output: this.isContainer
-                ? ''
-                : this.containedItems.containedItemsStringList
-        }
+    examine(): CommandResult {
+        if (this.containedItems)
+            return { output: this.containedItems.containedItemsStringList }
+        else
+            return { output: this.withIndefiniteArticle + '.' }
     }
 
     actions: { [action: string]: ItemAction } = {}
 }
 
-export default Item
+export default GameObject

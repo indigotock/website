@@ -41,4 +41,8 @@ export default class Way {
                 return Way.Up
         }
     }
+
+    public toString() {
+        return this.value.toLowerCase()
+    }
 }

@@ -30,13 +30,17 @@ export class StandardHTMLGameInterface extends GameInterface {
     ) {
         super(game)
         input.addEventListener('keydown', this.keyDownEvent.bind(this))
+        main.addEventListener('click', (e) => {
+            input.focus()
+        })
+        this.commandCompleted(game.start())
         this.updateInventory()
         this.updateNavigator()
     }
 
     private keyDownEvent(ev: KeyboardEvent) {
         let str = this.input.value.trim().toLowerCase()
-        if (ev.code == 'Enter') {
+        if (ev.code == 'Enter' || ev.code == 'NumpadEnter') {
             this.input.value = ''
             if (Util.isStringEmpty(str))
                 return
@@ -53,13 +57,18 @@ export class StandardHTMLGameInterface extends GameInterface {
             this.historyIndex = -1
             this.commandCompleted(result)
             this.main.scrollTop = this.main.scrollHeight
-
+            return
         } else if (ev.code == 'ArrowUp') {
             this.historyIndex = Math.min(this.historyIndex + 1, this.inputHistory.length - 2)
             this.input.value = this.inputHistory[this.historyIndex] || ''
+            this.input.selectionEnd = this.input.value.length - 1
+            this.input.selectionStart = this.input.value.length
+            ev.preventDefault()
         } else if (ev.code == 'ArrowDown') {
             this.historyIndex = Math.max(this.historyIndex - 1, -1)
             this.input.value = this.inputHistory[this.historyIndex] || ''
+            this.input.selectionEnd = this.input.value.length - 1
+            this.input.selectionStart = this.input.value.length - 1
         }
     }
 

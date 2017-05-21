@@ -1,7 +1,7 @@
 import Way from '../Way';
 import Room, { Link } from './Room';
 
-let roomNames = ['Garden', 'Hallway', 'Kitchen']
+let roomNames = ['Garden', 'Hallway']
 let rooms = []
 let nameIdMap = {}
 let links: Link[] = []

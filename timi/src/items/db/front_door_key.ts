@@ -1,13 +1,7 @@
-import Item from '../Item'
+import GameObject from '../Item'
 
 
-let rm = new (class FrontDoorKey extends Item {
-    actions = {
-        look(i, i2) {
-            return { output: 'THe key is pretty.' }
-        }
-    }
-})('Key')
+
 
 // export default class Room {
 //     public things: IItemContainer = new ItemContainer()
@@ -32,4 +26,4 @@ let rm = new (class FrontDoorKey extends Item {
 
 
 
-export default rm
+// export default rm
