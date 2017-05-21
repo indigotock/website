@@ -28,7 +28,7 @@ let rm = new (class Garden extends Room {
             output: 'You are in the front garden of a very ordinary-looking terraced house.'
         }
     }
-})('Garden', [fdk, fd])
+})('Garden', [fd])
 
 export let links: Link[] = [{
     room1: rm.name, room2: 'Hallway', way: Way.South,

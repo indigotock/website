@@ -44,16 +44,16 @@ export class ItemContainer {
         return this.items
     }
     get containedItemsStringList() {
-        if (this.count() === 0) return "\nIt is empty."
+        if (this.count() === 0) return "It is empty."
 
         let itemnames = []
         this.forEach(e => {
             let n = e.name
             itemnames.push(e.withIndefiniteArticle)
         })
-        let listSentence = 'it contains ' + (Util.toTextualList(itemnames) || "nothing")
+        let listSentence = (Util.toTextualList(itemnames) || "nothing")
 
-        return '\n' + Util.toSentenceCase(listSentence) + '.'
+        return listSentence
     }
 }
 
@@ -90,8 +90,8 @@ class GameObject {
         return IndefiniteArticle(this.name)
     }
     examine(): CommandResult {
-        if (this.containedItems)
-            return { output: this.containedItems.containedItemsStringList }
+        if (this.isContainer)
+            return { output: 'It contains ' + this.containedItems.containedItemsStringList + '.' }
         else
             return { output: this.withIndefiniteArticle + '.' }
     }
