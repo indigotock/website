@@ -10,6 +10,7 @@ import {
 } from 'graphlib';
 import { Game } from './Game';
 import { RoomNavigationEvent } from './Events';
+import { NavigationObject } from "./items/Item";
 
 
 export function OppositeNavigation(nav: Navigation): Navigation {
@@ -18,8 +19,7 @@ export function OppositeNavigation(nav: Navigation): Navigation {
         to: nav.from,
         way: nav.way.opposite,
         available: nav.available,
-        desc: nav.reverseDesc,
-        reverseDesc: nav.desc
+        desc: ''
     }
 }
 export interface Navigation {
@@ -28,17 +28,16 @@ export interface Navigation {
     to: Room
     available: boolean | ((n: Navigation, game: Game) => boolean)
     desc: string
-    reverseDesc: string
 }
 
 export class GameMap {
     constructor() {
         this.addRoom(House.rooms)
-        House.links.forEach(e => {
-            let r1i = House.nameIdMap[e.room1]
-            let r2i = House.nameIdMap[e.room2]
-            this.linkRoomsById(r1i, r2i, e.way, e.description, e.reverseDescription)
-        })
+        House.rooms.forEach(r => r.containedItems.array()
+            .filter(e => e instanceof NavigationObject).forEach((e: NavigationObject) => {
+                let rm = this.getRoomFromName(e.targetRoomName)
+                this.linkRooms(r, rm, e.way, e.brief)
+            }))
     }
     _defaultRoom: Room
     get defaultRoom(): Room {
@@ -48,6 +47,10 @@ export class GameMap {
         return this.map.node(this.map.nodes()[0])
     }
     map: Graph = new Graph({ directed: true, compound: false, multigraph: false })
+
+    getRoomFromName(name: String) {
+        return this.map.node(this.map.nodes().find(e => this.map.node(e).name === name))
+    }
 
     addRoom(room: Room | Room[]) {
         if (Array.isArray(room)) {
@@ -63,7 +66,7 @@ export class GameMap {
     }
 
     linkRooms(r1: Room, r2: Room, direction: Way,
-        desc: string, rDesc: string,
+        desc: string,
         available: boolean | (() => boolean) = true,
         availableBackwards: boolean | (() => boolean) = available) {
         let nav: Navigation = {
@@ -72,21 +75,11 @@ export class GameMap {
             way: direction,
             available,
             desc: desc,
-            reverseDesc: rDesc
         }
-        let oppositeNav = OppositeNavigation(nav)
+        // let oppositeNav = OppositeNavigation(nav)
         this.map.setEdge(r1.identifier, r2.identifier, nav)
-        this.map.setEdge(r2.identifier, r1.identifier, oppositeNav)
+        // this.map.setEdge(r2.identifier, r1.identifier, oppositeNav)
         return this.map.edge(r1.identifier, r2.identifier)
-    }
-
-    linkRoomsById(r1i: string, r2i: string, direction: Way,
-        desc: string, rDesc: string,
-        available: boolean | (() => boolean) = true,
-        availableBackwards: boolean | (() => boolean) = available) {
-        let r1 = this.map.node(r1i)
-        let r2 = this.map.node(r2i)
-        return this.linkRooms(r1, r2, direction, desc, rDesc)
     }
 
     getNavigationForEdge(edge: Edge): Navigation {

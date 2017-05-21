@@ -1,10 +1,9 @@
 import Way from '../Way';
-import Room, { Link } from './Room';
+import Room from './Room';
 
 let roomNames = ['Garden', 'Hallway']
-let rooms = []
+let rooms: Room[] = []
 let nameIdMap = {}
-let links: Link[] = []
 
 
 roomNames.forEach(name => {
@@ -12,8 +11,6 @@ roomNames.forEach(name => {
     let rm = imported.default as Room
     rooms.push(rm)
     nameIdMap[rm.name] = rm.identifier
-    if (imported.links)
-        links = links.concat(imported.links)
 });
 
-export default { rooms, links, nameIdMap }
+export default { rooms, nameIdMap }

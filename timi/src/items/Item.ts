@@ -3,6 +3,7 @@ import IndefiniteArticle from '../indefinite_article'
 import { CommandResult } from "../Command";
 import Util from "../Util";
 import Room from "../rooms/Room";
+import Way from "../Way";
 
 export type ItemAction = (this: GameObject, other?: GameObject) => CommandResult
 
@@ -44,20 +45,21 @@ export class ItemContainer {
         return this.items
     }
     get containedItemsStringList() {
-        if (this.count() === 0) return "It is empty."
+        if (this.count() === 0) return "nothing"
 
         let itemnames = []
         this.forEach(e => {
             let n = e.name
-            itemnames.push(e.withIndefiniteArticle)
+            itemnames.push(e.textualListEntry)
         })
-        let listSentence = (Util.toTextualList(itemnames) || "nothing")
+        let listSentence = Util.toTextualList(itemnames)
 
         return listSentence
     }
 }
 
 class GameObject {
+    brief: string
     public static getItemFromDb(name: string) {
         return require(`./db/${name}.ts`).default
     }
@@ -95,8 +97,21 @@ class GameObject {
         else
             return { output: this.withIndefiniteArticle + '.' }
     }
+    get textualListEntry() {
+        return this.withIndefiniteArticle
+    }
 
     actions: { [action: string]: ItemAction } = {}
+}
+
+export abstract class NavigationObject extends GameObject {
+    abstract destinationDesc: string;
+    abstract way: Way
+    abstract targetRoomName: string
+    get textualListEntry() {
+        return this.withIndefiniteArticle + ' to the ' + this.way.toString()
+            + ' leading to ' + this.destinationDesc
+    }
 }
 
 export default GameObject

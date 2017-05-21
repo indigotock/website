@@ -51,6 +51,8 @@ export class StandardHTMLGameInterface extends GameInterface {
             this.putInput(str)
             let com = Parser.parse(str)
             let result = this.game.actOnCommand(com)
+            if (com.verb === 'go' && !result.failure)
+                this.main.innerHTML = ''
             let mostRecent = this.inputHistory[0]
             if (mostRecent !== str)
                 this.inputHistory.unshift(str)
