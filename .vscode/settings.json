@@ -4,7 +4,9 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/CVS": true,
-        "**/src/*.js": true,
+        "**/src/*.js": {
+            "when": "$(basename).ts"
+        },
         "out": true,
         "**/jspm_packages": true,
         "**/node_modules": true,
