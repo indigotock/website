@@ -9,11 +9,11 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.ne$/, loader: 'nearley-loader' },
-            {
-                test: /\.s?css$/,
-                loader: "style-loader!css-loader!postcss-loader!sass-loader"
-            },
+            // { test: /\.ne$/, loader: 'nearley-loader' },
+            // {
+            //     test: /\.s?css$/,
+            //     loader: "style-loader!css-loader!postcss-loader!sass-loader"
+            // },
             { test: /\.ts$/, loader: "ts-loader" }
         ]
     }

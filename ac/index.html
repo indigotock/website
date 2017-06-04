@@ -4,43 +4,35 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      overflow: hidden;
+    }
+
+    body {
+      overflow: auto;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 
 <body>
-
-  <div id='game'>
-    <div id='left'>
-      <div id='main'>
-      </div>
-      <div id='controls'><span id='prompt'>> </span><input type="text" id='input' name="input" value=""></div>
-    </div>
-
-    <div id='sidebar'>
-      <!--<div id='meters'></div>-->
-      <div id='inventory' class='padded '>Inventory >
-        <ul></ul>
-      </div>
-      <div id='map' class='padded'>
-        Navigator >
-        <ul>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <template id="template_meter">
-    <!--<div class='bar '>-->
-    <div class="holder">
-      <div class="value" style="width: 100%;"></div>
-    </div>
-    <div class="corner top left"></div>
-    <div class="corner top right"></div>
-    <div class="corner bottom left"></div>
-    <div class="corner bottom right"></div>
-    <!--</div>-->
-  </template>
-  <script src='./bundle.js '>
-
-  </script>
+  <div id='container'></div>
 </body>
+<script src="bundle.js">
+
+</script>
 
 </html>
