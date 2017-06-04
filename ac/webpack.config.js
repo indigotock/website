@@ -5,7 +5,7 @@ module.exports = {
         filename: "bundle.js"
     },
     resolve: {
-        extensions: ['.ts', '.css', '.js', '.ne']
+        extensions: ['.ts', '.css', '.js', '.xml']
     },
     module: {
         loaders: [
@@ -14,7 +14,8 @@ module.exports = {
             //     test: /\.s?css$/,
             //     loader: "style-loader!css-loader!postcss-loader!sass-loader"
             // },
-            { test: /\.ts$/, loader: "ts-loader" }
+            { test: /\.ts$/, loader: "ts-loader" },
+            { test: /\.xml$/, loader: 'xml-loader' }
         ]
     }
 };

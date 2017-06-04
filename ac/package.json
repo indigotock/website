@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "@types/three": "^0.84.9",
-    "three": "^0.85.2"
+    "require": "^2.4.20",
+    "three": "^0.85.2",
+    "xml-loader": "^1.2.1"
   },
   "scripts": {
     "start": "webpack-dev-server --env development",
