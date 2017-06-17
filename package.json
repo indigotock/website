@@ -1,12 +1,11 @@
 {
-  "name": "ac",
+  "name": "timi",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/three": "^0.84.9",
-    "require": "^2.4.20",
-    "three": "^0.85.2",
-    "xml-loader": "^1.2.1"
+    "graphlib": "^2.1.1",
+    "nearley": "^2.9.2",
+    "uuid": "^3.0.1"
   },
   "scripts": {
     "start": "webpack-dev-server --env development",
@@ -14,7 +13,10 @@
   },
   "devDependencies": {
     "webpack": "^2.5.1",
-    "ts-loader": "^2.0.3",
+    "postcss-import": "^10.0.0",
+    "css-loader": "^0.28.1",
+    "postcss-loader": "^2.0.5",
+    "style-loader": "^0.17.0",
     "webpack-dev-server": "^2.4.5"
   }
 }
