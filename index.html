@@ -9,12 +9,6 @@
                    initial-scale=1.0,
                    maximum-scale=1.0,
                    user-scalable=no">
-  <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen">
-  <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
-  <link rel="stylesheet" type="text/css" href="css/small.css" media="screen and (max-width: 550px)">
-  <link rel="stylesheet" type="text/css" href="css/big.css" media="screen and (min-width: 1280px)">
-  <link rel="stylesheet" type="text/css" href="css/columns.css" media="screen and (min-width: 768px)">
-  <link rel="stylesheet" type="text/css" href="css/print.css" media="print">
   <link rel="shortcut icon" href="img/favicon.png">
   <link rel="icon" sizes="192x192" href="img/icon-192.png">
   <meta name="generator" content="My Hands">
@@ -24,22 +18,25 @@
   <meta property="og:image" content="/img/og_image.gif">
   <meta property="og:site_name" content="Kyle Hughes">
   <meta property="og:description" content="Kyle Hughes' Website">
+  <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
 </head>
 
 <body class="body">
   <header>
-    <div id="container"></div>
     <h1>Kyle Hughes</h1>
-    <ul class="horizontal">
-      <li><a href="./ideas.html">ideas</a></li>
-      <li><a href="mailto:kyle.hughes@outlook.com">email</a></li>
-      <li><a href="http://github.com/indigotock">github</a></li>
-    </ul>
+    <nav>
+      <ul class="horizontal">
+        <li><a href="./ideas.html">ideas</a></li>
+        <li><a href="mailto:kyle.hughes@outlook.com">email</a></li>
+        <li><a href="http://github.com/indigotock">github</a></li>
+      </ul>
+    </nav>
   </header>
-  <hr class="large" />
   <main>
-    <p><small>Welcome to a website by me. You may not find anything on here as I tend to use it only to host prvate projects and other miscellanea, but from time to time interesting things may find there way on here.</small></p>
-    <div class="spinner"></div>
+    <p><span id='greeting'>Greetings</span>! Welcome to a website by me. You may not find anything on here as I tend to use
+      it only to host prvate projects and other miscellanea, but from time to time interesting things may find there way
+      on here.
+    </p>
   </main>
   <script src='./bundle.js '>
 

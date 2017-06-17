@@ -1,0 +1,100 @@
+body {
+    font-family: "Libre Baskerville", "Times New Roman", Times, georgia, serif;
+    font-weight: normal;
+    cursor: default;
+    user-select: none;
+}
+
+body>* {
+    max-width: 31rem;
+    padding: 0 1em;
+    margin: 0 auto;
+}
+
+#overlay {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 50px;
+    filter: invert(100%);
+    background-color: red;
+    opacity: .9;
+    border-radius: 50%;
+    left: 50px;
+}
+
+p {
+    line-height: 1.4;
+}
+
+header {
+    font-weight: bold;
+    display: flex;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    h1 {
+        display: block;
+    }
+}
+
+@media (max-width: 320px) {
+    body {
+        font-size: .9em;
+    }
+}
+
+@media (max-width: 481px) {
+    header {
+        flex-direction: column;
+        h1 {
+            margin-bottom: .5em;
+        }
+    }
+}
+
+@media (min-width: 641px) {
+    body {
+        font-size: 1em;
+        &>* {
+            max-width: 41rem;
+        }
+    }
+}
+
+h1 {
+    margin: 0;
+    font-weight: lighter; // margin:0;
+}
+
+main {
+    text-align: justify;
+}
+
+header nav ul {
+    margin: 0;
+    padding: 0;
+    li {
+        display: inline;
+        text-transform: lowercase;
+        &:not(:first-child) {
+            margin-left: 1em;
+        }
+    }
+}
+
+a {
+    color: dimgray;
+    text-decoration: underline;
+    &[href] {
+        cursor: pointer;
+    }
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

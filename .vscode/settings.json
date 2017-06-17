@@ -2,6 +2,7 @@
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
+        "timi": true,
         "**/.hg": true,
         "**/CVS": true,
         "**/src/*.js": {
