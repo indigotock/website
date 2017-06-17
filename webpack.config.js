@@ -11,10 +11,9 @@ module.exports = {
         loaders: [
             { test: /\.ne$/, loader: 'nearley-loader' },
             {
-                test: /\.s?css$/,
-                loader: "style-loader!css-loader!postcss-loader!sass-loader"
-            },
-            { test: /\.ts$/, loader: "ts-loader" }
+                test: /\.css$/,
+                loader: "style-loader!css-loader!postcss-loader"
+            }
         ]
     }
 };
