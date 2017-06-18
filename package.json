@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "nearley": "^2.9.2",
-    "normalize.css": "^7.0.0"
+    "normalize.css": "^7.0.0",
+    "simplex-noise": "^2.3.0"
   },
   "scripts": {
     "start": "webpack-dev-server --env development",
