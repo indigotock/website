@@ -4,3 +4,4 @@
 *.js.map
 out/*
 **/.DS_Store
+bundle.js

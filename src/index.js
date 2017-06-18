@@ -1,6 +1,6 @@
 import '../node_modules/normalize.css/normalize.css'
 import './css/style.scss'
-// import './css/print.css'
+import './css/print.css'
 
 let grt = document.getElementById('greeting')
 if (grt) {
