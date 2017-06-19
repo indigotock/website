@@ -1,18 +1,14 @@
 body {
     margin: 40px 0;
     line-height: 1.6;
-    color: #444; // background: #eee;
+    margin-left: auto;
+    padding: 0 1em;
+    margin-right: auto;
+    max-width: 31rem;
+    color: #444;
+    background: #eee;
     font-family: "Libre Baskerville", Georgia, Times, serif;
-    font-weight: normal;
-    cursor: default;
-    user-select: none;
-    & header,
-    & main>*:not(.wide) {
-        margin-left: auto;
-        padding: 0 1em;
-        margin-right: auto;
-        max-width: 31rem;
-    }
+    font-weight: normal; // cursor: default; // user-select: none;
 }
 
 #overlay {
@@ -76,19 +72,13 @@ a {
     }
     header {
         flex-direction: column;
-        h1 {
-            margin-bottom: .5em;
-        }
     }
 }
 
 @media (min-width: 641px) {
     body {
         font-size: 1em;
-        & header,
-        & main>*:not(.wide) {
-            max-width: 41rem;
-        }
+        max-width: 41rem;
     }
 }
 
