@@ -1,15 +1,10 @@
-import '../node_modules/normalize.css/normalize.css'
-import './css/style.scss'
-import './css/print.css'
-
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
     return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    var SimplexNoise = require('simplex-noise'),
-        simplex = new SimplexNoise(Math.random)
+    // var SimplexNoise = require('simplex-noise'),
+    //     simplex = new SimplexNoise(Math.random)
 
     let grt = document.getElementById('greeting')
     if (grt) {
@@ -32,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let cnt = 6
     const mw = 1280
 
-
     for (let i = 0; i < breaks.length; i++) {
         let item = breaks[i]
         item.height = breakHeight
@@ -46,16 +40,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     })
 
-
-    let t = 0
-    function yy (x) {
-        return ((simplex.noise2D(x, t)) * (breakHeight * .9) / 2) + breakHeight / 2
-    }
+    let t = new Date().getTime()
     let pt = performance.now()
+    function yy (x) {
+        return (Math.sin(x + t * 1) * (breakHeight * .8) / 2) + breakHeight / 2//((simplex.noise2D(x, t)) * (breakHeight * .9) / 2) + breakHeight / 2
+    }
     function animate (timestamp) {
-        let dt = (timestamp - pt) / 10000
+        let dt = (timestamp - pt) / 1000
         pt = timestamp
-        cnt = 2 + Math.floor(Math.min(6, Math.max(3, document.body.clientWidth / 100)))
+        cnt = 2 + Math.floor(Math.min(12, Math.max(3, document.body.clientWidth / 100)))
+
         let w = (spread * cnt)
         for (let i = 0; i < breaks.length; i++) {
             breaks[i].style.width = w * 1 + 'px'

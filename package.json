@@ -1,28 +1,24 @@
 {
   "name": "site",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
-  "dependencies": {
-    "normalize.css": "^7.0.0",
-    "simplex-noise": "^2.3.0"
-  },
   "scripts": {
-    "start": "webpack-dev-server --env development",
-    "build": "webpack -p"
+    "start": "node ./bin/www"
   },
-  "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.0.0",
-    "babel-preset-es2015": "^6.24.1",
-    "css-loader": "^0.28.1",
+  "dependencies": {
+    "autoprefixer": "^7.1.1",
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "elemeno": "^1.1.0",
+    "express": "~4.15.2",
+    "hbs": "~4.0.1",
+    "memory-cache": "^0.2.0",
+    "morgan": "~1.8.1",
     "node-sass": "^4.5.3",
-    "postcss-import": "^10.0.0",
-    "postcss-loader": "^2.0.5",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.17.0",
-    "uglifyjs": "^2.4.11",
-    "webpack": "^2.5.1",
-    "webpack-dev-server": "^2.4.5"
+    "node-sass-middleware": "^0.11.0",
+    "postcss-middleware": "^1.1.3",
+    "serve-favicon": "~2.4.2"
   },
   "false": {}
 }

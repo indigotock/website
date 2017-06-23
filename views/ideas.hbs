@@ -1,0 +1,15 @@
+<section>
+    <h2>{{title}}</h2>
+    <p>I'm currently trying to consolidate all of my little ideas and toy projects to this page (why bother with a website if
+        I have nothing to show), the source for most of these is available on my GitHub.</p>
+</section>
+<section class='listview notwide'>
+    {{#each res.data}} {{#if this.published}}
+    <div>
+        <header>
+            <h1><a href='{{this.content.url}}'>{{this.title}}</a></h1>
+        </header>
+        <main>{{{this.content.description.html}}}</main>
+    </div>
+    {{/if}} {{/each}}
+</section>
