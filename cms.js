@@ -5,4 +5,16 @@ var elemeno = new Elemeno(require('./apikey'), {
 });
 
 
-module.exports = elemeno
+
+var obj = {
+    ideas: []
+}
+
+elemeno.getCollectionItems('ideas').then((data) => {
+    obj['ideas'] = data
+})
+
+//todo functionality for updating via webhooks
+
+
+module.exports = obj

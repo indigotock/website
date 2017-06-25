@@ -27,6 +27,47 @@ h3 {
   margin: 0;
   line-height: 1.3; }
 
+.boxlist {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; }
+  .boxlist div {
+    text-align: left;
+    cursor: pointer;
+    border: solid 1px currentColor;
+    margin: 1px;
+    width: 150px;
+    position: relative;
+    height: 150px; }
+    .boxlist div header {
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      top: calc(100% - 25px);
+      right: 5px;
+      transition: opacity .3s ease-out;
+      font-size: 12px !important; }
+    .boxlist div main {
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 30px;
+      position: absolute;
+      opacity: 0.5;
+      margin: 0;
+      text-overflow: ellipsis;
+      height: 120px;
+      font-size: 11px !important;
+      transition: opacity .3s ease-out; }
+      .boxlist div main p {
+        margin: 0; }
+    .boxlist div:hover main {
+      opacity: 1; }
+    .boxlist div:hover header {
+      opacity: .3; }
+
 .listview {
   font-size: .9em; }
   .listview div {
@@ -54,7 +95,7 @@ body > header {
   body > header h1 {
     display: block; }
 
-main {
+body > main {
   text-align: justify; }
 
 body > header nav ul {

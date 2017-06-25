@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // var SimplexNoise = require('simplex-noise'),
     //     simplex = new SimplexNoise(Math.random)
 
+    let boxes = document.getElementsByClassName('ideasbox')
+    if (boxes) {
+        for (let i = 0; i < boxes.length; i++) {
+            let b = boxes[i]
+            let attr = b.getAttribute('data-url')
+            if (attr)
+                b.addEventListener('click', (e) => {
+                    window.location = attr
+                })
+        }
+    }
+
     let grt = document.getElementById('greeting')
     if (grt) {
         let str;

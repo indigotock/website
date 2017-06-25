@@ -5,9 +5,9 @@ var cms = require('./../cms');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-  let c = cms.getCollection('ideas', function (e, r) {
-    res.render('ideas', { title: 'Ideas', res: r });
-  });
+  console.log(cms.ideas)
+  res.render('ideas', { title: 'Ideas', res: cms.ideas });
+
 });
 
 module.exports = router;
