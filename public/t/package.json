@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "compression": "^1.6.2",
     "graphlib": "^2.1.1",
+    "memory-cache": "^0.2.0",
     "nearley": "^2.9.2",
     "uuid": "^3.0.1"
   },

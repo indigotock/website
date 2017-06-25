@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 52);
+/******/ 	return __webpack_require__(__webpack_require__.s = 50);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,7 +76,7 @@ var lodash;
 
 if (true) {
   try {
-    lodash = __webpack_require__(38);
+    lodash = __webpack_require__(36);
   } catch (e) {}
 }
 
@@ -94,8 +94,8 @@ module.exports = lodash;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const uuid = __webpack_require__(47);
-const indefinite_article_1 = __webpack_require__(51);
+const uuid = __webpack_require__(45);
+const indefinite_article_1 = __webpack_require__(49);
 const Util_1 = __webpack_require__(12);
 class ItemContainer {
     constructor() {
@@ -163,7 +163,7 @@ class GameObject {
         }
     }
     static getItemFromDb(name) {
-        return __webpack_require__(53)(`./${name}.ts`).default;
+        return __webpack_require__(51)(`./${name}.ts`).default;
     }
     get isContainer() {
         return !!this.containedItems;
@@ -218,88 +218,6 @@ exports.default = GameObject;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -825,7 +743,567 @@ function edgeObjToId(isDirected, edgeObj) {
 
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class Way {
+    constructor(value) {
+        this.value = value;
+        if (!Way.stringMap)
+            Way.stringMap = new Map();
+        Way.stringMap.set(value.substr(0, 1).toLowerCase(), this);
+        Way.stringMap.set(value.toLowerCase(), this);
+    }
+    static fromString(inp) {
+        if (!inp)
+            return;
+        inp = inp.trim().toLowerCase();
+        return Way.stringMap.get(inp);
+    }
+    get lowercase() {
+        return this.value.toLowerCase();
+    }
+    get short() {
+        return this.value.substr(0, 1);
+    }
+    get opposite() {
+        switch (this) {
+            case Way.North:
+                return Way.South;
+            case Way.East:
+                return Way.West;
+            case Way.South:
+                return Way.North;
+            case Way.West:
+                return Way.East;
+            case Way.Up:
+                return Way.Down;
+            case Way.Down:
+                return Way.Up;
+        }
+    }
+    toString() {
+        return this.value.toLowerCase();
+    }
+}
+Way.North = new Way("North");
+Way.West = new Way("West");
+Way.South = new Way("South");
+Way.East = new Way("East");
+Way.Up = new Way("Up");
+Way.Down = new Way("Down");
+exports.default = Way;
+
+
+/***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+let Grammar = __webpack_require__(37);
+const Nearley = __webpack_require__(38);
+/*
+VERB_NAVIGATE -> "go" | "walk"
+VERB_TAKE -> "take"|"collect"|"pick up"
+VERB_SINGLE ->  "move" | "look at" | "touch" | "open" | "close"
+VERB_SIMPLE ->  "help"|"look"
+VERB_USE -> "use"
+*/
+function isObject(obj) {
+    return obj === Object(obj);
+}
+var Parser;
+(function (Parser) {
+    class ParsedCommand {
+    }
+    Parser.ParsedCommand = ParsedCommand;
+    class ParsedObject {
+        toString() {
+            return `${this.container}:${this.obj}`;
+        }
+    }
+    Parser.ParsedObject = ParsedObject;
+    function parseObject(parsed) {
+        if (!parsed)
+            return;
+        let ret = new ParsedObject();
+        ret.obj = parsed['obj'];
+        ret.container = parsed['container'];
+        return ret;
+    }
+    function parseCommand(parsed) {
+        let ret = new ParsedCommand();
+        ret.verb = parsed['verb'] || null;
+        ret.obj = parseObject(parsed['obj']);
+        ret.subject = parseObject(parsed['subject']);
+        ret.way = parsed['direction'];
+        return ret;
+    }
+    function parse(input) {
+        let parser = new Nearley.Parser(Grammar.ParserRules, Grammar.ParserStart);
+        let result;
+        try {
+            parser.feed(input);
+            result = parser.results[0][0];
+        }
+        catch (e) {
+            result = { verb: null };
+        }
+        return parseCommand(result);
+    }
+    Parser.parse = parse;
+})(Parser = exports.Parser || (exports.Parser = {}));
+exports.default = Parser;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+
+module.exports = dfs;
+
+/*
+ * A helper that preforms a pre- or post-order traversal on the input graph
+ * and returns the nodes in the order they were visited. If the graph is
+ * undirected then this algorithm will navigate using neighbors. If the graph
+ * is directed then this algorithm will navigate using successors.
+ *
+ * Order must be one of "pre" or "post".
+ */
+function dfs(g, vs, order) {
+  if (!_.isArray(vs)) {
+    vs = [vs];
+  }
+
+  var navigation = (g.isDirected() ? g.successors : g.neighbors).bind(g);
+
+  var acc = [],
+      visited = {};
+  _.each(vs, function(v) {
+    if (!g.hasNode(v)) {
+      throw new Error("Graph does not have node: " + v);
+    }
+
+    doDfs(g, v, order === "post", visited, navigation, acc);
+  });
+  return acc;
+}
+
+function doDfs(g, v, postorder, visited, navigation, acc) {
+  if (!_.has(visited, v)) {
+    visited[v] = true;
+
+    if (!postorder) { acc.push(v); }
+    _.each(navigation(v), function(w) {
+      doDfs(g, w, postorder, visited, navigation, acc);
+    });
+    if (postorder) { acc.push(v); }
+  }
+}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0),
+    PriorityQueue = __webpack_require__(10);
+
+module.exports = dijkstra;
+
+var DEFAULT_WEIGHT_FUNC = _.constant(1);
+
+function dijkstra(g, source, weightFn, edgeFn) {
+  return runDijkstra(g, String(source),
+                     weightFn || DEFAULT_WEIGHT_FUNC,
+                     edgeFn || function(v) { return g.outEdges(v); });
+}
+
+function runDijkstra(g, source, weightFn, edgeFn) {
+  var results = {},
+      pq = new PriorityQueue(),
+      v, vEntry;
+
+  var updateNeighbors = function(edge) {
+    var w = edge.v !== v ? edge.v : edge.w,
+        wEntry = results[w],
+        weight = weightFn(edge),
+        distance = vEntry.distance + weight;
+
+    if (weight < 0) {
+      throw new Error("dijkstra does not allow negative edge weights. " +
+                      "Bad edge: " + edge + " Weight: " + weight);
+    }
+
+    if (distance < wEntry.distance) {
+      wEntry.distance = distance;
+      wEntry.predecessor = v;
+      pq.decrease(w, distance);
+    }
+  };
+
+  g.nodes().forEach(function(v) {
+    var distance = v === source ? 0 : Number.POSITIVE_INFINITY;
+    results[v] = { distance: distance };
+    pq.add(v, distance);
+  });
+
+  while (pq.size() > 0) {
+    v = pq.removeMin();
+    vEntry = results[v];
+    if (vEntry.distance === Number.POSITIVE_INFINITY) {
+      break;
+    }
+
+    edgeFn(v).forEach(updateNeighbors);
+  }
+
+  return results;
+}
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+
+module.exports = tarjan;
+
+function tarjan(g) {
+  var index = 0,
+      stack = [],
+      visited = {}, // node id -> { onStack, lowlink, index }
+      results = [];
+
+  function dfs(v) {
+    var entry = visited[v] = {
+      onStack: true,
+      lowlink: index,
+      index: index++
+    };
+    stack.push(v);
+
+    g.successors(v).forEach(function(w) {
+      if (!_.has(visited, w)) {
+        dfs(w);
+        entry.lowlink = Math.min(entry.lowlink, visited[w].lowlink);
+      } else if (visited[w].onStack) {
+        entry.lowlink = Math.min(entry.lowlink, visited[w].index);
+      }
+    });
+
+    if (entry.lowlink === entry.index) {
+      var cmpt = [],
+          w;
+      do {
+        w = stack.pop();
+        visited[w].onStack = false;
+        cmpt.push(w);
+      } while (v !== w);
+      results.push(cmpt);
+    }
+  }
+
+  g.nodes().forEach(function(v) {
+    if (!_.has(visited, v)) {
+      dfs(v);
+    }
+  });
+
+  return results;
+}
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+
+module.exports = topsort;
+topsort.CycleException = CycleException;
+
+function topsort(g) {
+  var visited = {},
+      stack = {},
+      results = [];
+
+  function visit(node) {
+    if (_.has(stack, node)) {
+      throw new CycleException();
+    }
+
+    if (!_.has(visited, node)) {
+      stack[node] = true;
+      visited[node] = true;
+      _.each(g.predecessors(node), visit);
+      delete stack[node];
+      results.push(node);
+    }
+  }
+
+  _.each(g.sinks(), visit);
+
+  if (_.size(visited) !== g.nodeCount()) {
+    throw new CycleException();
+  }
+
+  return results;
+}
+
+function CycleException() {}
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+
+module.exports = PriorityQueue;
+
+/**
+ * A min-priority queue data structure. This algorithm is derived from Cormen,
+ * et al., "Introduction to Algorithms". The basic idea of a min-priority
+ * queue is that you can efficiently (in O(1) time) get the smallest key in
+ * the queue. Adding and removing elements takes O(log n) time. A key can
+ * have its priority decreased in O(log n) time.
+ */
+function PriorityQueue() {
+  this._arr = [];
+  this._keyIndices = {};
+}
+
+/**
+ * Returns the number of elements in the queue. Takes `O(1)` time.
+ */
+PriorityQueue.prototype.size = function() {
+  return this._arr.length;
+};
+
+/**
+ * Returns the keys that are in the queue. Takes `O(n)` time.
+ */
+PriorityQueue.prototype.keys = function() {
+  return this._arr.map(function(x) { return x.key; });
+};
+
+/**
+ * Returns `true` if **key** is in the queue and `false` if not.
+ */
+PriorityQueue.prototype.has = function(key) {
+  return _.has(this._keyIndices, key);
+};
+
+/**
+ * Returns the priority for **key**. If **key** is not present in the queue
+ * then this function returns `undefined`. Takes `O(1)` time.
+ *
+ * @param {Object} key
+ */
+PriorityQueue.prototype.priority = function(key) {
+  var index = this._keyIndices[key];
+  if (index !== undefined) {
+    return this._arr[index].priority;
+  }
+};
+
+/**
+ * Returns the key for the minimum element in this queue. If the queue is
+ * empty this function throws an Error. Takes `O(1)` time.
+ */
+PriorityQueue.prototype.min = function() {
+  if (this.size() === 0) {
+    throw new Error("Queue underflow");
+  }
+  return this._arr[0].key;
+};
+
+/**
+ * Inserts a new key into the priority queue. If the key already exists in
+ * the queue this function returns `false`; otherwise it will return `true`.
+ * Takes `O(n)` time.
+ *
+ * @param {Object} key the key to add
+ * @param {Number} priority the initial priority for the key
+ */
+PriorityQueue.prototype.add = function(key, priority) {
+  var keyIndices = this._keyIndices;
+  key = String(key);
+  if (!_.has(keyIndices, key)) {
+    var arr = this._arr;
+    var index = arr.length;
+    keyIndices[key] = index;
+    arr.push({key: key, priority: priority});
+    this._decrease(index);
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Removes and returns the smallest key in the queue. Takes `O(log n)` time.
+ */
+PriorityQueue.prototype.removeMin = function() {
+  this._swap(0, this._arr.length - 1);
+  var min = this._arr.pop();
+  delete this._keyIndices[min.key];
+  this._heapify(0);
+  return min.key;
+};
+
+/**
+ * Decreases the priority for **key** to **priority**. If the new priority is
+ * greater than the previous priority, this function will throw an Error.
+ *
+ * @param {Object} key the key for which to raise priority
+ * @param {Number} priority the new priority for the key
+ */
+PriorityQueue.prototype.decrease = function(key, priority) {
+  var index = this._keyIndices[key];
+  if (priority > this._arr[index].priority) {
+    throw new Error("New priority is greater than current priority. " +
+        "Key: " + key + " Old: " + this._arr[index].priority + " New: " + priority);
+  }
+  this._arr[index].priority = priority;
+  this._decrease(index);
+};
+
+PriorityQueue.prototype._heapify = function(i) {
+  var arr = this._arr;
+  var l = 2 * i,
+      r = l + 1,
+      largest = i;
+  if (l < arr.length) {
+    largest = arr[l].priority < arr[largest].priority ? l : largest;
+    if (r < arr.length) {
+      largest = arr[r].priority < arr[largest].priority ? r : largest;
+    }
+    if (largest !== i) {
+      this._swap(i, largest);
+      this._heapify(largest);
+    }
+  }
+};
+
+PriorityQueue.prototype._decrease = function(index) {
+  var arr = this._arr;
+  var priority = arr[index].priority;
+  var parent;
+  while (index !== 0) {
+    parent = index >> 1;
+    if (arr[parent].priority < priority) {
+      break;
+    }
+    this._swap(index, parent);
+    index = parent;
+  }
+};
+
+PriorityQueue.prototype._swap = function(i, j) {
+  var arr = this._arr;
+  var keyIndices = this._keyIndices;
+  var origArrI = arr[i];
+  var origArrJ = arr[j];
+  arr[i] = origArrJ;
+  arr[j] = origArrI;
+  keyIndices[origArrJ.key] = i;
+  keyIndices[origArrI.key] = j;
+};
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -862,7 +1340,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(41);
+	fixUrls = __webpack_require__(39);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -1138,484 +1616,6 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class Way {
-    constructor(value) {
-        this.value = value;
-        if (!Way.stringMap)
-            Way.stringMap = new Map();
-        Way.stringMap.set(value.substr(0, 1).toLowerCase(), this);
-        Way.stringMap.set(value.toLowerCase(), this);
-    }
-    static fromString(inp) {
-        if (!inp)
-            return;
-        inp = inp.trim().toLowerCase();
-        return Way.stringMap.get(inp);
-    }
-    get lowercase() {
-        return this.value.toLowerCase();
-    }
-    get short() {
-        return this.value.substr(0, 1);
-    }
-    get opposite() {
-        switch (this) {
-            case Way.North:
-                return Way.South;
-            case Way.East:
-                return Way.West;
-            case Way.South:
-                return Way.North;
-            case Way.West:
-                return Way.East;
-            case Way.Up:
-                return Way.Down;
-            case Way.Down:
-                return Way.Up;
-        }
-    }
-    toString() {
-        return this.value.toLowerCase();
-    }
-}
-Way.North = new Way("North");
-Way.West = new Way("West");
-Way.South = new Way("South");
-Way.East = new Way("East");
-Way.Up = new Way("Up");
-Way.Down = new Way("Down");
-exports.default = Way;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-let Grammar = __webpack_require__(39);
-const Nearley = __webpack_require__(40);
-/*
-VERB_NAVIGATE -> "go" | "walk"
-VERB_TAKE -> "take"|"collect"|"pick up"
-VERB_SINGLE ->  "move" | "look at" | "touch" | "open" | "close"
-VERB_SIMPLE ->  "help"|"look"
-VERB_USE -> "use"
-*/
-function isObject(obj) {
-    return obj === Object(obj);
-}
-var Parser;
-(function (Parser) {
-    class ParsedCommand {
-    }
-    Parser.ParsedCommand = ParsedCommand;
-    class ParsedObject {
-        toString() {
-            return `${this.container}:${this.obj}`;
-        }
-    }
-    Parser.ParsedObject = ParsedObject;
-    function parseObject(parsed) {
-        if (!parsed)
-            return;
-        let ret = new ParsedObject();
-        ret.obj = parsed['obj'];
-        ret.container = parsed['container'];
-        return ret;
-    }
-    function parseCommand(parsed) {
-        let ret = new ParsedCommand();
-        ret.verb = parsed['verb'] || null;
-        ret.obj = parseObject(parsed['obj']);
-        ret.subject = parseObject(parsed['subject']);
-        ret.way = parsed['direction'];
-        return ret;
-    }
-    function parse(input) {
-        let parser = new Nearley.Parser(Grammar.ParserRules, Grammar.ParserStart);
-        let result;
-        try {
-            parser.feed(input);
-            result = parser.results[0][0];
-        }
-        catch (e) {
-            result = { verb: null };
-        }
-        return parseCommand(result);
-    }
-    Parser.parse = parse;
-})(Parser = exports.Parser || (exports.Parser = {}));
-exports.default = Parser;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _ = __webpack_require__(0);
-
-module.exports = dfs;
-
-/*
- * A helper that preforms a pre- or post-order traversal on the input graph
- * and returns the nodes in the order they were visited. If the graph is
- * undirected then this algorithm will navigate using neighbors. If the graph
- * is directed then this algorithm will navigate using successors.
- *
- * Order must be one of "pre" or "post".
- */
-function dfs(g, vs, order) {
-  if (!_.isArray(vs)) {
-    vs = [vs];
-  }
-
-  var navigation = (g.isDirected() ? g.successors : g.neighbors).bind(g);
-
-  var acc = [],
-      visited = {};
-  _.each(vs, function(v) {
-    if (!g.hasNode(v)) {
-      throw new Error("Graph does not have node: " + v);
-    }
-
-    doDfs(g, v, order === "post", visited, navigation, acc);
-  });
-  return acc;
-}
-
-function doDfs(g, v, postorder, visited, navigation, acc) {
-  if (!_.has(visited, v)) {
-    visited[v] = true;
-
-    if (!postorder) { acc.push(v); }
-    _.each(navigation(v), function(w) {
-      doDfs(g, w, postorder, visited, navigation, acc);
-    });
-    if (postorder) { acc.push(v); }
-  }
-}
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _ = __webpack_require__(0),
-    PriorityQueue = __webpack_require__(11);
-
-module.exports = dijkstra;
-
-var DEFAULT_WEIGHT_FUNC = _.constant(1);
-
-function dijkstra(g, source, weightFn, edgeFn) {
-  return runDijkstra(g, String(source),
-                     weightFn || DEFAULT_WEIGHT_FUNC,
-                     edgeFn || function(v) { return g.outEdges(v); });
-}
-
-function runDijkstra(g, source, weightFn, edgeFn) {
-  var results = {},
-      pq = new PriorityQueue(),
-      v, vEntry;
-
-  var updateNeighbors = function(edge) {
-    var w = edge.v !== v ? edge.v : edge.w,
-        wEntry = results[w],
-        weight = weightFn(edge),
-        distance = vEntry.distance + weight;
-
-    if (weight < 0) {
-      throw new Error("dijkstra does not allow negative edge weights. " +
-                      "Bad edge: " + edge + " Weight: " + weight);
-    }
-
-    if (distance < wEntry.distance) {
-      wEntry.distance = distance;
-      wEntry.predecessor = v;
-      pq.decrease(w, distance);
-    }
-  };
-
-  g.nodes().forEach(function(v) {
-    var distance = v === source ? 0 : Number.POSITIVE_INFINITY;
-    results[v] = { distance: distance };
-    pq.add(v, distance);
-  });
-
-  while (pq.size() > 0) {
-    v = pq.removeMin();
-    vEntry = results[v];
-    if (vEntry.distance === Number.POSITIVE_INFINITY) {
-      break;
-    }
-
-    edgeFn(v).forEach(updateNeighbors);
-  }
-
-  return results;
-}
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _ = __webpack_require__(0);
-
-module.exports = tarjan;
-
-function tarjan(g) {
-  var index = 0,
-      stack = [],
-      visited = {}, // node id -> { onStack, lowlink, index }
-      results = [];
-
-  function dfs(v) {
-    var entry = visited[v] = {
-      onStack: true,
-      lowlink: index,
-      index: index++
-    };
-    stack.push(v);
-
-    g.successors(v).forEach(function(w) {
-      if (!_.has(visited, w)) {
-        dfs(w);
-        entry.lowlink = Math.min(entry.lowlink, visited[w].lowlink);
-      } else if (visited[w].onStack) {
-        entry.lowlink = Math.min(entry.lowlink, visited[w].index);
-      }
-    });
-
-    if (entry.lowlink === entry.index) {
-      var cmpt = [],
-          w;
-      do {
-        w = stack.pop();
-        visited[w].onStack = false;
-        cmpt.push(w);
-      } while (v !== w);
-      results.push(cmpt);
-    }
-  }
-
-  g.nodes().forEach(function(v) {
-    if (!_.has(visited, v)) {
-      dfs(v);
-    }
-  });
-
-  return results;
-}
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _ = __webpack_require__(0);
-
-module.exports = topsort;
-topsort.CycleException = CycleException;
-
-function topsort(g) {
-  var visited = {},
-      stack = {},
-      results = [];
-
-  function visit(node) {
-    if (_.has(stack, node)) {
-      throw new CycleException();
-    }
-
-    if (!_.has(visited, node)) {
-      stack[node] = true;
-      visited[node] = true;
-      _.each(g.predecessors(node), visit);
-      delete stack[node];
-      results.push(node);
-    }
-  }
-
-  _.each(g.sinks(), visit);
-
-  if (_.size(visited) !== g.nodeCount()) {
-    throw new CycleException();
-  }
-
-  return results;
-}
-
-function CycleException() {}
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _ = __webpack_require__(0);
-
-module.exports = PriorityQueue;
-
-/**
- * A min-priority queue data structure. This algorithm is derived from Cormen,
- * et al., "Introduction to Algorithms". The basic idea of a min-priority
- * queue is that you can efficiently (in O(1) time) get the smallest key in
- * the queue. Adding and removing elements takes O(log n) time. A key can
- * have its priority decreased in O(log n) time.
- */
-function PriorityQueue() {
-  this._arr = [];
-  this._keyIndices = {};
-}
-
-/**
- * Returns the number of elements in the queue. Takes `O(1)` time.
- */
-PriorityQueue.prototype.size = function() {
-  return this._arr.length;
-};
-
-/**
- * Returns the keys that are in the queue. Takes `O(n)` time.
- */
-PriorityQueue.prototype.keys = function() {
-  return this._arr.map(function(x) { return x.key; });
-};
-
-/**
- * Returns `true` if **key** is in the queue and `false` if not.
- */
-PriorityQueue.prototype.has = function(key) {
-  return _.has(this._keyIndices, key);
-};
-
-/**
- * Returns the priority for **key**. If **key** is not present in the queue
- * then this function returns `undefined`. Takes `O(1)` time.
- *
- * @param {Object} key
- */
-PriorityQueue.prototype.priority = function(key) {
-  var index = this._keyIndices[key];
-  if (index !== undefined) {
-    return this._arr[index].priority;
-  }
-};
-
-/**
- * Returns the key for the minimum element in this queue. If the queue is
- * empty this function throws an Error. Takes `O(1)` time.
- */
-PriorityQueue.prototype.min = function() {
-  if (this.size() === 0) {
-    throw new Error("Queue underflow");
-  }
-  return this._arr[0].key;
-};
-
-/**
- * Inserts a new key into the priority queue. If the key already exists in
- * the queue this function returns `false`; otherwise it will return `true`.
- * Takes `O(n)` time.
- *
- * @param {Object} key the key to add
- * @param {Number} priority the initial priority for the key
- */
-PriorityQueue.prototype.add = function(key, priority) {
-  var keyIndices = this._keyIndices;
-  key = String(key);
-  if (!_.has(keyIndices, key)) {
-    var arr = this._arr;
-    var index = arr.length;
-    keyIndices[key] = index;
-    arr.push({key: key, priority: priority});
-    this._decrease(index);
-    return true;
-  }
-  return false;
-};
-
-/**
- * Removes and returns the smallest key in the queue. Takes `O(log n)` time.
- */
-PriorityQueue.prototype.removeMin = function() {
-  this._swap(0, this._arr.length - 1);
-  var min = this._arr.pop();
-  delete this._keyIndices[min.key];
-  this._heapify(0);
-  return min.key;
-};
-
-/**
- * Decreases the priority for **key** to **priority**. If the new priority is
- * greater than the previous priority, this function will throw an Error.
- *
- * @param {Object} key the key for which to raise priority
- * @param {Number} priority the new priority for the key
- */
-PriorityQueue.prototype.decrease = function(key, priority) {
-  var index = this._keyIndices[key];
-  if (priority > this._arr[index].priority) {
-    throw new Error("New priority is greater than current priority. " +
-        "Key: " + key + " Old: " + this._arr[index].priority + " New: " + priority);
-  }
-  this._arr[index].priority = priority;
-  this._decrease(index);
-};
-
-PriorityQueue.prototype._heapify = function(i) {
-  var arr = this._arr;
-  var l = 2 * i,
-      r = l + 1,
-      largest = i;
-  if (l < arr.length) {
-    largest = arr[l].priority < arr[largest].priority ? l : largest;
-    if (r < arr.length) {
-      largest = arr[r].priority < arr[largest].priority ? r : largest;
-    }
-    if (largest !== i) {
-      this._swap(i, largest);
-      this._heapify(largest);
-    }
-  }
-};
-
-PriorityQueue.prototype._decrease = function(index) {
-  var arr = this._arr;
-  var priority = arr[index].priority;
-  var parent;
-  while (index !== 0) {
-    parent = index >> 1;
-    if (arr[parent].priority < priority) {
-      break;
-    }
-    this._swap(index, parent);
-    index = parent;
-  }
-};
-
-PriorityQueue.prototype._swap = function(i, j) {
-  var arr = this._arr;
-  var keyIndices = this._keyIndices;
-  var origArrI = arr[i];
-  var origArrJ = arr[j];
-  arr[i] = origArrJ;
-  arr[j] = origArrI;
-  keyIndices[origArrJ.key] = i;
-  keyIndices[origArrI.key] = j;
-};
-
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1697,7 +1697,7 @@ exports.default = Room;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Room_1 = __webpack_require__(13);
-const Way_1 = __webpack_require__(5);
+const Way_1 = __webpack_require__(3);
 const Item_1 = __webpack_require__(1);
 exports.fd = new (class FrontDoor extends Item_1.NavigationObject {
     constructor() {
@@ -1749,7 +1749,7 @@ exports.default = rm;
 
 /**
  * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
  */
 var byteToHex = [];
 for (var i = 0; i < 256; ++i) {
@@ -1759,7 +1759,7 @@ for (var i = 0; i < 256; ++i) {
 function bytesToUuid(buf, offset) {
   var i = offset || 0;
   var bth = byteToHex;
-  return  bth[buf[i++]] + bth[buf[i++]] +
+  return bth[buf[i++]] + bth[buf[i++]] +
           bth[buf[i++]] + bth[buf[i++]] + '-' +
           bth[buf[i++]] + bth[buf[i++]] + '-' +
           bth[buf[i++]] + bth[buf[i++]] + '-' +
@@ -1785,7 +1785,7 @@ var rng;
 var crypto = global.crypto || global.msCrypto; // for IE 11
 if (crypto && crypto.getRandomValues) {
   // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
-  var rnds8 = new Uint8Array(16);
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
   rng = function whatwgRNG() {
     crypto.getRandomValues(rnds8);
     return rnds8;
@@ -1797,7 +1797,7 @@ if (!rng) {
   //
   // If all else fails, use Math.random().  It's fast, but is of unspecified
   // quality.
-  var  rnds = new Array(16);
+  var rnds = new Array(16);
   rng = function() {
     for (var i = 0, r; i < 16; i++) {
       if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
@@ -1846,7 +1846,7 @@ module.exports = g;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(23);
+var content = __webpack_require__(22);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1854,7 +1854,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(11)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1874,43 +1874,12 @@ if(false) {
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(24);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/postcss-loader/lib/index.js!../../node_modules/sass-loader/lib/loader.js!./reset.css", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/postcss-loader/lib/index.js!../../node_modules/sass-loader/lib/loader.js!./reset.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const World_1 = __webpack_require__(43);
-const Way_1 = __webpack_require__(5);
-__webpack_require__(42);
+const World_1 = __webpack_require__(41);
+const Way_1 = __webpack_require__(3);
+__webpack_require__(40);
 const Item_1 = __webpack_require__(1);
 class Game {
     constructor() {
@@ -2089,14 +2058,14 @@ exports.Game = Game;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = __webpack_require__(12);
-const Parser_1 = __webpack_require__(6);
+const Parser_1 = __webpack_require__(4);
 class GameInterface {
     constructor(game) {
         this.game = game;
@@ -2226,10 +2195,10 @@ exports.StandardHTMLGameInterface = StandardHTMLGameInterface;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(5)(undefined);
 // imports
 
 
@@ -2240,35 +2209,21 @@ exports.push([module.i, "#game {\n  display: -webkit-box;\n  display: -ms-flexbo
 
 
 /***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(5)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "body {\n  background-color: black;\n  font-family: Courier New, Courier, monospace;\n  color: whitesmoke; }\n\n.clearfix {\n  overflow: auto; }\n\nhr {\n  border: none;\n  border-top: dashed 1px currentColor; }\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "body {\n  font-size: 14pt;\n  background-color: black;\n  font-family: Courier New, Courier, monospace;\n  color: whitesmoke; }\n\n.clearfix {\n  overflow: auto; }\n\nhr {\n  border: none;\n  border-top: dashed 1px currentColor; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "/** https://github.com/jtrost/Complete-CSS-Reset \n/* Displays for HTML 5 */\narticle, aside, audio, command, datagrid, details, dialog, embed, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, video, wbr {\n  display: block; }\n\nbdi, figcaption, keygen, mark, meter, progress, rp, rt, ruby, time {\n  display: inline; }\n\n/* Deprecated tags */\nacronym, applet, big, center, dir, font, frame, frameset, noframes, s, strike, tt, u, xmp {\n  display: none; }\n\n/* Reset styles for all structural tags */\n/*a, abbr, area, article, aside, audio, b, bdo, blockquote, body, button, canvas, caption, cite, code, col, colgroup, command, datalist, dd, del, details, dialog, dfn, div, dl, dt, em, embed, fieldset, figure, form, h1, h2, h3, h4, h5, h6, head, header, hgroup, hr, html, i, iframe, img, input, ins, keygen, kbd, label, legend, li, map, mark, menu, meter, nav, noscript, object, ol, optgroup, option, output, p, param, pre, progress, q, rp, rt, ruby, samp, section, select, small, span, strong, sub, sup, table, tbody, td, textarea, tfoot, th, thead, time, tr, ul, var, video {\n\t background: transparent;\n\t border: 0;\n\t font-size: 100%;\n\t font: inherit;\n\t margin: 0;\n\t outline: none;\n\t padding: 0;\n\t text-align: left;\n\t text-decoration: none;\n\t vertical-align: baseline;\n\t z-index: 1;\n  resize: none;\n}*/\n/* Miscellaneous resets */\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after, q:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2301,18 +2256,18 @@ exports.push([module.i, "/** https://github.com/jtrost/Complete-CSS-Reset \n/* D
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var lib = __webpack_require__(35);
+var lib = __webpack_require__(33);
 
 module.exports = {
   Graph: lib.Graph,
-  json: __webpack_require__(36),
-  alg: __webpack_require__(30),
+  json: __webpack_require__(34),
+  alg: __webpack_require__(28),
   version: lib.version
 };
 
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0);
@@ -2345,10 +2300,10 @@ function components(g) {
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dijkstra = __webpack_require__(8),
+var dijkstra = __webpack_require__(7),
     _ = __webpack_require__(0);
 
 module.exports = dijkstraAll;
@@ -2361,11 +2316,11 @@ function dijkstraAll(g, weightFunc, edgeFunc) {
 
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0),
-    tarjan = __webpack_require__(9);
+    tarjan = __webpack_require__(8);
 
 module.exports = findCycles;
 
@@ -2377,7 +2332,7 @@ function findCycles(g) {
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0);
@@ -2433,29 +2388,29 @@ function runFloydWarshall(g, weightFn, edgeFn) {
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-  components: __webpack_require__(26),
-  dijkstra: __webpack_require__(8),
-  dijkstraAll: __webpack_require__(27),
-  findCycles: __webpack_require__(28),
-  floydWarshall: __webpack_require__(29),
-  isAcyclic: __webpack_require__(31),
-  postorder: __webpack_require__(32),
-  preorder: __webpack_require__(33),
-  prim: __webpack_require__(34),
-  tarjan: __webpack_require__(9),
-  topsort: __webpack_require__(10)
+  components: __webpack_require__(24),
+  dijkstra: __webpack_require__(7),
+  dijkstraAll: __webpack_require__(25),
+  findCycles: __webpack_require__(26),
+  floydWarshall: __webpack_require__(27),
+  isAcyclic: __webpack_require__(29),
+  postorder: __webpack_require__(30),
+  preorder: __webpack_require__(31),
+  prim: __webpack_require__(32),
+  tarjan: __webpack_require__(8),
+  topsort: __webpack_require__(9)
 };
 
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var topsort = __webpack_require__(10);
+var topsort = __webpack_require__(9);
 
 module.exports = isAcyclic;
 
@@ -2473,10 +2428,10 @@ function isAcyclic(g) {
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dfs = __webpack_require__(7);
+var dfs = __webpack_require__(6);
 
 module.exports = postorder;
 
@@ -2486,10 +2441,10 @@ function postorder(g, vs) {
 
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dfs = __webpack_require__(7);
+var dfs = __webpack_require__(6);
 
 module.exports = preorder;
 
@@ -2499,12 +2454,12 @@ function preorder(g, vs) {
 
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0),
-    Graph = __webpack_require__(3),
-    PriorityQueue = __webpack_require__(11);
+    Graph = __webpack_require__(2),
+    PriorityQueue = __webpack_require__(10);
 
 module.exports = prim;
 
@@ -2557,22 +2512,22 @@ function prim(g, weightFunc) {
 
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Includes only the "core" of graphlib
 module.exports = {
-  Graph: __webpack_require__(3),
-  version: __webpack_require__(37)
+  Graph: __webpack_require__(2),
+  version: __webpack_require__(35)
 };
 
 
 /***/ }),
-/* 36 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0),
-    Graph = __webpack_require__(3);
+    Graph = __webpack_require__(2);
 
 module.exports = {
   write: write,
@@ -2640,14 +2595,14 @@ function read(json) {
 
 
 /***/ }),
-/* 37 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = '2.1.1';
 
 
 /***/ }),
-/* 38 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -19736,10 +19691,10 @@ module.exports = '2.1.1';
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17), __webpack_require__(50)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17), __webpack_require__(48)(module)))
 
 /***/ }),
-/* 39 */
+/* 37 */
 /***/ (function(module, exports) {
 
 // Generated automatically by nearley
@@ -19869,7 +19824,7 @@ if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
 
 
 /***/ }),
-/* 40 */
+/* 38 */
 /***/ (function(module, exports) {
 
 (function(root, factory) {
@@ -20143,6 +20098,7 @@ Parser.prototype.feed = function(chunk) {
     var lexer = this.lexer;
     lexer.reset(chunk, this.lexerState);
 
+    var token;
     while (token = lexer.next()) {
         // We add new states to table[current+1]
         var column = this.table[this.current];
@@ -20267,7 +20223,7 @@ return {
 
 
 /***/ }),
-/* 41 */
+/* 39 */
 /***/ (function(module, exports) {
 
 
@@ -20362,13 +20318,13 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 42 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(22);
+var content = __webpack_require__(21);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -20376,7 +20332,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(11)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -20393,14 +20349,14 @@ if(false) {
 }
 
 /***/ }),
-/* 43 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const House_1 = __webpack_require__(45);
-const graphlib_1 = __webpack_require__(25);
+const House_1 = __webpack_require__(43);
+const graphlib_1 = __webpack_require__(23);
 const Item_1 = __webpack_require__(1);
 function OppositeNavigation(nav) {
     return {
@@ -20474,7 +20430,7 @@ exports.GameMap = GameMap;
 
 
 /***/ }),
-/* 44 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20503,7 +20459,7 @@ exports.default = keyset;
 
 
 /***/ }),
-/* 45 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20513,7 +20469,7 @@ let roomNames = ['Garden', 'Hallway'];
 let rooms = [];
 let nameIdMap = {};
 roomNames.forEach(name => {
-    let imported = __webpack_require__(54)(`./${name}.ts`);
+    let imported = __webpack_require__(52)(`./${name}.ts`);
     let rm = imported.default;
     rooms.push(rm);
     nameIdMap[rm.name] = rm.identifier;
@@ -20522,14 +20478,14 @@ exports.default = { rooms, nameIdMap };
 
 
 /***/ }),
-/* 46 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Room_1 = __webpack_require__(13);
-const Way_1 = __webpack_require__(5);
+const Way_1 = __webpack_require__(3);
 const Item_1 = __webpack_require__(1);
 let fd = new (class FrontDoor extends Item_1.NavigationObject {
     constructor() {
@@ -20567,11 +20523,11 @@ exports.default = rm;
 
 
 /***/ }),
-/* 47 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var v1 = __webpack_require__(48);
-var v4 = __webpack_require__(49);
+var v1 = __webpack_require__(46);
+var v4 = __webpack_require__(47);
 
 var uuid = v4;
 uuid.v1 = v1;
@@ -20581,12 +20537,9 @@ module.exports = uuid;
 
 
 /***/ }),
-/* 48 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Unique ID creation requires a high quality random # generator.  We feature
-// detect to determine the best RNG source, normalizing to a function that
-// returns 128-bits of randomness, since that's what's usually required
 var rng = __webpack_require__(16);
 var bytesToUuid = __webpack_require__(15);
 
@@ -20690,7 +20643,7 @@ module.exports = v1;
 
 
 /***/ }),
-/* 49 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(16);
@@ -20725,7 +20678,7 @@ module.exports = v4;
 
 
 /***/ }),
-/* 50 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -20753,7 +20706,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 51 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20846,26 +20799,24 @@ function IndefiniteArticle(phrase) {
 /* harmony default export */ __webpack_exports__["default"] = (IndefiniteArticle);
 
 /***/ }),
-/* 52 */
+/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Game__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Game__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Game___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Game__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GameInterface__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GameInterface__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GameInterface___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__GameInterface__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Parser__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Parser__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Parser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_reset_css__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_reset_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_reset_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles_index_css__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles_index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__styles_index_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_index_css__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_index_css__);
 // import Konsol from './Konsol'
 
 
 
-
+// import './styles/reset.css'
 
 
 
@@ -20880,11 +20831,11 @@ let intf = new __WEBPACK_IMPORTED_MODULE_1__GameInterface__["StandardHTMLGameInt
 )
 
 /***/ }),
-/* 53 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./keys.ts": 44
+	"./keys.ts": 42
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -20900,15 +20851,15 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 53;
+webpackContext.id = 51;
 
 /***/ }),
-/* 54 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./Garden.ts": 14,
-	"./Hallway.ts": 46
+	"./Hallway.ts": 44
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -20924,7 +20875,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 54;
+webpackContext.id = 52;
 
 /***/ })
 /******/ ]);

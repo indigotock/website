@@ -8,12 +8,14 @@ var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 var postcssMiddleware = require('postcss-middleware');
 var autoprefixer = require('autoprefixer');
-
+// var compression = require('compression');
 
 var index = require('./routes/index');
 var ideas = require('./routes/ideas');
 
 var app = express();
+
+// app.use(compression())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,8 +42,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/js', express.static(path.join(__dirname, 'public', 'javascripts')));
+app.use(express.static(path.join(__dirname, '/public')));
+app.use('/timi', express.static(path.join(__dirname, '/public', 't')));
+app.use('/js', express.static(path.join(__dirname, '/public', 'javascripts')));
 
 app.use('/', index);
 app.use('/ideas', ideas);

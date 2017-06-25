@@ -1,19 +1,13 @@
 var express = require('express');
 var router = express.Router();
+var cms = require('./../cms');
 
-
-var Elemeno = require('elemeno');
-
-var elemeno = new Elemeno(require('../apikey'));
-let cache
-elemeno.getCollectionItems('ideas', function (err, response) {
-  cache = response
-  console.log(response.data[0])
-});
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-  res.render('ideas', { title: 'Ideas', res: cache });
+  let c = cms.getCollection('ideas', function (e, r) {
+    res.render('ideas', { title: 'Ideas', res: r });
+  });
 });
 
 module.exports = router;
