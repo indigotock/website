@@ -3,9 +3,6 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // var SimplexNoise = require('simplex-noise'),
-    //     simplex = new SimplexNoise(Math.random)
-
     let boxes = document.getElementsByClassName('ideasbox')
     if (boxes) {
         for (let i = 0; i < boxes.length; i++) {

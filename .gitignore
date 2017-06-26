@@ -6,3 +6,4 @@ out/*
 **/.DS_Store
 bundle.js
 apikey.js
+restartCode.js

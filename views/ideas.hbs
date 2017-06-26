@@ -5,11 +5,14 @@
 </section>
 <section class='boxlist'>
     {{#each res.data}} {{#if this.published}}
-    <div class='ideasbox' data-url='{{this.content.url}}' {{!--{{#if this.content.image}} style="
+    <div class='ideasbox' data-idea={{@index}} data-url='{{this.content.url}}' {{!--{{#if this.content.image}} style="
         background-image:url('{{this.content.image.thumbnails.med}}')
     " {{/if}}--}}>
         <header>
-            <h1><a href='{{this.content.url}}'>{{this.title}}</a></h1>
+            <h1>
+                {{#if this.content.url}}
+                <a href='{{this.content.url}}'>{{this.title}}</a> {{else}} {{this.title}} {{/if}}
+            </h1>
         </header>
         <main>{{{this.content.description.html}}}</main>
     </div>
