@@ -12,7 +12,6 @@ var autoprefixer = require('autoprefixer');
 
 var restart = require('./routes/restart');
 var index = require('./routes/index');
-var ideas = require('./routes/ideas');
 
 var app = express();
 
@@ -48,7 +47,6 @@ app.use('/timi', express.static(path.join(__dirname, '/public', 't')));
 app.use('/js', express.static(path.join(__dirname, '/public', 'javascripts')));
 
 app.use('/', index);
-app.use('/ideas', ideas);
 app.use('/restart', restart);
 
 // catch 404 and forward to error handler

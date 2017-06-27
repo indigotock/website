@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=express:* node ./bin/www"
+    "start": "DEBUG=express:* node ./bin/www",
+    "win":"set DEBUG=express:* & node ./bin/www"
   },
   "dependencies": {
     "autoprefixer": "^7.1.1",
