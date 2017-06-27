@@ -3,23 +3,34 @@
     it only to host prvate projects and other miscellanea, but from time to time interesting things may find there way on
     here.
 </p>
-  <canvas class='break'></canvas>
+<canvas class='break'></canvas>
 <section>
-    <p>I'm currently trying to consolidate all of my little ideas and toy projects to this page (why bother with a website if
-        I have nothing to show), the source for most of these is available on my GitHub.</p>
+    <p>I'm currently trying to consolidate all of my little ideas and toy projects to this page, the source for most of these
+        is available on my GitHub.</p>
 </section>
-<section class='boxlist'>
-    {{#each res.data}} {{#if this.published}}
-    <div class='ideasbox' data-idea={{@index}} data-url='{{this.content.url}}' {{!--{{#if this.content.image}} style="
-        background-image:url('{{this.content.image.thumbnails.med}}')
-    " {{/if}}--}}>
-        <header>
-            <h1>
+<section class='ldisplay'>
+    <div class='boxlist '>
+        {{#each res.data}} {{#if this.published}}
+        <article class='listitem'>
+            {{#if this.content.url}}
+            <a href='{{this.content.url}}'>
+        {{/if}}
+        <img src={{this.content.image.thumbnails.med}}/>
+        {{#if this.content.url}}
+        </a> {{/if}}
+            <div class='right'>
                 {{#if this.content.url}}
-                <a href='{{this.content.url}}'>{{this.title}}</a> {{else}} {{this.title}} {{/if}}
-            </h1>
-        </header>
-        <main>{{{this.content.description.html}}}</main>
+                <a href='{{this.content.url}}'>
+        {{/if}}
+        <h1>{{this.title}}</h1>
+        {{#if this.content.url}}
+        </a> {{/if}}
+                <span>{{{this.content.description.html}}}</span>
+            </div>
+        </article>
+        {{/if}} {{/each}} {{#if res}} {{else}}
+        <p class='info'>Appears to be some problem fetching the data from the server. How awfully embarassing. Have a look at my GitHub for
+            some of the things you are meant to see here.</p>
+        {{/if}}
     </div>
-    {{/if}} {{/each}}
 </section>
