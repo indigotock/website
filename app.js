@@ -49,9 +49,9 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use('/timi', express.static(path.join(__dirname, '/public', 't')));
 app.use('/js', express.static(path.join(__dirname, '/public', 'javascripts')));
 
-app.use('/', index);
 app.use('/restart', restart);
 app.use('/elemeno', elemeno);
+app.use('/', index);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
