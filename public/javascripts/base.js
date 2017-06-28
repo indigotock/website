@@ -53,6 +53,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let pt = performance.now()
 
     function yy(x) {
+        x &= 700
+        x *= 3 ^ x
+        x &= 500
         return (Math.sin(x + t * 1) * (breakHeight * .8) / 2) + breakHeight / 2 //((simplex.noise2D(x, t)) * (breakHeight * .9) / 2) + breakHeight / 2
     }
 
