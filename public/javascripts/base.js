@@ -51,10 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let t = new Date().getTime()
     let pt = performance.now()
-    function yy (x) {
-        return (Math.sin(x + t * 1) * (breakHeight * .8) / 2) + breakHeight / 2//((simplex.noise2D(x, t)) * (breakHeight * .9) / 2) + breakHeight / 2
+
+    function yy(x) {
+        return (Math.sin(x + t * 1) * (breakHeight * .8) / 2) + breakHeight / 2 //((simplex.noise2D(x, t)) * (breakHeight * .9) / 2) + breakHeight / 2
     }
-    function animate (timestamp) {
+
+    function animate(timestamp) {
         let dt = (timestamp - pt) / 1000
         pt = timestamp
         cnt = 2 + Math.floor(Math.min(12, Math.max(3, document.body.clientWidth / 100)))
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let c = ctx[i]
             c.clearRect(0, 0, c.canvas.width, c.canvas.height)
             for (let j = 0; j < cnt; j++) {
-                function xx (num) {
+                function xx(num) {
                     return i + (num * spread) + (spread * .5 - radius * 2)
                 }
                 let x = xx(j)

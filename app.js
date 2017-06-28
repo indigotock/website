@@ -11,6 +11,7 @@ var autoprefixer = require('autoprefixer');
 // var compression = require('compression');
 
 var restart = require('./routes/restart');
+var elemeno = require('./routes/elemeno');
 var index = require('./routes/index');
 
 var app = express();
@@ -40,7 +41,9 @@ app.use(postcssMiddleware({
 }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')));
 app.use('/timi', express.static(path.join(__dirname, '/public', 't')));
@@ -48,6 +51,7 @@ app.use('/js', express.static(path.join(__dirname, '/public', 'javascripts')));
 
 app.use('/', index);
 app.use('/restart', restart);
+app.use('/elemeno', elemeno);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
