@@ -6,10 +6,9 @@
 <canvas class='break'></canvas>
 <section>
     <p>I'm currently trying to consolidate all of my little ideas and toy projects to this page, the source for most of these
-        is available on my GitHub.</p>
+        is available on my GitHub. Here are some of the ones I've made public:</p>
 </section>
 <section class='ldisplay'>
-    <h2>Things</h2>
     <div class='boxlist '>
         {{#each res.data}} {{#if this.published}}
         <article class='listitem'>
@@ -23,7 +22,7 @@
                 {{#if this.content.url}}
                 <a href='{{this.content.url}}'>
         {{/if}}
-        <h1>{{this.title}}</h1>
+        <h3>{{this.title}}</h3>
         {{#if this.content.url}}
         </a> {{/if}}
                 <span>{{{this.content.description.html}}}</span>
