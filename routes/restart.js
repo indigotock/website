@@ -7,8 +7,6 @@ router.get('/', function (req, res, next) {
   res.sendFile(path.join(__dirname, '..', 'public', 'restart.html'))
 })
 
-
-
 router.post('/', function (req, res, next) {
   if (req.body.pass && req.body.pass == require('../restartCode')) {
     res.write('Confirmed', (e) => {

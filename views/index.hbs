@@ -3,3 +3,34 @@
     it only to host prvate projects and other miscellanea, but from time to time interesting things may find there way on
     here.
 </p>
+<canvas class='break'></canvas>
+<section>
+    <p>I'm currently trying to consolidate all of my little ideas and toy projects to this page, the source for most of these
+        is available on my GitHub. Here are some of the ones I've made public:</p>
+</section>
+<section class='ldisplay'>
+    <div class='boxlist '>
+        {{#each res.data}} {{#if this.published}}
+        <article class='listitem'>
+            {{#if this.content.url}}
+            <a href='{{this.content.url}}'>
+        {{/if}}
+        <img src={{this.content.image.thumbnails.med}}/>
+        {{#if this.content.url}}
+        </a> {{/if}}
+            <div class='right'>
+                {{#if this.content.url}}
+                <a href='{{this.content.url}}'>
+        {{/if}}
+        <h3>{{this.title}}</h3>
+        {{#if this.content.url}}
+        </a> {{/if}}
+                <span>{{{this.content.description.html}}}</span>
+            </div>
+        </article>
+        {{/if}} {{/each}} {{#if res}} {{else}}
+        <p class='info'>Appears to be some problem fetching the data from the server. How awfully embarassing. Have a look at my GitHub for
+            some of the things you are meant to see here.</p>
+        {{/if}}
+    </div>
+</section>

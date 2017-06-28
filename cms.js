@@ -1,13 +1,17 @@
 var Elemeno = require('elemeno');
 
 var elemeno = new Elemeno(require('./apikey'), {
-    cacheMaxAge: 20, cacheSize: 100
+    cacheMaxAge: 20,
+    cacheSize: 100
 });
 
 
 
 var obj = {
-    ideas: []
+    ideas: [],
+    clearCache: function () {
+        elemeno.clearCache()
+    }
 }
 
 elemeno.getCollectionItems('ideas').then((data) => {
