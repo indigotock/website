@@ -23,15 +23,18 @@ body {
     -webkit-font-smoothing:antialiased;
 }
 
+a {
+    color: $tertiary;
+    text-decoration: none;
+    &:visited {
+        color: $tertiary;
+    }
+}
+
 h1,
 h2,
 h3 {
-    color: $primary;
     font-family: "Libre Baskerville", Georgia, Times, serif;
-}
-
-h1 {
-    margin: 0;
 }
 
 .info {
@@ -86,14 +89,6 @@ h1 {
     }
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
-    &:visited {
-        color: inherit;
-    }
-}
-
 body>header {
     font-weight: bold;
     display: flex;
@@ -103,8 +98,12 @@ body>header {
     align-items: center;
     flex-wrap: nowrap;
     h1 {
-        display: block;
         font-size: 3.0em;
+        color: $primary !important;
+        margin: 0;
+        a {
+            color: $primary !important;
+        }
     }
     nav {
         font-size: 1.1em;

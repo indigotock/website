@@ -11,14 +11,16 @@ body {
     margin-left: 1em;
     margin-right: 1em; }
 
+a {
+  color: #f0b32b;
+  text-decoration: none; }
+  a:visited {
+    color: #f0b32b; }
+
 h1,
 h2,
 h3 {
-  color: #12ff58;
   font-family: "Libre Baskerville", Georgia, Times, serif; }
-
-h1 {
-  margin: 0; }
 
 .info {
   font-style: italic;
@@ -64,12 +66,6 @@ h1 {
           margin: 0;
           line-height: 1.2; }
 
-a {
-  color: inherit;
-  text-decoration: none; }
-  a:visited {
-    color: inherit; }
-
 body > header {
   font-weight: bold;
   display: flex;
@@ -79,8 +75,11 @@ body > header {
   align-items: center;
   flex-wrap: nowrap; }
   body > header h1 {
-    display: block;
-    font-size: 3.0em; }
+    font-size: 3.0em;
+    color: #12ff58 !important;
+    margin: 0; }
+    body > header h1 a {
+      color: #12ff58 !important; }
   body > header nav {
     font-size: 1.1em; }
 
