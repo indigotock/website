@@ -146,9 +146,9 @@ ol.horizontal {
     }
 }
 
-@media only screen and (max-width: 475px) {
+@media (max-width: 475px) {
     body {
-        font-size: 1.1rem;
+        font-size: 1em;
         &>header {
             h1 {
                 text-align: center;
@@ -173,7 +173,7 @@ ol.horizontal {
     }
 }
 
-@media only screen and (min-width: 768px) {
+@media (min-width: 768px) {
     body {
         font-size: 1.3rem;
         &>header {
