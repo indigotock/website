@@ -17,7 +17,8 @@ var obj = {
 }
 
 
-//todo functionality for updating via webhooks
-
+elemeno.getCollectionItems('ideas').then((data) => {
+    obj['ideas'] = data
+})
 
 module.exports = obj
