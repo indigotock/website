@@ -8,10 +8,11 @@ var elemeno = new Elemeno(require('./apikey'), {
 
 var obj = {
     ideas: [],
-    clearCache: function () {
+    clearCache: function (cb) {
         elemeno.clearCache()
         elemeno.getCollectionItems('ideas').then((data) => {
             obj['ideas'] = data
+            cb()
         })
     }
 }
