@@ -35,6 +35,13 @@ h1,
 h2,
 h3 {
     font-family: "Libre Baskerville", Georgia, Times, serif;
+    color: $primary;
+    a {
+        color: $primary;
+        &:visited {
+            color: $primary;
+        }
+    }
 }
 
 .info {
@@ -61,7 +68,7 @@ h3 {
         img {
             height: 120px;
             flex: 0 0 120px;
-            border: solid 1px currentColor;
+            border: solid 1px $primary;
             width: 125px;
             flex-grow: 0;
             flex-shrink: 0;
@@ -71,10 +78,15 @@ h3 {
             display: flex;
             flex-direction: column;
             margin-left: 1em;
-            h3 {
-                padding: 0;
-                margin: 0;
-                line-height: 1.2;
+            header {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                h3 {
+                    padding: 0;
+                    margin: 0;
+                    line-height: 1.2;
+                }
             }
             span {
                 text-overflow: ellipsis;
@@ -99,11 +111,7 @@ body>header {
     flex-wrap: nowrap;
     h1 {
         font-size: 3.0em;
-        color: $primary !important;
         margin: 0;
-        a {
-            color: $primary !important;
-        }
     }
     nav {
         font-size: 1.1em;
@@ -114,7 +122,8 @@ body>main {
     text-align: justify;
 }
 
-body>header nav ul {
+ul.horizontal,
+ol.horizontal {
     margin: 0;
     padding: 0;
     li {

@@ -12,19 +12,20 @@
     <div class='boxlist '>
         {{#each res.data}} {{#if this.published}}
         <article class='listitem'>
-            {{#if this.content.url}}
-            <a href='{{this.content.url}}'>
-        {{/if}}
-        <img src={{this.content.image.thumbnails.med}}/>
-        {{#if this.content.url}}
-        </a> {{/if}}
+            <img src={{this.content.image.thumbnails.med}}/>
             <div class='right'>
+                <header>
+                    <h3>{{this.title}}</h3>
+                    {{#if this.content.links}}
+                    <ul class='horizontal'>
+                        {{#each this.content.links}}
+                        <li><a href='{{this.url}}'>{{this.name}}</a></li>
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+                </header>
                 {{#if this.content.url}}
-                <a href='{{this.content.url}}'>
-        {{/if}}
-        <h3>{{this.title}}</h3>
-        {{#if this.content.url}}
-        </a> {{/if}}
+                </a> {{/if}}
                 <span>{{{this.content.description.html}}}</span>
             </div>
         </article>

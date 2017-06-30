@@ -5,7 +5,8 @@ var cms = require('../cms');
 
 router.post('/', function (req, res, next) {
   cms.clearCache();
-  res.sendStatus(200);
+  console.log(cms);
+  res.send(cms).sendStatus(200);
 });
 
 module.exports = router;

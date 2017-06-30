@@ -6,17 +6,16 @@ var elemeno = new Elemeno(require('./apikey'), {
 });
 
 
-
 var obj = {
     ideas: [],
     clearCache: function () {
         elemeno.clearCache()
+        elemeno.getCollectionItems('ideas').then((data) => {
+            obj['ideas'] = data
+        })
     }
 }
 
-elemeno.getCollectionItems('ideas').then((data) => {
-    obj['ideas'] = data
-})
 
 //todo functionality for updating via webhooks
 

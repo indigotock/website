@@ -20,7 +20,16 @@ a {
 h1,
 h2,
 h3 {
-  font-family: "Libre Baskerville", Georgia, Times, serif; }
+  font-family: "Libre Baskerville", Georgia, Times, serif;
+  color: #12ff58; }
+  h1 a,
+  h2 a,
+  h3 a {
+    color: #12ff58; }
+    h1 a:visited,
+    h2 a:visited,
+    h3 a:visited {
+      color: #12ff58; }
 
 .info {
   font-style: italic;
@@ -45,7 +54,7 @@ h3 {
     .boxlist .listitem img {
       height: 120px;
       flex: 0 0 120px;
-      border: solid 1px currentColor;
+      border: solid 1px #12ff58;
       width: 125px;
       flex-grow: 0;
       flex-shrink: 0; }
@@ -54,10 +63,14 @@ h3 {
       display: flex;
       flex-direction: column;
       margin-left: 1em; }
-      .boxlist .listitem .right h3 {
-        padding: 0;
-        margin: 0;
-        line-height: 1.2; }
+      .boxlist .listitem .right header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between; }
+        .boxlist .listitem .right header h3 {
+          padding: 0;
+          margin: 0;
+          line-height: 1.2; }
       .boxlist .listitem .right span {
         text-overflow: ellipsis;
         overflow: hidden;
@@ -76,23 +89,23 @@ body > header {
   flex-wrap: nowrap; }
   body > header h1 {
     font-size: 3.0em;
-    color: #12ff58 !important;
     margin: 0; }
-    body > header h1 a {
-      color: #12ff58 !important; }
   body > header nav {
     font-size: 1.1em; }
 
 body > main {
   text-align: justify; }
 
-body > header nav ul {
+ul.horizontal,
+ol.horizontal {
   margin: 0;
   padding: 0; }
-  body > header nav ul li {
+  ul.horizontal li,
+  ol.horizontal li {
     display: inline;
     text-transform: lowercase; }
-    body > header nav ul li:not(:first-child) {
+    ul.horizontal li:not(:first-child),
+    ol.horizontal li:not(:first-child) {
       margin-left: .5em; }
 
 @media (max-width: 481px) {
