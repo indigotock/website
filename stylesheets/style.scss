@@ -5,11 +5,11 @@ $secondary: rgba(57, 18, 133, 1);
 $tertiary: rgba(240, 179, 43, 1);
 body {
     margin: 40px auto;
-    line-height: 1.4;
+    line-height: 1.2;
     font-size: 1.2rem;
-    max-width: 31rem;
     color: $foregroundColor;
     background: $backgroundColor;
+    max-width: 41em;
     &>* {
         margin-left: 1em;
         margin-right: 1em;
@@ -59,10 +59,10 @@ h3 {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
+    font-size: inherit;
     .listitem {
         display: flex;
         flex-direction: row;
-        font-size: .9em;
         margin-bottom: 1em;
         height: 120px;
         img {
@@ -90,7 +90,6 @@ h3 {
                 }
             }
             span {
-                font-size: .9em;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 p {
@@ -123,13 +122,14 @@ body>header {
     h1 {
         font-size: 3.0em;
         margin: 0;
+        text-align: center;
     }
     nav {
         font-size: 1.1em;
     }
 }
 
-body>main {
+p {
     text-align: justify;
 }
 
@@ -146,7 +146,7 @@ ol.horizontal {
     }
 }
 
-@media (max-width: 481px) {
+@media only screen and (max-width: 475px) {
     body {
         font-size: 1.1rem;
         &>header {
@@ -173,7 +173,7 @@ ol.horizontal {
     }
 }
 
-@media (min-width: 641px) {
+@media only screen and (min-width: 768px) {
     body {
         font-size: 1.3rem;
         &>header {

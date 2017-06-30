@@ -7,3 +7,5 @@ out/*
 bundle.js
 apikey.js
 restartCode.js
+
+public/stylesheets
