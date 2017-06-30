@@ -28,19 +28,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let breaks = document.getElementsByClassName('break')
-    let ctx = []
 
     let breakHeight = 30
     let spread = 40
     let radius = 2.5
     let cnt = 6
+    const colour = window.getComputedStyle(document.body).getPropertyValue('color')
     const mw = 1280
+    const svgns = 'http://www.w3.org/2000/svg'
 
     for (let i = 0; i < breaks.length; i++) {
         let item = breaks[i]
         item.height = breakHeight
-        item.style.height = breakHeight + 'px'
-        ctx.push(item.getContext('2d'))
+        item.setAttribute('version', 1.1)
+        item.setAttribute('xmlns', svgns)
+        item.setAttribute('height', breakHeight)
     }
 
     window.addEventListener('resize', function () {
@@ -59,6 +61,30 @@ document.addEventListener('DOMContentLoaded', function () {
         return (Math.sin(x + t * 1) * (breakHeight * .8) / 2) + breakHeight / 2 //((simplex.noise2D(x, t)) * (breakHeight * .9) / 2) + breakHeight / 2
     }
 
+    function getCircle(svg, index) {
+        let ret = svg.getElementsByTagName('circle')[index]
+
+        if (ret) return ret
+        ret = document.createElementNS(svgns, 'circle')
+        svg.appendChild(ret)
+        ret.setAttribute('r', 5 / 2)
+        ret.setAttribute('stroke', colour)
+        ret.setAttribute('fill', 'transparent')
+        ret.setAttribute('stroke-width', 2)
+        return ret
+    }
+
+    function getLine(svg, index) {
+        let ret = svg.getElementsByTagName('line')[index]
+
+        if (ret) return ret
+        ret = document.createElementNS(svgns, 'line')
+        ret.setAttribute('stroke-width', 2)
+        ret.setAttribute('stroke', colour)
+        svg.appendChild(ret)
+        return ret
+    }
+
     function animate(timestamp) {
         let dt = (timestamp - pt) / 1000
         pt = timestamp
@@ -66,25 +92,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let w = (spread * cnt)
         for (let i = 0; i < breaks.length; i++) {
-            breaks[i].style.width = w * 1 + 'px'
-            breaks[i].width = w * 1
-            let c = ctx[i]
-            c.clearRect(0, 0, c.canvas.width, c.canvas.height)
+            let svg = breaks[i]
+            svg.setAttribute('width', w)
             for (let j = 0; j < cnt; j++) {
+                let circ = getCircle(svg, j)
+
                 function xx(num) {
                     return i + (num * spread) + (spread * .5 - radius * 2)
                 }
                 let x = xx(j)
                 let y = yy(x)
-                c.strokeStyle = '#bbb'
-                c.beginPath()
-                c.arc(i + x, y, radius, 0, Math.PI * 2)
+                circ.setAttribute('cx', x)
+                circ.setAttribute('cy', y)
                 if (j < cnt - 1) {
+                    let line = getLine(svg, j)
                     let x2 = xx(j + 1)
                     let y2 = yy(x2)
-                    c.lineTo(x2, y2)
+                    line.setAttribute('x1', x)
+                    line.setAttribute('x2', x2)
+                    line.setAttribute('y1', y)
+                    line.setAttribute('y2', y2)
                 }
-                c.stroke()
             }
         }
         t += dt || 0
