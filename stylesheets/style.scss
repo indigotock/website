@@ -183,7 +183,11 @@ ol.horizontal {
     }
 }
 
-.break {
+svg.break {
     margin: 0 auto; // width: 200px;
     display: block;
+    circle,
+    line {
+        stroke: transparentize($foregroundColor, .2);
+    }
 }

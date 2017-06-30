@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ret = document.createElementNS(svgns, 'circle')
         svg.appendChild(ret)
         ret.setAttribute('r', 5 / 2)
-        ret.setAttribute('stroke', colour)
         ret.setAttribute('fill', 'transparent')
         ret.setAttribute('stroke-width', 2)
         return ret
@@ -80,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (ret) return ret
         ret = document.createElementNS(svgns, 'line')
         ret.setAttribute('stroke-width', 2)
-        ret.setAttribute('stroke', colour)
         svg.appendChild(ret)
         return ret
     }
