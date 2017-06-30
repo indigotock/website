@@ -65,6 +65,7 @@ h3 {
         flex-direction: row;
         margin-bottom: 1em;
         height: 120px;
+        max-width: 100%;
         img {
             height: 120px;
             flex: 0 0 120px;
@@ -79,6 +80,7 @@ h3 {
             flex-direction: column;
             margin-left: 1em;
             position: relative;
+            width: 100%;
             header {
                 display: flex;
                 flex-direction: row;
@@ -90,6 +92,7 @@ h3 {
                 }
             }
             span {
+                width: 100%;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 p {

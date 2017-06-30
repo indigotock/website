@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let b = boxes[i]
             let attr = b.getAttribute('data-url')
             if (attr)
-                b.addEventListener('click', (e) => {
+                b.addEventListener('click', function (e) {
                     window.location = attr
                 })
         }
