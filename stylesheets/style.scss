@@ -6,7 +6,7 @@ $tertiary: rgba(240, 179, 43, 1);
 body {
     margin: 40px auto;
     line-height: 1.4;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     max-width: 31rem;
     color: $foregroundColor;
     background: $backgroundColor;
@@ -78,6 +78,7 @@ h3 {
             display: flex;
             flex-direction: column;
             margin-left: 1em;
+            position: relative;
             header {
                 display: flex;
                 flex-direction: row;
@@ -89,13 +90,23 @@ h3 {
                 }
             }
             span {
+                font-size: .9em;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 p {
                     margin: 0;
                     line-height: 1.2;
                 }
-                position: relative;
+                &:after {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    height: 2em;
+                    content: '';
+                    pointer-events: none;
+                    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, $backgroundColor 100%);
+                    right: 0;
+                }
             }
         }
     }
@@ -137,10 +148,26 @@ ol.horizontal {
 
 @media (max-width: 481px) {
     body {
+        font-size: 1.1rem;
         &>header {
             h1 {
                 text-align: center;
                 font-size: 2.5em;
+            }
+        }
+        .boxlist {
+            .listitem {
+                .right {
+                    padding-top: 0;
+                    header {
+                        display: block;
+                    }
+                }
+                img {
+                    width: 70px;
+                    flex: 0 0 70px;
+                    height: 70px;
+                }
             }
         }
     }
@@ -148,6 +175,7 @@ ol.horizontal {
 
 @media (min-width: 641px) {
     body {
+        font-size: 1.3rem;
         &>header {
             flex-direction: row;
         }

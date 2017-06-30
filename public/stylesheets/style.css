@@ -1,7 +1,7 @@
 body {
   margin: 40px auto;
   line-height: 1.4;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   max-width: 31rem;
   color: #e7e8e8;
   background: #203242;
@@ -62,7 +62,8 @@ h3 {
       padding-top: 5px;
       display: flex;
       flex-direction: column;
-      margin-left: 1em; }
+      margin-left: 1em;
+      position: relative; }
       .boxlist .listitem .right header {
         display: flex;
         flex-direction: row;
@@ -72,12 +73,21 @@ h3 {
           margin: 0;
           line-height: 1.2; }
       .boxlist .listitem .right span {
+        font-size: .9em;
         text-overflow: ellipsis;
-        overflow: hidden;
-        position: relative; }
+        overflow: hidden; }
         .boxlist .listitem .right span p {
           margin: 0;
           line-height: 1.2; }
+        .boxlist .listitem .right span:after {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 2em;
+          content: '';
+          pointer-events: none;
+          background: linear-gradient(to bottom, transparent 0%, #203242 100%);
+          right: 0; }
 
 body > header {
   font-weight: bold;
@@ -109,12 +119,23 @@ ol.horizontal {
       margin-left: .5em; }
 
 @media (max-width: 481px) {
-  body > header h1 {
-    text-align: center;
-    font-size: 2.5em; } }
+  body {
+    font-size: 1.1rem; }
+    body > header h1 {
+      text-align: center;
+      font-size: 2.5em; }
+    body .boxlist .listitem .right {
+      padding-top: 0; }
+      body .boxlist .listitem .right header {
+        display: block; }
+    body .boxlist .listitem img {
+      width: 70px;
+      flex: 0 0 70px;
+      height: 70px; } }
 
 @media (min-width: 641px) {
   body {
+    font-size: 1.3rem;
     max-width: 51rem; }
     body > header {
       flex-direction: row; } }
