@@ -112,6 +112,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     line.setAttribute('x2', x2)
                     line.setAttribute('y1', y)
                     line.setAttribute('y2', y2)
+                } else if (j < cnt) {
+                    let line = getLine(svg, j)
+                    line.setAttribute('x1', -10)
+                    line.setAttribute('x2', -10)
+                    line.setAttribute('y1', -10)
+                    line.setAttribute('y2', -10)
                 }
             }
         }
