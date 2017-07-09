@@ -16,6 +16,7 @@ var index = require('./routes/index');
 
 var app = express();
 
+app.use(express.static(path.join(__dirname, '/public')));
 // app.use(compression())
 
 // view engine setup
@@ -45,9 +46,6 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '/public')));
-app.use('/timi', express.static(path.join(__dirname, '/public', 't')));
-app.use('/js', express.static(path.join(__dirname, '/public', 'javascripts')));
 
 app.use('/restart', restart);
 app.use('/elemeno', elemeno);
