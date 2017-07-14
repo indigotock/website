@@ -14,7 +14,7 @@
     <div class='boxlist'>
         {{#each res.data}} {{#if this.published}}
         <article class='listitem'>
-            <img src={{this.content.image.thumbnails.med}}/>
+            <img src='{{this.content.image.fileUrl}}' />
             <div class='right'>
                 <header>
                     <h3>{{this.title}}</h3>
