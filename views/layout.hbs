@@ -2,9 +2,12 @@
 <html>
 
 <head>
+  {{#if title}}
   <title>{{title}} - Kyle Hughes</title>
+  {{else}}
+  <title>Kyle Hughes</title>
+  {{/if}}
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Raleway" rel="stylesheet">
   <link rel='stylesheet' href='/stylesheets/normalize.css'>
   <link rel='stylesheet' href='/stylesheets/style.css' media='screen'>
   <link rel='stylesheet' href='/stylesheets/print.css' media='print'>
@@ -27,6 +30,21 @@
     </nav>
   </header>
   {{{body}}}
+  <hr>
+  <footer>
+    This site is built on a number of tools/techs:
+    <ul class='horizontal'>
+      {{!--
+      <li><a href='https://github.com/oxalorg/sakura'>Sakura</a></li>
+      <li><a href='https://expressjs.com/'>Express</a></li>
+      <li><a href='https://elemeno.io/'>Elemeno</a></li>
+      <li><a href='https://github.com/oxalorg/sakura'>Sakura</a></li>
+
+      <li><a href='https://letsencrypt.org/'>Let's Encrypt</a></li>--}}{{#each techs.data}} {{#if this.published}}
+      <li><a href='{{this.content.url}}'>{{this.title}}</a></li>
+      {{/if}} {{/each}}
+    </ul>
+  </footer>
 </body>
 
 </html>
