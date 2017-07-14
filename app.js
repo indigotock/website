@@ -16,7 +16,6 @@ var index = require('./routes/index');
 
 var app = express();
 
-app.use('/public', express.static(path.join(__dirname, '/public')));
 // app.use(compression())
 
 // view engine setup
@@ -26,20 +25,23 @@ app.set('view engine', 'hbs');
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 
-app.use(sassMiddleware({
+app.use('/stylesheets', sassMiddleware({
   /* Options */
-  src: __dirname,
-  dest: __dirname + '/public',
-  outputStyle: 'compressed'
+  src: path.join(__dirname, 'stylesheets'),
+  dest: path.join(__dirname, 'public', 'stylesheets'),
+  outputStyle: 'compressed',
 }));
-app.use(postcssMiddleware({
+app.use('/stylesheets', postcssMiddleware({
   plugins: [
-    autoprefixer({})
+    autoprefixer()
   ],
   src: function (req) {
-    return path.join(__dirname + '/public', req.url);
+    return path.join(__dirname, 'public', 'stylesheets', req.url);
   }
 }));
+app.use(express.static(path.join(__dirname, '/public')));
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
