@@ -6,14 +6,10 @@ $color-bg-alt: #40363a;
 //  $color-text: #dedce5;
 $color-text: #d9d8dc;
 $font-size-base: 1.8rem;
-@mixin sans-serif() {
-    font-family: Verdana, Geneva, sans-serif;
-}
-
-@mixin serif() {
-    font-family: serif;
-}
-
+$font-family-sans-serif: Verdana,
+Geneva,
+sans-serif;
+$font-family-serif: serif;
 @import 'sakura';
 .info {
     font-style: italic;
@@ -26,7 +22,7 @@ body {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        @include sans-serif();
+        font-family: $font-family-sans-serif;
         nav {
             font-size: 1.2em;
         }
@@ -92,6 +88,7 @@ ul.horizontal,
 ol.horizontal {
     margin: 0;
     padding: 0;
+    display: inline;
     li {
         display: inline;
         text-transform: lowercase;
