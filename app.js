@@ -16,7 +16,7 @@ var index = require('./routes/index');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, '/public')));
+app.use('/public', express.static(path.join(__dirname, '/public')));
 // app.use(compression())
 
 // view engine setup
@@ -30,7 +30,7 @@ app.use(sassMiddleware({
   /* Options */
   src: __dirname,
   dest: __dirname + '/public',
-  outputStyle: 'extended'
+  outputStyle: 'compressed'
 }));
 app.use(postcssMiddleware({
   plugins: [
