@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "DEBUG=express:* node ./bin/www",
-    "win":"set DEBUG=express:* & node ./bin/www"
+    "win": "set DEBUG=express:* & node ./bin/www"
   },
   "dependencies": {
     "autoprefixer": "^7.1.1",
@@ -13,6 +13,7 @@
     "debug": "~2.6.3",
     "elemeno": "^1.1.0",
     "express": "~4.15.2",
+    "express-minify": "^0.2.0",
     "hbs": "~4.0.1",
     "memory-cache": "^0.2.0",
     "morgan": "~1.8.1",
