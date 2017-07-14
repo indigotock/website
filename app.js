@@ -13,10 +13,17 @@ var autoprefixer = require('autoprefixer');
 var restart = require('./routes/restart');
 var elemeno = require('./routes/elemeno');
 var index = require('./routes/index');
+var cms = require('./cms');
 
 var app = express();
 
 // app.use(compression())
+
+app.use(function (req, res, next) {
+  res.locals.techs = cms.site_techs
+  console.log(cms.site_techs)
+  next()
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,6 +55,8 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
+
+
 
 app.use('/restart', restart);
 app.use('/elemeno', elemeno);
