@@ -102,7 +102,7 @@ ol.horizontal {
             content: ',';
         }
         &:last-child:after {
-            content: '';
+            content: '.';
         }
     }
 }
