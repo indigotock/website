@@ -15,8 +15,13 @@ $font-family-serif: serif;
     font-style: italic;
 }
 
+.left {
+    text-align: left;
+    display: block;
+}
+
 body {
-    header {
+    &>header {
         display: flex;
         flex-wrap: nowrap;
         flex-direction: row;
@@ -142,5 +147,11 @@ svg.break {
     line {
         stroke: currentColor;
         fill-opacity: 0;
+    }
+}
+
+.post {
+    .title {
+        margin-bottom: 0;
     }
 }

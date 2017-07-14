@@ -11,6 +11,7 @@
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "cross-env": "^5.0.1",
+    "dateformat": "^2.0.0",
     "debug": "~2.6.3",
     "elemeno": "^1.1.0",
     "express": "~4.15.2",

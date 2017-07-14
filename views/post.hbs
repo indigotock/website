@@ -1,0 +1,7 @@
+{{#each posts}} {{#if this.published}}
+<article class='post'>
+    <h3 class='title'>{{this.title}}</h3>
+    <a href='/posts/{{this.slug}}'>
+    {{datetime this.datePublished "dS mmmm  yyyy, h:MMtt"}}</a> {{{this.content.body.html}}}
+</article>
+{{/if}} {{/each}}

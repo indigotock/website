@@ -12,10 +12,14 @@ function get_and_save_data() {
     elemeno.getCollectionItems('ideas').then((data) => {
         obj['ideas'] = data
     })
+    elemeno.getCollectionItems('posts').then((data) => {
+        obj.posts = data
+    })
 }
 
 
 var obj = {
+    posts: [],
     ideas: [],
     site_techs: [],
     clearCache: function (cb) {
