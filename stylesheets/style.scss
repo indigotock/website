@@ -92,12 +92,12 @@ ul.horizontal,
 ol.horizontal {
     margin: 0;
     padding: 0;
-    display: inline;
     li {
         display: inline;
         text-transform: lowercase;
-        margin-left: .5em;
-        &:not(:first-child) {}
+        &:not(:first-child) {
+            margin-left: .5em;
+        }
         &:after {
             content: ',';
         }

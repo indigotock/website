@@ -32,10 +32,16 @@
   {{{body}}}
   <hr>
   <footer>
-    This site is built with a number of tools/techs:
+    This site is built on a number of tools/techs:
     <ul class='horizontal'>
-      {{#each techs.data}} {{#if this.published}}
-      <li><a target='_blank' href='{{this.content.url}}'>{{this.title}}</a></li>
+      {{!--
+      <li><a href='https://github.com/oxalorg/sakura'>Sakura</a></li>
+      <li><a href='https://expressjs.com/'>Express</a></li>
+      <li><a href='https://elemeno.io/'>Elemeno</a></li>
+      <li><a href='https://github.com/oxalorg/sakura'>Sakura</a></li>
+
+      <li><a href='https://letsencrypt.org/'>Let's Encrypt</a></li>--}}{{#each techs.data}} {{#if this.published}}
+      <li><a href='{{this.content.url}}'>{{this.title}}</a></li>
       {{/if}} {{/each}}
     </ul>
   </footer>

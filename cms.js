@@ -5,26 +5,21 @@ var elemeno = new Elemeno(require('./apikey'), {
     cacheSize: 100
 });
 
-function get_and_save_data() {
-    elemeno.getCollectionItems('ideas').then((data) => {
-        obj['ideas'] = data
-    })
-    elemeno.getCollectionItems('techs').then((data) => {
-        obj['site_techs'] = data
-    })
-}
 
 var obj = {
     ideas: [],
-    site_techs: [],
     clearCache: function (cb) {
         elemeno.clearCache()
-        get_and_save_data();
-        cb()
+        elemeno.getCollectionItems('ideas').then((data) => {
+            obj['ideas'] = data
+            cb()
+        })
     }
 }
 
-get_and_save_data()
 
+elemeno.getCollectionItems('ideas').then((data) => {
+    obj['ideas'] = data
+})
 
 module.exports = obj
