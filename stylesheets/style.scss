@@ -1,54 +1,36 @@
-$backgroundColor: rgba(32, 50, 66, 1);
-$primary: rgba(18, 255, 88, 1);
-$foregroundColor: rgba(231, 232, 232, 1);
-$secondary: rgba(57, 18, 133, 1);
-$tertiary: rgba(240, 179, 43, 1);
-body {
-    margin: 40px auto;
-    line-height: 1.2;
-    font-size: 1.2rem;
-    color: $foregroundColor;
-    background: $backgroundColor;
-    max-width: 41em;
-    &>* {
-        margin-left: 1em;
-        margin-right: 1em;
-    }
-    font-family: 'Raleway',
-    'Gill Sans',
-    'Gill Sans MT',
-    Calibri,
-    'Trebuchet MS',
-    sans-serif;
-    -webkit-font-smoothing:antialiased;
+$color-force: #DA4453;
+$color-blossom: lighten($color-force, 20%);
+$color-fade: $color-force;
+$color-bg: #120c0e;
+$color-bg-alt: #40363a;
+//  $color-text: #dedce5;
+$color-text: #d9d8dc;
+$font-size-base: 1.8rem;
+@mixin sans-serif() {
+    font-family: Verdana, Geneva, sans-serif;
 }
 
-a {
-    color: $tertiary;
-    text-decoration: none;
-    &:visited {
-        color: $tertiary;
-    }
+@mixin serif() {
+    font-family: serif;
 }
 
-h1,
-h2,
-h3 {
-    font-family: "Libre Baskerville", Georgia, Times, serif;
-    color: $primary;
-    a {
-        color: $primary;
-        &:visited {
-            color: $primary;
-        }
-    }
-}
-
+@import 'sakura';
 .info {
     font-style: italic;
-    max-width: 90%;
-    opacity: .5;
-    padding-bottom: .5em;
+}
+
+body {
+    header {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        @include sans-serif();
+        nav {
+            font-size: 1.2em;
+        }
+    }
 }
 
 .boxlist {
@@ -59,23 +41,20 @@ h3 {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
-    font-size: inherit;
     .listitem {
         display: flex;
         flex-direction: row;
         margin-bottom: 1em;
-        height: 120px;
         max-width: 100%;
         img {
-            height: 120px;
-            flex: 0 0 120px;
-            border: solid 1px $primary;
-            width: 125px;
+            width: 70px;
+            flex: 0 0 70px;
+            height: 70px;
+            border: solid 1px currentColor;
             flex-grow: 0;
             flex-shrink: 0;
         }
         .right {
-            padding-top: 5px;
             display: flex;
             flex-direction: column;
             margin-left: 1em;
@@ -89,6 +68,7 @@ h3 {
                     padding: 0;
                     margin: 0;
                     line-height: 1.2;
+                    font-size: 1.1em;
                 }
             }
             span {
@@ -99,36 +79,8 @@ h3 {
                     margin: 0;
                     line-height: 1.2;
                 }
-                &:after {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    height: 2em;
-                    content: '';
-                    pointer-events: none;
-                    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, $backgroundColor 100%);
-                    right: 0;
-                }
             }
         }
-    }
-}
-
-body>header {
-    font-weight: bold;
-    display: flex;
-    padding-bottom: 1em;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap;
-    h1 {
-        font-size: 3.0em;
-        margin: 0;
-        text-align: center;
-    }
-    nav {
-        font-size: 1.1em;
     }
 }
 
@@ -151,46 +103,41 @@ ol.horizontal {
 
 @media (max-width: 475px) {
     body {
-        font-size: 1em;
         &>header {
             h1 {
                 text-align: center;
-                font-size: 2.5em;
             }
         }
         .boxlist {
             .listitem {
                 .right {
-                    padding-top: 0;
                     header {
                         display: block;
                     }
-                }
-                img {
-                    width: 70px;
-                    flex: 0 0 70px;
-                    height: 70px;
                 }
             }
         }
     }
 }
 
-@media (min-width: 768px) {
+// Small
+@media (max-width: 684px) {
     body {
-        font-size: 1.3rem;
         &>header {
-            flex-direction: row;
+            flex-direction: column;
         }
-        max-width: 51rem;
     }
 }
 
+// Very small
+@media (max-width: 382px) {}
+
 svg.break {
     margin: 0 auto; // width: 200px;
-    display: block;
+    display: none;
     circle,
     line {
-        stroke: transparentize($foregroundColor, .2);
+        stroke: currentColor;
+        fill-opacity: 0;
     }
 }
