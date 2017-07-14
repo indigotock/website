@@ -98,6 +98,12 @@ ol.horizontal {
         &:not(:first-child) {
             margin-left: .5em;
         }
+        &:after {
+            content: ',';
+        }
+        &:last-child:after {
+            content: '';
+        }
     }
 }
 
