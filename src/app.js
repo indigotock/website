@@ -44,7 +44,7 @@ app.use('/stylesheets', postcssMiddleware({
     return path.join(__dirname, '..', 'public', 'stylesheets', req.url);
   }
 }));
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '..', '/public')));
 
 hbs.handlebars.registerHelper('datetime', function (dt, f) {
   return dateFormat(new Date(dt), f)
