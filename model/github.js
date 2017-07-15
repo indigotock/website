@@ -74,6 +74,11 @@ module.exports.my_repositories = function (cb) {
         cb(null, cache.get('my-repositories'))
     } else
         repositories(USERNAME, function (err, data) {
+            data = data.sort((a, b) => {
+                let da = new Date(a.lastUpdate)
+                let db = new Date(b.lastUpdate)
+                return db - da
+            })
             my_repos_time = Date.now()
             debug('Saving my-repositories to cache')
             cache.put('my-repositories', data)
