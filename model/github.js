@@ -65,7 +65,8 @@ var repositories = function (user, cb) {
     })
 }
 
-let my_repos_time = 0
+let my_repos_time = 0,
+    api_time = 0
 
 module.exports.my_repositories = function (cb) {
     let timeRemaining = Date.now() - my_repos_time
@@ -84,4 +85,17 @@ module.exports.my_repositories = function (cb) {
             cache.put('my-repositories', data)
             cb(err, data)
         })
+}
+
+module.exports.api_status = function (cb) {
+    let timeRemaining = Date.now() - api_time
+    if (timeRemaining < FORGET_TIME) {
+        cb(null, cache.get('api-status'))
+    } else {
+        http_get('https://status.github.com/api/status.json', function (err, apistatus) {
+            api_time = Date.now()
+            cache.put('api-status', apistatus.status)
+            cb(err, apistatus.status)
+        })
+    }
 }

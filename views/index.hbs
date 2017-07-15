@@ -7,12 +7,13 @@
 </section>
 <svg class='break' version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
 <section>
-    <p>I'm currently trying to consolidate all of my little ideas and toy projects to this page, the source for most of these
-        is available on my GitHub. Here are some of the ones I've made public:</p>
+    <p>I'm currently trying to consolidate all of my little ideas and toy projects to my GitHub, and here is an updating list
+        of the 5 most recently updated repositories of mine (see the website repository for the integration details):</p>
 </section>
 <section>
+    {{#if repos}}
     <div class='boxlist'>
-        {{#if repos}} {{#each repos}}
+        {{#each repos}}
         <article class='listitem'>
             <img class='img' src='{{this.imageUri}}' />
             <div class='right'>
@@ -26,9 +27,10 @@
                 <p>{{{this.description}}}</p>
             </div>
         </article>
-        {{/each}} {{else}}
-        <p class='info'>Appears to be some problem fetching the data from the server. How awfully embarassing. Have a look at my GitHub for
-            some of the things you are meant to see here.</p>
-        {{/if}}
+        {{/each}}
     </div>
+    {{/if}} {{#unless apistatusgood}}
+    <p class='info'>Appears to be some problem fetching the data from the GitHub API. Have a look at my GitHub for some of the things you
+        are meant to see here.</p>{{/unless}}
+    <a href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>
 </section>
