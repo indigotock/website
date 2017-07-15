@@ -32,7 +32,7 @@ app.use(favicon(path.join(__dirname, '..', 'public', 'favicon.png')));
 
 app.use('/stylesheets', sassMiddleware({
   /* Options */
-  src: path.join(__dirname, 'sass'),
+  src: path.join(__dirname, '..', 'sass'),
   dest: path.join(__dirname, '..', 'public', 'stylesheets'),
   outputStyle: 'compressed',
 }));
