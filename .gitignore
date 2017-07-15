@@ -8,4 +8,6 @@ bundle.js
 apikey.js
 restartCode.js
 
+**/auths.js
+
 public/stylesheets

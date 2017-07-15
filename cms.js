@@ -6,15 +6,15 @@ var elemeno = new Elemeno(require('./apikey'), {
 });
 
 function get_and_save_data() {
-    elemeno.getCollectionItems('techs').then((data) => {
-        obj['site_techs'] = data
-    })
-    elemeno.getCollectionItems('ideas').then((data) => {
-        obj['ideas'] = data
-    })
-    elemeno.getCollectionItems('posts').then((data) => {
-        obj.posts = data
-    })
+    // elemeno.getCollectionItems('techs').then((data) => {
+    //     obj['site_techs'] = data
+    // })
+    // elemeno.getCollectionItems('ideas').then((data) => {
+    //     obj['ideas'] = data
+    // })
+    // elemeno.getCollectionItems('posts').then((data) => {
+    //     obj.posts = data
+    // })
 }
 
 

@@ -51,8 +51,8 @@ body {
         display: flex;
         flex-direction: row;
         margin-bottom: 1em;
-        max-width: 100%;
-        img {
+        width: 100%;
+        &>.img {
             width: 70px;
             flex: 0 0 70px;
             height: 70px;
@@ -77,14 +77,12 @@ body {
                     font-size: 1.1em;
                 }
             }
-            span {
+            p {
                 width: 100%;
                 text-overflow: ellipsis;
                 overflow: hidden;
-                p {
-                    margin: 0;
-                    line-height: 1.2;
-                }
+                margin: 0;
+                line-height: 1.2;
             }
         }
     }

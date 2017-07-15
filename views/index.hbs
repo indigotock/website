@@ -12,26 +12,21 @@
 </section>
 <section>
     <div class='boxlist'>
-        {{#each res.data}} {{#if this.published}}
+        {{#if repos}} {{#each repos}}
         <article class='listitem'>
-            <img src='{{this.content.image.fileUrl}}' />
+            <img class='img' src='{{this.imageUri}}' />
             <div class='right'>
                 <header>
-                    <h3>{{this.title}}</h3>
-                    {{#if this.content.links}}
+                    <h3>{{this.name}}</h3>
                     <ul class='horizontal'>
-                        {{#each this.content.links}}
-                        <li><a href='{{this.url}}'>{{this.name}}</a></li>
-                        {{/each}}
+                        <li><a href='{{this.site}}'>repository</a></li>
                     </ul>
-                    {{/if}}
                 </header>
-                {{#if this.content.url}}
-                </a> {{/if}}
-                <span>{{{this.content.description.html}}}</span>
+                <small><em>Last push: {{datetime this.lastUpdate "dS mmmm yyyy, h:MMtt"}}</em></small>
+                <p>{{{this.description}}}</p>
             </div>
         </article>
-        {{/if}} {{/each}} {{#if res}} {{else}}
+        {{/each}} {{else}}
         <p class='info'>Appears to be some problem fetching the data from the server. How awfully embarassing. Have a look at my GitHub for
             some of the things you are meant to see here.</p>
         {{/if}}

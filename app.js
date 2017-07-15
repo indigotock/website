@@ -14,12 +14,12 @@ var dateFormat = require('dateformat')
 var hbs = require('hbs')
 
 var restart = require('./routes/restart');
-var elemeno = require('./routes/elemeno');
 var posts = require('./routes/posts');
 var index = require('./routes/index');
 var cms = require('./cms')
 
 var app = express();
+
 
 // app.use(compression())
 app.use(function (req, res, next) {
@@ -62,9 +62,11 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use('/restart', restart);
-app.use('/elemeno', elemeno);
 app.use('/posts', posts);
 app.use('/', index);
+
+app.use('/api', require('./api'))
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
