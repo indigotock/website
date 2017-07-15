@@ -16,14 +16,12 @@ var hbs = require('hbs')
 var restart = require('./routes/restart');
 var posts = require('./routes/posts');
 var index = require('./routes/index');
-var cms = require('./cms')
 
 var app = express();
 
 
 // app.use(compression())
 app.use(function (req, res, next) {
-  res.locals.techs = cms.site_techs
   next()
 })
 // view engine setup
