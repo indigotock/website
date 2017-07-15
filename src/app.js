@@ -13,7 +13,6 @@ var autoprefixer = require('autoprefixer');
 var dateFormat = require('dateformat')
 var hbs = require('hbs')
 
-var restart = require('./routes/restart');
 var posts = require('./routes/posts');
 var index = require('./routes/index');
 
@@ -25,16 +24,16 @@ app.use(function (req, res, next) {
   next()
 })
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
+app.use(favicon(path.join(__dirname, '..', 'public', 'favicon.png')));
 
 app.use('/stylesheets', sassMiddleware({
   /* Options */
-  src: path.join(__dirname, 'stylesheets'),
-  dest: path.join(__dirname, 'public', 'stylesheets'),
+  src: path.join(__dirname, 'sass'),
+  dest: path.join(__dirname, '..', 'public', 'stylesheets'),
   outputStyle: 'compressed',
 }));
 app.use('/stylesheets', postcssMiddleware({
@@ -42,7 +41,7 @@ app.use('/stylesheets', postcssMiddleware({
     autoprefixer()
   ],
   src: function (req) {
-    return path.join(__dirname, 'public', 'stylesheets', req.url);
+    return path.join(__dirname, '..', 'public', 'stylesheets', req.url);
   }
 }));
 app.use(express.static(path.join(__dirname, '/public')));
@@ -59,7 +58,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
-app.use('/restart', restart);
 app.use('/posts', posts);
 app.use('/', index);
 
