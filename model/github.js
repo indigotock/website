@@ -46,15 +46,7 @@ module.exports.repository_image = function (user, name, cb) {
     })
 }
 
-module.exports.repository = function (user, name, cb) {
-    http_get(GITHUB_BASE + 'repos/' + user + '/' + name, cb)
-}
-
-module.exports.my_repository = function (name, cb) {
-    module.exports.repository(USERNAME, name, cb)
-}
-
-module.exports.repositories = function (user, cb) {
+var repositories = function (user, cb) {
     http_get(GITHUB_BASE + 'users/' + user + '/repos', function (err, body) {
         let total = body.length
         let done = 0
@@ -81,7 +73,7 @@ module.exports.my_repositories = function (cb) {
         debug('Reading my-repositories from cache. Forget in ' + (FORGET_TIME - timeRemaining))
         cb(null, cache.get('my-repositories'))
     } else
-        module.exports.repositories(USERNAME, function (err, data) {
+        repositories(USERNAME, function (err, data) {
             my_repos_time = Date.now()
             debug('Saving my-repositories to cache')
             cache.put('my-repositories', data)

@@ -14,7 +14,6 @@ var dateFormat = require('dateformat')
 var hbs = require('hbs')
 
 var restart = require('./routes/restart');
-var elemeno = require('./routes/elemeno');
 var posts = require('./routes/posts');
 var index = require('./routes/index');
 var cms = require('./cms')
@@ -63,7 +62,6 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use('/restart', restart);
-app.use('/elemeno', elemeno);
 app.use('/posts', posts);
 app.use('/', index);
 
