@@ -9,7 +9,12 @@ $font-size-base: 1.8rem;
 $font-family-sans-serif: Verdana,
 Geneva,
 sans-serif;
-$font-family-serif: serif;
+$font-family-serif: Cambria,
+Cochin,
+Georgia,
+Times,
+Times New Roman,
+serif;
 @import 'sakura';
 .info {
     font-style: italic;
