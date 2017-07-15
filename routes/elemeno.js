@@ -5,7 +5,7 @@ var cms = require('../cms');
 
 router.post('/', function (req, res, next) {
   cms.clearCache(function () {
-    res.status(200).send(cms);
+    res.send(cms).sendStatus(200);
   });
 
 });

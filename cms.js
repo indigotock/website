@@ -1,11 +1,4 @@
 var Elemeno = require('elemeno');
-var loki = require('lokijs')
-
-var db = new loki('store')
-
-var collections = db.addCollection('collections')
-var singles = db.addCollection('singles')
-var collectionItems = db.addCollection('collectionItems')
 
 var elemeno = new Elemeno(require('./apikey'), {
     cacheMaxAge: 20,
@@ -15,10 +8,10 @@ var elemeno = new Elemeno(require('./apikey'), {
 function get_and_save_data() {
     elemeno.getCollectionItems('techs').then((data) => {
         obj['site_techs'] = data
-    });
+    })
     elemeno.getCollectionItems('ideas').then((data) => {
         obj['ideas'] = data
-    });
+    })
     elemeno.getCollectionItems('posts').then((data) => {
         obj.posts = data
     })
