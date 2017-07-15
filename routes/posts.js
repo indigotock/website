@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var cms = require('./../cms');
 var elemeno = require('../model/elemeno')
 
 
