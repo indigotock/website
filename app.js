@@ -21,6 +21,7 @@ var cms = require('./cms')
 
 var app = express();
 
+
 // app.use(compression())
 app.use(function (req, res, next) {
   res.locals.techs = cms.site_techs
@@ -65,6 +66,9 @@ app.use('/restart', restart);
 app.use('/elemeno', elemeno);
 app.use('/posts', posts);
 app.use('/', index);
+
+app.use('/api', require('./api'))
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
