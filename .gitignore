@@ -1,3 +1,4 @@
+**/build/
 **/node_modules/*
 **/jspm_packages/*
 **.*.js.map
@@ -7,6 +8,8 @@ out/*
 bundle.js
 apikey.js
 restartCode.js
+
+
 
 **/auths.js
 
