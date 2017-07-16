@@ -21,13 +21,14 @@ app.use(function (req, res, next) {
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'hbs');
 
-const PRODUCTION = process.env === 'production'
+const PRODUCTION = process.env.NODE_ENV === 'production'
 
-
+console.log('Starting server in ' + process.env.NODE_ENV + ', ' + PRODUCTION)
 if (PRODUCTION) {
   app.use(express.static(path.join(__dirname, '..', 'public')));
 } else {
-  app.use(express.static(path.join(__dirname, '..', '..', 'client')));
+  app.use(express.static(path.join(__dirname, '..', '..', 'client', 'src')));
+  app.use(express.static(path.join(__dirname, '..', '..', 'client', 'copy')));
 }
 
 
@@ -52,7 +53,7 @@ app.use('/api', require('./api'))
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
-  err.status = 404;
+  err['status'] = 404;
   next(err);
 });
 
