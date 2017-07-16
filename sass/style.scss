@@ -144,7 +144,22 @@ ol.horizontal {
 }
 
 // Very small
-@media (max-width: 382px) {}
+@media (max-width: 382px) {
+    .boxlist {
+        &>.listitem {
+            .img {
+                width: 50px;
+                flex: 0 0 50px;
+                height: 50px;
+            }
+            .right {
+                &>p {
+                    display: none;
+                }
+            }
+        }
+    }
+}
 
 svg.break {
     margin: 0 auto; // width: 200px;
