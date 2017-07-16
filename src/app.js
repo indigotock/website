@@ -18,7 +18,6 @@ var index = require('./routes/index');
 
 var app = express();
 
-
 // app.use(compression())
 app.use(function (req, res, next) {
   next()

@@ -1,101 +1,135 @@
-var debugx = require('debug')
+import debugx = require('debug')
 var debug = debugx('site:models')
-var auths = require('./auths')
-var cache = require('memory-cache')
-var http = require('request')
+import auths = require('./auths')
+import cache = require('memory-cache')
+import request = require('request')
 
 const USERNAME = auths.github.username
 
 const GITHUB_BASE = 'https://api.github.com/'
 
 const FORGET_TIME = (10 * 60 * 1000) // ten minutes
+let my_repos_time = 0,
+    api_time = 0
 
-function http_get(uri, cb) {
-    uri += '?access_token=' + auths.github.token
-    debugx('site:network')('getting from ' + uri)
-    http.get(uri, {
-        headers: {
-            'User-Agent': 'indigotock/website'
-        }
-    }, function (error, response, body) {
-        if (error) {
-            cb(error, null);
-        } else {
-            cb(null, JSON.parse(body))
-        }
-    })
+interface GitHubRepo {
+    id: number,
+    name: string,
+    site: string,
+    description: string,
+    lastUpdate: Date,
+    imageUri?: string
 }
-
-function repo(body, cb) {
+function repositoryFromResponse(body): GitHubRepo {
     return {
         id: body.id,
         name: body.name,
         site: body.html_url,
         description: body.description,
-        lastUpdate: body.pushed_at
+        lastUpdate: new Date(body.pushed_at)
     }
 }
 
-module.exports.repository_image = function (user, name, cb) {
-    http_get(GITHUB_BASE + 'repos/' + user + '/' + name + '/contents/image.png', function (err, data) {
-        if (data.name) {
-            cb(data.download_url)
-        } else {
-            cb('./project_image_fallback.png')
-        }
-    })
+type HttpRequestCallback<T> = (response: HttpRequestResponse<T>) => void
+interface HttpRequestResponse<T> {
+    error: Error,
+    body: T,
 }
+class GitHubInterface {
+    private async http_get(uri, cb: HttpRequestCallback<any>) {
+        debugx('site:network')('getting from ' + uri)
+        uri += '?access_token=' + auths.github.token
+        request.get(uri, {
+            headers: {
+                'User-Agent': 'indigotock/website'
+            }
+        }, function(error, body) {
+            let res: HttpRequestResponse<any> = {
+                error: error ? error : null,
+                body: JSON.parse(body.body)
+            }
+            cb(res)
+        })
+    }
+    constructor(public readonly username: string) {
 
-var repositories = function (user, cb) {
-    http_get(GITHUB_BASE + 'users/' + user + '/repos', function (err, body) {
-        let total = body.length
-        let done = 0
-        let newbodies = []
-        body.forEach(rep => {
-            module.exports.repository_image(USERNAME, rep.name, function (response) {
-                done++
-                let newitem = repo(rep)
-                newitem.imageUri = response
-                newbodies.push(newitem)
-                if (done == total) {
-                    cb(err, newbodies)
+    }
+
+    public repositories(cb: HttpRequestCallback<GitHubRepo[]>) {
+        const that: GitHubInterface = this
+        let timeRemaining = Date.now() - my_repos_time
+        if (timeRemaining < FORGET_TIME) {
+            debug('Reading my-repositories from cache. Forget in ' + (FORGET_TIME - timeRemaining))
+            cb({
+                error: null,
+                body: cache.get('my-repositories')
+            })
+        } else {
+            this.http_get(GITHUB_BASE + 'users/' + this.username + '/repos', function(res) {
+                let ret: HttpRequestResponse<GitHubRepo>
+                if (res.error) {
+                    ret = {
+                        error: res.error,
+                        body: null
+                    }
+                } else {
+                    let total = res.body.length
+                    let done = 0
+                    let newbodies = []
+                    res.body.forEach((e) => {
+                        let r = repositoryFromResponse(e)
+                        that.repositoryFilePath(r.name, 'image.png', function(res) {
+                            r.imageUri = res.body
+                            newbodies.push(r)
+                            done++
+                            if (done == total) {
+
+                                newbodies = newbodies.sort((a, b) => {
+                                    let da = new Date(a.lastUpdate).valueOf()
+                                    let db = new Date(b.lastUpdate).valueOf()
+                                    return db - da
+                                })
+                                my_repos_time = Date.now()
+                                cache.put('my-repositories', newbodies)
+                                cb({
+                                    error: null,
+                                    body: newbodies
+                                })
+                            }
+                        }, './project_image_fallback.png')
+                    })
                 }
             })
-        })
-    })
-}
+        }
+    }
 
-let my_repos_time = 0,
-    api_time = 0
-
-module.exports.my_repositories = function (cb) {
-    let timeRemaining = Date.now() - my_repos_time
-    if (timeRemaining < FORGET_TIME) {
-        debug('Reading my-repositories from cache. Forget in ' + (FORGET_TIME - timeRemaining))
-        cb(null, cache.get('my-repositories'))
-    } else
-        repositories(USERNAME, function (err, data) {
-            data = data.sort((a, b) => {
-                let da = new Date(a.lastUpdate)
-                let db = new Date(b.lastUpdate)
-                return db - da
+    public repositoryFilePath(repo: string, path: string, cb: HttpRequestCallback<string>, fallback?: string) {
+        this.http_get(GITHUB_BASE + 'repos/' + this.username + '/' + repo + '/contents/' + path, function(res) {
+            cb({
+                error: res.error || null,
+                body: res.body.download_url || fallback || ''
             })
-            my_repos_time = Date.now()
-            debug('Saving my-repositories to cache')
-            cache.put('my-repositories', data)
-            cb(err, data)
-        })
-}
-
-module.exports.api_status = function (cb) {
-    let timeRemaining = Date.now() - api_time
-    if (timeRemaining < FORGET_TIME) {
-        cb(null, cache.get('api-status'))
-    } else {
-        http_get('https://status.github.com/api/status.json', function (err, apistatus) {
-            api_time = Date.now()
-            cache.put('api-status', apistatus.status)
-            cb(err, apistatus.status)
         })
     }
+
+    public apiStatus(cb: HttpRequestCallback<string>) {
+        let timeRemaining = Date.now() - api_time
+        if (timeRemaining < FORGET_TIME) {
+            cb({
+                error: null,
+                body: cache.get('api-status')
+            })
+        } else {
+            this.http_get('https://status.github.com/api/status.json', function(response) {
+                api_time = Date.now()
+                cache.put('api-status', response.body.status)
+                cb({
+                    error: response.error,
+                    body: response.body.status || null
+                })
+            })
+        }
+    }
 }
+
+export = new GitHubInterface('indigotock')
