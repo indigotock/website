@@ -5,11 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var sassMiddleware = require('node-sass-middleware');
-var postcssMiddleware = require('postcss-middleware');
-var autoprefixer = require('autoprefixer');
-// var compression = require('compression');
-
 var dateFormat = require('dateformat')
 var hbs = require('hbs')
 
@@ -26,24 +21,15 @@ app.use(function (req, res, next) {
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'hbs');
 
-// uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, '..', 'public', 'favicon.png')));
+const PRODUCTION = process.env === 'production'
 
-app.use('/stylesheets', sassMiddleware({
-  /* Options */
-  src: path.join(__dirname, '..', 'sass'),
-  dest: path.join(__dirname, '..', 'public', 'stylesheets'),
-  outputStyle: 'compressed',
-}));
-app.use('/stylesheets', postcssMiddleware({
-  plugins: [
-    autoprefixer()
-  ],
-  src: function (req) {
-    return path.join(__dirname, '..', 'public', 'stylesheets', req.url);
-  }
-}));
-app.use(express.static(path.join(__dirname, '..', '/public')));
+
+if (PRODUCTION) {
+  app.use(express.static(path.join(__dirname, '..', 'public')));
+} else {
+  app.use(express.static(path.join(__dirname, '..', '..', 'client')));
+}
+
 
 hbs.handlebars.registerHelper('datetime', function (dt, f) {
   return dateFormat(new Date(dt), f)

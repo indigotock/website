@@ -1,15 +1,2 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
-exports.__esModule = true;
-var test_1 = require("./test");
-var debug = function (inp) {
-    console.log(inp);
-};
-debug('Typescript test25asdda' + test_1["default"]);
-
-},{"./test":2}],2:[function(require,module,exports){
-"use strict";
-exports.__esModule = true;
-exports["default"] = 'dasdads';
-
-},{}]},{},[1]);
+!function r(e,t,n){function u(i,f){if(!t[i]){if(!e[i]){var s="function"==typeof require&&require;if(!f&&s)return s(i,!0);if(o)return o(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var c=t[i]={exports:{}};e[i][0].call(c.exports,function(r){var t=e[i][1][r];return u(t||r)},c,c.exports,r,e,t,n)}return t[i].exports}for(var o="function"==typeof require&&require,i=0;i<n.length;i++)u(n[i]);return u}({1:[function(r,e,t){"use strict";t.__esModule=!0;var n=r("./test");debug("Typescript !!!"+n.default)},{"./test":2}],2:[function(r,e,t){"use strict";t.__esModule=!0,t.default="dasdads"},{}]},{},[1]);
+//# sourceMappingURL=index.js.map
