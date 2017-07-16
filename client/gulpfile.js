@@ -95,7 +95,7 @@ gulp.task('watch', function () {
     gulp.start('watch:ts')
 })
 gulp.task('watch:sass', function () {
-    gulp.watch('sass/**/*.scss', ['compile:sass'])
+    gulp.watch(options.sass.source, ['compile:sass'])
 })
 
 let tsb = watchify(browserify({
