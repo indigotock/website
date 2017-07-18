@@ -33,7 +33,11 @@ if (PRODUCTION) {
 
 
 hbs.handlebars.registerHelper('datetime', function (dt, f) {
-  return dateFormat(new Date(dt), f)
+  try {
+    return dateFormat(new Date(dt), f)
+  } catch (e) {
+    return ''
+  }
 })
 
 
@@ -44,6 +48,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
+app.use('/repos', require('./routes/repos'));
 app.use('/posts', posts);
 app.use('/', index);
 

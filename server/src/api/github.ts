@@ -1,10 +1,10 @@
 var express = require('express')
 var router = express.Router()
-import gh = require('../model/github')
+import { GitHubRepo, getRepositoriesForUser } from '../model/GitHubInterface'
 
-router.get('/repos', function(req, res) {
-    gh.repositories((response) => {
-        res.status(200).json(response.body);
+router.get('/repos', function (req, res) {
+    getRepositoriesForUser('indigotock').then((response) => {
+        res.status(200).json(response);
     });
 });
 
