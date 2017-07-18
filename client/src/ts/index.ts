@@ -1,20 +1,7 @@
-Number.prototype.map = function (in_min, in_max, out_min, out_max) {
-    return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
+import test from './test'
 
 document.addEventListener('DOMContentLoaded', function () {
-    let boxes = document.getElementsByClassName('ideasbox')
-    if (boxes) {
-        for (let i = 0; i < boxes.length; i++) {
-            let b = boxes[i]
-            let attr = b.getAttribute('data-url')
-            if (attr)
-                b.addEventListener('click', function (e) {
-                    window.location = attr
-                })
-        }
-    }
-
+    console.log(test)
     let grt = document.getElementById('greeting')
     if (grt) {
         let str;
@@ -39,10 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     for (let i = 0; i < breaks.length; i++) {
         let item = breaks[i]
-        item.height = breakHeight
-        item.setAttribute('version', 1.1)
+        item.setAttribute('height', breakHeight + '')
+        item.setAttribute('version', 1.1 + '')
         item.setAttribute('xmlns', svgns)
-        item.setAttribute('height', breakHeight)
+        item.setAttribute('height', breakHeight + '')
     }
 
     window.addEventListener('resize', function () {
@@ -120,5 +107,5 @@ document.addEventListener('DOMContentLoaded', function () {
         requestAnimationFrame(animate)
     }
 
-    animate();
+    animate(null);
 });

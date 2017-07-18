@@ -1,22 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var debug = require('debug')('site:routes')
-import gh = require('../model/github')
+import { GitHubRepo, getRepositoriesForUser } from '../model/GitHubInterface'
 
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    gh.apiStatus((statusres) => {
-        gh.repositories((reposres) => {
-            reposres.body = reposres.body.slice(0, 5)
-            res.render('index', {
-                repos: reposres.body,
-                apistatus: statusres.body,
-                apistatusgood: statusres.body === 'good',
-                apistatusbad: statusres.body !== 'good'
-            })
+    getRepositoriesForUser('indigotock').then((reposres) => {
+        reposres = reposres.slice(0, 5)
+        res.render('index', {
+            repos: reposres,
+        })
+    }).catch(err => {
+
+        res.render('index', {
+            repos: [],
         })
     })
 });
+
 
 module.exports = router;
