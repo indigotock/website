@@ -80,24 +80,14 @@ export class GitHubRepo {
             })
         })
         try {
-            let readme = await new Promise((good, bad) => {
-                http_get(GITHUB_BASE + 'repos/' + repo.user + '/' + repo.name + '/readme').then(res => {
-                    let data = res.content
-
-                    let encoding = res.encoding
-                    if (encoding === 'base64') {
-                        let decoded = b64.decode(data)
-                        repo.consumeReadme(decoded)
-                        good(decoded)
-                    } else {
-                        bad('Unknown file encoding: ' + encoding)
-                    }
-                }).catch(error => {
-                    repo.readmeMD = ''
-                    bad({ status: error.statusCode || 501, error: error })
-                })
-            })
-        } catch (erro) {
+            var readme = await http_get(GITHUB_BASE + 'repos/' + repo.user + '/' + repo.name + '/readme');
+            var data = readme.content
+            var encoding = readme.encoding
+            if (encoding === 'base64') {
+                let decoded = b64.decode(data)
+                repo.consumeReadme(decoded)
+            }
+        } catch (error) {
             repo.consumeReadme(null)
         }
         try {
@@ -110,19 +100,22 @@ export class GitHubRepo {
     }
 
     private consumeReadme(markdown: string) {
-        if (markdown === null)
+        if (markdown == null)
             return
-        let marked = md(this.readmeMD)
-        this.readmeMD = markdown
-        this.readmeHTML = marked.html
-        this.metadata = marked.meta
+        try {
+            let marked = md(markdown)
+            this.readmeMD = markdown
+            this.readmeHTML = marked.html
+            this.metadata = marked.meta
 
-        for (var key in this.metadata) {
-            if (this.metadata.hasOwnProperty(key)) {
-                var element = this.metadata[key]
-                delete this.metadata[key]
-                this.metadata[key.toLowerCase()] = element
+            for (var key in this.metadata) {
+                if (this.metadata.hasOwnProperty(key)) {
+                    var element = this.metadata[key]
+                    delete this.metadata[key]
+                    this.metadata[key.toLowerCase()] = element
+                }
             }
+        } catch (erro) {
         }
     }
     getFile(path: string): Promise<GitHubFile> {

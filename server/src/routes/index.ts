@@ -11,18 +11,13 @@ router.get('/', function (req, res, next) {
         res.render('index', {
             repos: reposres,
         })
+    }).catch(err => {
+
+        res.render('index', {
+            repos: [],
+        })
     })
 });
-
-
-router.get('/repo/:name', function (req, res, next) {
-    let r = GitHubRepo.fromName('indigotock', req.params.name).then(repo => {
-        res.json(repo)
-    }).catch(err => {
-        res.json(err)
-    })
-})
-
 
 
 module.exports = router;

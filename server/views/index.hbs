@@ -20,8 +20,10 @@
                 <header>
                     <h3>{{this.name}}</h3>
                     <ul class='horizontal'>
-                        <li><a href='{{metadata.Live}}'>live</a></li>
                         <li><a href='{{this.site}}'>repository</a></li>
+                        {{#if metadata.links}} {{#each metadata.links}}{{#each this}}
+                        <li><a href='{{this}}'>{{@key}}</a></li>
+                        {{/each}} {{/each}} {{/if}}
                     </ul>
                 </header>
                 <small><em>Last push: {{datetime this.lastUpdate "dS mmmm yyyy, h:MMtt"}}</em></small>
@@ -30,7 +32,7 @@
         </article>
         {{/each}}
     </div>
-    {{/if}} {{#unless apistatusgood}}
+    {{/if}} {{#unless repos}}
     <p class='info'>Appears to be some problem fetching the data from the GitHub API. Have a look at my GitHub for some of the things you
         are meant to see here.</p>{{/unless}}
     <a href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>
