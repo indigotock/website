@@ -1,6 +1,4 @@
 ---
-
-License: MIT
 Links:
   Live: https://kylehughes.co.uk/
 ---
