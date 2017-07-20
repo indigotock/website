@@ -18,12 +18,12 @@
             <img class='img' src='{{this.imageUri}}' />
             <div class='right'>
                 <header>
-                    <h3>{{this.name}}</h3>
+                    <h3><a href='/repos/{{name}}'>{{this.name}}</a></h3>
                     <ul class='horizontal'>
                         <li><a href='{{this.site}}'>repository</a></li>
-                        {{#if metadata.links}} {{#each metadata.links}}{{#each this}}
+                        {{#if metadata.links}} {{#each metadata.links}}
                         <li><a href='{{this}}'>{{@key}}</a></li>
-                        {{/each}} {{/each}} {{/if}}
+                        {{/each}}{{/if}}
                     </ul>
                 </header>
                 <small><em>Last push: {{datetime this.lastUpdate "dS mmmm yyyy, h:MMtt"}}</em></small>

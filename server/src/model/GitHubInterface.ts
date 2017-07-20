@@ -88,7 +88,7 @@ export class GitHubRepo {
                 repo.consumeReadme(decoded)
             }
         } catch (error) {
-            repo.consumeReadme(null)
+            repo.consumeReadme('No readme.')
         }
         try {
             let img = await repo.getFile('image.png')
@@ -107,7 +107,7 @@ export class GitHubRepo {
             this.readmeMD = markdown
             this.readmeHTML = marked.html
             this.metadata = marked.meta
-
+            console.log(this.metadata)
             for (var key in this.metadata) {
                 if (this.metadata.hasOwnProperty(key)) {
                     var element = this.metadata[key]

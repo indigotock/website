@@ -3,11 +3,6 @@
     font-style: italic;
 }
 
-.left {
-    text-align: left;
-    display: block;
-}
-
 body {
     &>header {
         display: flex;
@@ -25,11 +20,6 @@ body {
 .boxlist {
     width: 90%;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
     .listitem {
         display: flex;
         flex-direction: row;
