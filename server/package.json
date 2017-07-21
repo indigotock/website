@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "concurrently --kill-others \"tsc -w -p .\" \"cross-env NODE_ENV=development DEBUG=site:* nodemon ./bin/www\"",
-    "prod": "cross-env NODE_ENV=production  node ./bin/www"
+    "prod": "cross-env NODE_ENV=production  node ./bin/www",
+    "build": "tsc -p ."
   },
   "dependencies": {
     "@types/express": "^4.0.36",
