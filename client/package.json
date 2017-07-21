@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Static files for the client-side website.",
   "scripts": {
-    "start": "gulp watch"
+    "start": "gulp watch",
+    "build": "gulp dist"
   },
   "author": "Kyle Hughes",
   "license": "MIT",
