@@ -1,6 +1,6 @@
 {
   "name": "site",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "concurrently --kill-others \"tsc -w -p .\" \"cross-env NODE_ENV=development DEBUG=site:* nodemon ./bin/www\"",
