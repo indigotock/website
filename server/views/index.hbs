@@ -15,10 +15,10 @@
     <div class='boxlist'>
         {{#each repos}}
         <article class='listitem'>
-            <img class='img' src='{{this.imageUri}}' />
+            <img class='img' src='{{this.tileImage}}' />
             <div class='right'>
                 <header>
-                    <h3><a href='/repos/{{name}}'>{{this.name}}</a></h3>
+                    <h3>{{this.name}}</h3>
                     <ul class='horizontal'>
                         <li><a href='{{this.site}}'>repository</a></li>
                         {{#if metadata.links}} {{#each metadata.links}}
@@ -27,7 +27,7 @@
                     </ul>
                 </header>
                 <small><em>Last push: {{datetime this.lastUpdate "dS mmmm yyyy, h:MMtt"}}</em></small>
-                <p>{{{this.description}}}</p>
+                <p>{{{this.descriptionHTML}}}</p>
             </div>
         </article>
         {{/each}}

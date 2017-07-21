@@ -2,7 +2,9 @@
   "name": "website-client",
   "version": "0.1.0",
   "description": "Static files for the client-side website.",
-  "scripts": {},
+  "scripts": {
+    "start": "gulp watch"
+  },
   "author": "Kyle Hughes",
   "license": "MIT",
   "devDependencies": {

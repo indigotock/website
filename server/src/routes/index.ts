@@ -1,21 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var debug = require('debug')('site:routes')
-import { GitHubRepo, getRepositoriesForUser } from '../model/GitHubInterface'
+import GHI, { GitHubRepo } from '../model/GitHubInterface'
 
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-    getRepositoriesForUser('indigotock').then((reposres) => {
-        reposres = reposres.slice(0, 5)
-        res.render('index', {
-            repos: reposres,
-        })
-    }).catch(err => {
-
-        res.render('index', {
-            repos: [],
-        })
+router.get('/', async function (req, res, next) {
+    let repos = await GHI.getRepositories(5)
+    res.render('index', {
+        repos: repos,
     })
 });
 

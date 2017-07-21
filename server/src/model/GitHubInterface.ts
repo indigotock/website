@@ -1,151 +1,194 @@
 import debug = require('debug')
 let debugx = debug('site:github-i')
 import request = require('request-promise')
-import auths = require('./auths')
+import auths = require('../auths')
+var md = require('meta-marked')
 var b64 = require('js-base64').Base64
-import md = require('meta-marked')
+import gh = require('github')
+import db = require('../db')
 import { HttpRequestCallback, HttpRequestResponse } from '../util/HttpRequest'
-const GITHUB_BASE = 'https://api.github.com/'
-
 import cache = require('memory-cache')
+import InterfaceBase from "./index";
 
-export interface GitHubFile {
-    readonly url: string
-    readonly size: number
-}
+let github = new gh({
+    protocol: 'https',
+    headers: {
+        'User-Agent': 'indigotock/website'
+    },
+})
 
-export async function getRepositoriesForUser(user: string): Promise<GitHubRepo[]> {
-    let incache = cache.get(`repolist-${user}`)
+const TEN_MINUTES = 10 * 60 * 1000
+
+async function retrieveRepo(name) {
+    let incache = cache.get('repository-' + name)
     if (incache) {
-        debug('Reading ' + `repolist-${user}` + ' from cache. Forget in ' + incache)
-        let promises = incache.map(e => GitHubRepo.fromName(user, e))
-        let res = await Promise.all<GitHubRepo>(promises)
-        return res
+        debugx('Taking repository ' + name + ' from cache')
+        return incache
+    }
+    let indb = await db.default.repositories().findOne({ name: name })
+    if (indb) {
+        cache.put('repository-' + name, indb, TEN_MINUTES)
+        debugx('Taking repository ' + name + ' from db')
+        return indb
+    }
+    let ret = await github.repos.get({ owner: auths.github.username, repo: name })
+    ret = ret.data
+    let repo = await createRepoFromPayload(ret)
+    cache.put('repository-' + name, repo, TEN_MINUTES)
+    return repo
+}
+async function createRepoFromPayload(payload): Promise<GitHubRepo> {
+    let ret: GitHubRepo = {
+        id: payload.id,
+        name: payload.name,
+        owner: payload.owner.login,
+        httpUrl: payload.url,
+        description: payload.description,
+        descriptionHTML: payload.description,
+        lastUpdate: payload.pushed_at,
+        tileImage: './project_image_fallback.png',
+        metadata: {},
+        readmeMD: '',
+        readmeHTML: ''
+    }
+
+    try {
+        let emoji = await github.misc.getEmojis({})
+        emoji = emoji.data
+        let replaced: string = ret.description
+        for (let key in emoji) {
+            if (emoji.hasOwnProperty(key)) {
+                let element = emoji[key];
+                replaced = replaced.replace(':' + key + ':',
+                    `<img class="emoji" src="${element}" alt="key"/>`
+                )
+            }
+        }
+        ret.descriptionHTML = replaced;
+    } catch (error) {
+        debugx('Unable to apply gitmoji transformations to repository: ' + error)
+    }
+
+    try {
+        let tileimg = await request(`https://api.github.com/repos/${ret.owner}/${ret.name}/contents/image.png`,
+            {
+                qs: {
+                    'access_token': auths.github.token
+                },
+                headers: {
+                    'User-Agent': 'indigotock/website'
+                }
+            })
+        tileimg = JSON.parse(tileimg)
+        ret.tileImage = tileimg.download_url
+    } catch (error) {
+        debugx('Error getting tile image: ' + error)
+    }
+
+    try {
+        let readme = await github.repos.getReadme({ owner: auths.github.username, repo: ret.name })
+        readme = readme.data
+        let decoded = b64.decode(readme.content)
+        let mm = md(decoded)
+        ret.metadata = mm.meta
+        for (let key in ret.metadata) {
+            if (ret.metadata.hasOwnProperty(key)) {
+                let element = ret.metadata[key];
+                delete ret.metadata[key];
+                ret.metadata[key.toLowerCase()] = element
+            }
+        }
+        ret.readmeHTML = mm.html.trim()
+
+        let imgmatch = /<img.*?src=['"](.*?)['"]/g
+        ret.readmeHTML = ret.readmeHTML.replace(imgmatch,
+            (str, ...rest) => {
+                // If url is absolute then ignore
+                if (/^https?/i.test(rest[0]))
+                    return '<img src=\'' + rest[0] + '\''
+                return `<img src='https://github.com/${ret.owner}/${ret.name}/raw/master/` + rest[0] + '\''
+            })
+
+        ret.readmeMD = mm.markdown.trim()
+    } catch (erro) {
+        debugx('Unable to get readme for repository ' + ret.name + ': ' + erro)
     }
     try {
-        let array = await http_get(GITHUB_BASE + 'users/' + user + '/repos')
-        array.sort((a, b) => {
-            let da = new Date(a.pushed_at).valueOf()
-            let db = new Date(b.pushed_at).valueOf()
-            return db - da
-        })
-        array = array.map(e => e.name)
-        cache.put(`repolist-${user}`, array, getNewForgetTime())
-        let promises = array.map(e => GitHubRepo.fromName(user, e))
-        let res = await Promise.all<GitHubRepo>(promises)
-        return res
-    } catch (err) {
-        return []
+        db.default.repositories().updateOne({ id: ret.id }, ret, { upsert: true })
+    } catch (error) {
+        debugx(`Unable to upsert repository ${ret.name} into database: ${error}`)
     }
+    return ret
 }
 
-function getNewForgetTime() {
-    return (10 * 60 * 1000) // Ten minutes time
-}
-
-
-export class GitHubRepo {
-    public readonly birthTime: number;
-    id: number
-    site: string
-    description: string
-    lastUpdate: Date
-    imageUri: string
-    private readmeMD: string = null
-    private readmeHTML: string = null
-    private metadata: { [key: string]: string } = null
-    readonly apiUri: string
-
-    private constructor(public readonly user, public readonly name) {
-        this.birthTime = Date.now()
-        this.apiUri = `https://api.github.com/repos/${user}/${name}`
-    }
-
-    public static async fromName(user: string, name: string): Promise<GitHubRepo> {
-        let incache = cache.get(`repo-${user}/${name}`)
-        if (incache) {
-            return incache
-        }
-        let repo = await new Promise<GitHubRepo>((good, bad) => {
-            http_get(GITHUB_BASE + 'repos/' + user + '/' + name).then((body: any) => {
-                let repo = new GitHubRepo(user, name)
-                repo.id = body.id
-                repo.site = body.html_url
-                repo.description = body.description
-                repo.lastUpdate = new Date(body.pushed_at)
-                cache.put(`repo-${user}/${name}`, repo, getNewForgetTime())
-                good(repo)
-            }).catch(error => {
-                bad(error)
-            })
-        })
-        try {
-            var readme = await http_get(GITHUB_BASE + 'repos/' + repo.user + '/' + repo.name + '/readme');
-            var data = readme.content
-            var encoding = readme.encoding
-            if (encoding === 'base64') {
-                let decoded = b64.decode(data)
-                repo.consumeReadme(decoded)
-            }
-        } catch (error) {
-            repo.consumeReadme('No readme.')
-        }
-        try {
-            let img = await repo.getFile('image.png')
-            repo.imageUri = img.url
-        } catch (erro) {
-            repo.imageUri = './project_image_fallback.png'
-        }
-        return repo
-    }
-
-    private consumeReadme(markdown: string) {
-        if (markdown == null)
-            return
-        try {
-            let marked = md(markdown)
-            this.readmeMD = markdown
-            this.readmeHTML = marked.html
-            this.metadata = marked.meta
-            console.log(this.metadata)
-            for (var key in this.metadata) {
-                if (this.metadata.hasOwnProperty(key)) {
-                    var element = this.metadata[key]
-                    delete this.metadata[key]
-                    this.metadata[key.toLowerCase()] = element
-                }
-            }
-        } catch (erro) {
-        }
-    }
-    getFile(path: string): Promise<GitHubFile> {
-        return new Promise((good, bad) => {
-            http_get(GITHUB_BASE + 'repos/' + this.user + '/' + this.name + '/contents/' + path).then(res => {
-                good({
-                    size: res.size,
-                    url: res.download_url
-                })
-            }).catch(error => {
-                bad({ status: error.statusCode || 500 })
-            })
-        })
-    }
-}
-
-export function http_get(uri) {
-    debugx('getting from ' + uri)
-    return new Promise((good: (any) => void, bad: (any) => void) => {
-        request.get(uri, {
-            qs: {
-                'access_token': auths.github.token
-            },
-            headers: {
-                'User-Agent': 'indigotock/website'
-            }
-        }).then(function (data) {
-            good(JSON.parse(data))
-        }).catch(function (error) {
-            bad(error)
-        })
+function ghAuth() {
+    github.authenticate({
+        type: 'token',
+        token: auths.github.token
     })
 }
+class GitHubInterface extends InterfaceBase {
+    public async getRepositories(count = 5): Promise<GitHubRepo[]> {
+        let done = await this.ensureUpdated()
+
+        let incache: GitHubRepo[] = cache.get('my-repositories')
+        try {
+            if (incache) {
+                ghAuth()
+                debugx('Taking repositories from cache')
+                incache.sort((a, b) => {
+                    return new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime()
+                })
+                return incache.slice(0, count)
+            } else {
+                return []
+            }
+        } catch (error) {
+            debugx('Error getting github repositories: ' + error)
+        }
+    }
+    public async specificRepository(name): Promise<GitHubRepo> {
+        try {
+            let ret = await retrieveRepo(name)
+            return ret
+        } catch (error) {
+            debugx('Error getting repository ' + name + ': ' + error)
+            return null
+        }
+    }
+    public async update(): Promise<any> {
+        this.lastChecked = Date.now()
+        try {
+            ghAuth()
+
+            let repos: any = await github.repos.getForUser({ username: auths.github.username })
+            repos = repos.data
+            let newrepos = await Promise.all(repos.map(async (e) => {
+                let repo = await createRepoFromPayload(e)
+                cache.put('repository-' + repo.name, repo)
+                return repo
+            }))
+            debugx('Putting my-repositories into cache')
+            cache.put('my-repositories', newrepos)
+            return repos
+        } catch (error) {
+            debugx('Error updating github repositories: ' + error)
+        }
+    }
+}
+
+export interface GitHubRepo {
+    id: number
+    name: string,
+    owner: string,
+    httpUrl: string
+    description: string
+    descriptionHTML: string
+    lastUpdate: Date
+    tileImage: string
+    readmeMD: string
+    readmeHTML: string
+    metadata: { [key: string]: string }
+}
+
+export default new GitHubInterface()
