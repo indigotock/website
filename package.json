@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "cross-env DEBUG=site:* nodemon ./bin/www",
-    "prod": "cross-env NODE_ENV=production  node ./bin/www",
-    "build": "tsc -p ."
+    "prod": "cross-env NODE_ENV=production  node ./bin/www"
   },
   "dependencies": {
     "autoprefixer": "^7.1.1",
