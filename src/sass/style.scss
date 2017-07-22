@@ -17,6 +17,7 @@ h2+p {
     text-align: center;
     &>.project-item {
         text-align: initial;
+        margin-bottom: .5em;
         &:last-of-type {
             margin-bottom: 1em;
         }
