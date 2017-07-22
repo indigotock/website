@@ -1,39 +1,28 @@
 <section>
     <p>
-        <span id='greeting'>Greetings</span>! Welcome to a website by me. You may not find anything on here as I tend to
-        use it only to host prvate projects and other miscellanea, but from time to time interesting things may find there
-        way on here.
+        {{timeofday}}! Welcome to a website by me. You may not find anything on here as I tend to use it only to host prvate projects
+        and other miscellanea, but from time to time interesting things may find there way on here.
     </p>
 </section>
-<svg class='break' version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
 <section>
-    <p>I'm currently trying to consolidate all of my little ideas and toy projects to my GitHub, and here is an updating list
-        of the 5 most recently updated repositories of mine (see the website repository for the integration details):</p>
-</section>
-<section>
-    {{#if repos}}
-    <div class='boxlist'>
-        {{#each repos}}
-        <article class='listitem'>
-            <img class='img' src='{{this.tileImage}}' />
-            <div class='right'>
-                <header>
-                    <h3>{{this.name}}</h3>
-                    <ul class='horizontal'>
-                        <li><a href='{{this.site}}'>repository</a></li>
-                        {{#if metadata.links}} {{#each metadata.links}}
-                        <li><a href='{{this}}'>{{@key}}</a></li>
-                        {{/each}}{{/if}}
-                    </ul>
-                </header>
-                <small><em>Last push: {{datetime this.lastUpdate "dS mmmm yyyy, h:MMtt"}}</em></small>
-                <p>{{{this.descriptionHTML}}}</p>
-            </div>
-        </article>
+    <h2>Projects</h2>
+    <p>I'm currently trying to consolidate all of my little ideas and toy projects to my GitHub. Here I've listed a select few:</p>
+    <div class='project-list'>
+        {{#each projects}}
+
+        <div class='project-item'>
+            <header>
+                <h5>{{name}}</h5>
+                <ul class='horizontal'>{{#each links}}
+                    <li><a href='{{this}}'>{{@key}}</a></li>
+                    {{/each}}
+                    <li><a href='{{repository}}'>github</a></li>
+                </ul>
+            </header>
+            <p>{{{emojify description}}}</p>
+        </div>
+
         {{/each}}
+        <a class='end-link' href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>
     </div>
-    {{/if}} {{#unless repos}}
-    <p class='info'>Appears to be some problem fetching the data from the GitHub API. Have a look at my GitHub for some of the things you
-        are meant to see here.</p>{{/unless}}
-    <a href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>
 </section>

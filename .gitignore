@@ -2,15 +2,5 @@
 **/node_modules/*
 **/jspm_packages/*
 **.*.js.map
-*.js.map
-out/*
-**/.DS_Store
-bundle.js
-apikey.js
-restartCode.js
-
-
-
-**/auths.js
-
-public/stylesheets
+.DS_Store
+public/css
