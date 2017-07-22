@@ -8,34 +8,21 @@
     "build": "tsc -p ."
   },
   "dependencies": {
-    "@types/express": "^4.0.36",
-    "@types/memory-cache": "0.0.29",
-    "@types/node": "^8.0.13",
-    "@types/request": "0.0.47",
-    "async-request": "^1.2.0",
     "autoprefixer": "^7.1.1",
     "body-parser": "~1.17.1",
-    "concurrently": "^3.5.0",
     "cookie-parser": "~1.4.3",
     "cross-env": "^5.0.1",
     "dateformat": "^2.0.0",
     "debug": "~2.6.3",
-    "elemeno": "^1.1.0",
     "express": "~4.15.2",
-    "express-minify": "^0.2.0",
     "hbs": "~4.0.1",
-    "memory-cache": "^0.2.0",
-    "mongodb": "^2.2.30",
     "morgan": "~1.8.1",
+    "node-emoji": "^1.8.0",
     "node-sass": "^4.5.3",
     "node-sass-middleware": "^0.11.0",
     "nodemon": "^1.11.0",
     "postcss-middleware": "^1.1.3",
     "serve-favicon": "~2.4.2"
   },
-  "false": {},
-  "devDependencies": {
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1"
-  }
+  "false": {}
 }
