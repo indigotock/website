@@ -1,7 +1,0 @@
-{{#each posts}}
-<article class='post'>
-    <h3 class='title'>{{this.title}}</h3>
-    <a href='/posts/{{this.slug}}'>
-    {{datetime date "dS mmmm  yyyy, h:MMtt"}}</a> {{{this.content.body.html}}}
-</article>
-{{/each}}

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "concurrently --kill-others \"tsc -w -p .\" \"cross-env NODE_ENV=development DEBUG=site:* nodemon ./bin/www\"",
+    "start": "cross-env DEBUG=site:* nodemon ./bin/www",
     "prod": "cross-env NODE_ENV=production  node ./bin/www",
     "build": "tsc -p ."
   },

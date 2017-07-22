@@ -1,5 +1,3 @@
-import test from './test'
-
 document.addEventListener('DOMContentLoaded', function () {
     console.log(test)
     let grt = document.getElementById('greeting')

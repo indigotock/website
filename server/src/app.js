@@ -8,17 +8,16 @@ var bodyParser = require('body-parser');
 var dateFormat = require('dateformat')
 var hbs = require('hbs')
 
-var posts = require('./routes/posts');
-var index = require('./routes/index');
-
 var app = express();
 
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'hbs');
 
 const PRODUCTION = process.env.NODE_ENV === 'production'
+if (!PRODUCTION)
+    process.env.NODE_ENV = 'development'
 
-console.log('Starting server in ' + process.env.NODE_ENV + ', ' + PRODUCTION)
+console.log('Starting server in ' + process.env.NODE_ENV)
 if (PRODUCTION) {
     app.use(express.static(path.join(__dirname, '..', 'public')));
 } else {
@@ -26,15 +25,7 @@ if (PRODUCTION) {
     app.use(express.static(path.join(__dirname, '..', '..', 'client', 'copy')));
 }
 
-hbs.handlebars.registerHelper('datetime', function(dt, f) {
-    try {
-        return dateFormat(new Date(dt), f)
-    } catch (e) {
-        return ''
-    }
-})
-
-require('./db')
+require('./hbsHelpers')(hbs)
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -43,22 +34,17 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
-app.use('/repos', require('./routes/repos'));
-app.use('/posts', posts);
-app.use('/', index);
-
-app.use('/api', require('./api'))
-
+app.use('/', require('./routes/index'));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err['status'] = 404;
     next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
