@@ -11,7 +11,13 @@ var autoprefixer = require('autoprefixer');
 var dateFormat = require('dateformat')
 var hbs = require('hbs')
 
+require('dotenv').config({
+    path: path.join(__dirname, '.env')
+})
 var app = express();
+
+require('./cms').initialise()
+require('./db').initialise()
 
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'hbs');

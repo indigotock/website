@@ -2,5 +2,7 @@
 **/node_modules/*
 **/jspm_packages/*
 **/*.js.map
+.env
+datastore.db
 .DS_Store
 public/css
