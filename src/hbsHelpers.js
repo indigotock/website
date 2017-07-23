@@ -19,7 +19,7 @@ let exp = function (hbs) {
     })
     hbs.handlebars.registerHelper('multilingualgreeting', function (str) {
         if (Math.random() < .2)
-            return util.randomFrom(['Hoi!', 'Hallo.', 'Welkom'])
+            return util.randomFrom(['Hoi!', 'Hallo', 'Welkom'])
         return util.randomFrom(['Hi!', 'Welcome'])
     })
     hbs.handlebars.registerHelper('timeofday', function () {
@@ -32,6 +32,6 @@ let exp = function (hbs) {
         else str = 'Evening'
         return str
     })
-    hbs.registerPartials(path.join('..', 'views', 'partials'));
+    hbs.registerPartials(path.join('..', 'views'));
 }
 module.exports = exp

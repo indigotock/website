@@ -1,0 +1,14 @@
+<div class='project-item'>
+    <header>
+        <h5>{{title}}</h5>
+        <ul class='horizontal'>{{#each content.links}} {{#if url}}
+            <li><a href='{{url}}'>{{name}}</a></li>
+            {{else}}
+            <li><a>{{name}} (currently down)</a></li>
+            {{/if}} {{/each}} {{#if content.repository}}
+            <li><a href='{{content.repository}}'>repository</a></li>
+            {{/if}}
+        </ul>
+    </header>
+    {{{emojify content.description.html}}}
+</div>
