@@ -9,20 +9,20 @@
     <p>I'm currently trying to consolidate all of my little ideas and toy projects to my GitHub. Here I've listed a select few:</p>
     <div class='project-list'>
         {{#each projects}}
-
         <div class='project-item'>
             <header>
                 <h5>{{title}}</h5>
-                <ul class='horizontal'>{{#each content.links}}
+                <ul class='horizontal'>{{#each content.links}} {{#if url}}
                     <li><a href='{{url}}'>{{name}}</a></li>
-                    {{/each}} {{#if content.repository}}
+                    {{else}}
+                    <li><a>{{name}} (currently down)</a></li>
+                    {{/if}} {{/each}} {{#if content.repository}}
                     <li><a href='{{content.repository}}'>repository</a></li>
                     {{/if}}
                 </ul>
             </header>
             <span>{{{emojify content.description.html}}}</span>
         </div>
-
         {{/each}}
         <a class='end-link' href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>
     </div>

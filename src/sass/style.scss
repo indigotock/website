@@ -55,6 +55,13 @@ body {
     }
 }
 
+a:not([href]) {
+    color: $color-fade;
+    &:hover {
+        border: none;
+    }
+}
+
 .emoji {
     width: 1em;
 }
