@@ -60,6 +60,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use('/', require('./routes/index'));
+app.use('/elemeno', require('./routes/elemenoWebhook'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
