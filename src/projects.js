@@ -23,7 +23,9 @@ let exp = {}
 exp.getProjects = function (callback) {
     db.find({
         collectionSlug: 'ideas'
-    }, callback)
+    }).sort({
+        'content.order': 1
+    }).exec(callback)
 }
 
 
