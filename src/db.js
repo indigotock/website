@@ -1,5 +1,8 @@
 var nedb = require('nedb'),
-    db = new nedb('datastore.db')
+    db = new nedb({
+        filename: __dirname + '/../datastore.db',
+        autoload: true
+    })
 
 var debug = require('debug'),
     debugx = debug('site:database')
@@ -7,12 +10,14 @@ var debug = require('debug'),
 let exp = {}
 
 exp.initialise = function () {
-    db.loadDatabase(function (err) {
-        if (err)
-            debugx('Error loading database: ' + err)
-        else
-            debugx('Succesfully loaded database')
-    })
+    db.ensureIndex(({
+        fieldName: 'id',
+        unique: true
+    }, function (err) {
+        if (err) {
+            throw new Error('Unable to ensure index id ' + err)
+        }
+    }))
 }
 
 exp.database = function () {

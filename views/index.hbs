@@ -12,14 +12,15 @@
 
         <div class='project-item'>
             <header>
-                <h5>{{name}}</h5>
-                <ul class='horizontal'>{{#each links}}
-                    <li><a href='{{this}}'>{{@key}}</a></li>
-                    {{/each}}
-                    <li><a href='{{repository}}'>github</a></li>
+                <h5>{{title}}</h5>
+                <ul class='horizontal'>{{#each content.links}}
+                    <li><a href='{{url}}'>{{name}}</a></li>
+                    {{/each}} {{#if content.repository}}
+                    <li><a href='{{content.repository}}'>repository</a></li>
+                    {{/if}}
                 </ul>
             </header>
-            <p>{{{emojify description}}}</p>
+            <span>{{{emojify content.description.html}}}</span>
         </div>
 
         {{/each}}

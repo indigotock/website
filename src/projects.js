@@ -1,3 +1,5 @@
+var _db = require('./db'),
+    db = _db.database()
 let projects = []
 
 projects.push({
@@ -16,5 +18,13 @@ projects.push({
     }
 })
 
+let exp = {}
 
-module.exports = projects
+exp.getProjects = function (callback) {
+    db.find({
+        collectionSlug: 'ideas'
+    }, callback)
+}
+
+
+module.exports = exp

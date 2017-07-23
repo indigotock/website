@@ -17,7 +17,7 @@ h2+p {
     text-align: center;
     &>.project-item {
         text-align: initial;
-        margin-bottom: .5em;
+        margin-bottom: 1em;
         &:last-of-type {
             margin-bottom: 1em;
         }
@@ -31,7 +31,7 @@ h2+p {
                 margin: 0;
             }
         }
-        &>p {
+        &>span>* {
             margin: 0;
             text-align: left;
         }
