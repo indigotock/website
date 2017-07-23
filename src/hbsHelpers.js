@@ -1,5 +1,6 @@
 var emoji = require('node-emoji')
 var path = require('path')
+var util = require('./util')
 
 let exp = function (hbs) {
     hbs.handlebars.registerHelper('datetime', function (dt, f) {
@@ -15,6 +16,11 @@ let exp = function (hbs) {
         } catch (e) {
             return str
         }
+    })
+    hbs.handlebars.registerHelper('multilingualgreeting', function (str) {
+        if (Math.random() < .2)
+            return util.randomFrom(['Hoi!', 'Hallo.', 'Welkom'])
+        return util.randomFrom(['Hi!', 'Welcome'])
     })
     hbs.handlebars.registerHelper('timeofday', function () {
         let str;

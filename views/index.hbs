@@ -1,4 +1,5 @@
 <section>
+    <h2>{{multilingualgreeting}}</h2>
     <p>
         {{timeofday}}! Welcome to a website by me. You may not find anything on here as I tend to use it only to host prvate projects
         and other miscellanea, but from time to time interesting things may find there way on here.
@@ -21,7 +22,7 @@
                     {{/if}}
                 </ul>
             </header>
-            <span>{{{emojify content.description.html}}}</span>
+            {{{emojify content.description.html}}}
         </div>
         {{/each}}
         <a class='end-link' href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>
