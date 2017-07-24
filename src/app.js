@@ -67,6 +67,7 @@ app.use('/elemeno', require('./routes/elemenoWebhook'));
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
+    err.body = `<strong>Whoops.</strong> Not sure how you've managed to get a 404 on my website, but bravo! If you're looking for a post then the slug in the url may be incorrect, otherwise feel free to ask for help via <a href='mailto:kyle.hughes@outlook.com'>email.</a>`
     next(err);
 });
 
@@ -74,8 +75,12 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.locals.error = err;
+    if (req.app.get('env') === 'development') {
 
+    } else {
+        err.stack = null
+    }
     // render the error page
     res.status(err.status || 500);
     res.render('error');
