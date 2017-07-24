@@ -20,7 +20,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/:slug([a-zA-Z0-9-_]+)', function (req, res, next) {
     posts.getPostBySlug(req.params.slug, function (err, data) {
-        if (err) {
+        if (err || !data) {
             next()
         } else
             res.render('post', data)
