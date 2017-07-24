@@ -91,6 +91,8 @@ exp.setPublishState = function (id, published, cb) {
 }
 
 exp.initialise = function () {
+    if (process.env.NODE_ENV !== 'production')
+        return
     Elemeno.getCollections(null, function (err, data) {
         if (err)
             throw new Error(err)

@@ -1,13 +1,14 @@
 var emoji = require('node-emoji')
 var path = require('path')
 var util = require('./util')
+var dateFormat = require('dateformat')
 
 let exp = function (hbs) {
     hbs.handlebars.registerHelper('datetime', function (dt, f) {
         try {
             return dateFormat(new Date(dt), f)
         } catch (e) {
-            return 'Unknown datetime: ' + e
+            return `Cannot format ${dt} to datetime format ${f}: ` + e
         }
     })
     hbs.handlebars.registerHelper('emojify', function (str) {
