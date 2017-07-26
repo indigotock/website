@@ -14,20 +14,16 @@
             {{#if content.image}}
             <img src='{{content.image.fileUrl}}' /> {{else}}
             <img src='./favicon.png' /> {{/if}}
-            <div class='right'>
-                <header>
-                    <h5>{{title}}</h5>
-                    <ul class='horizontal'>{{#each content.links}} {{#if url}}
-                        <li><a href='{{url}}'>{{name}}</a></li>
-                        {{else}}
-                        <li><a>{{name}} (currently down)</a></li>
-                        {{/if}} {{/each}} {{#if content.repository}}
-                        <li><a href='{{content.repository}}'>repository</a></li>
-                        {{/if}}
-                    </ul>
-                </header>
-                {{{emojify content.description.html}}}
-            </div>
+            <h5>{{title}}</h5>
+            <ul class='horizontal'>{{#each content.links}} {{#if url}}
+                <li><a href='{{url}}'>{{name}}</a></li>
+                {{else}}
+                <li><a>{{name}} (currently down)</a></li>
+                {{/if}} {{/each}} {{#if content.repository}}
+                <li><a href='{{content.repository}}'>repository</a></li>
+                {{/if}}
+            </ul>
+            {{{emojify content.description.html}}}
         </article>
         {{/each}}
         <a class='end-link' href='https://github.com/indigotock?tab=repositories'>View all repositories...</a>

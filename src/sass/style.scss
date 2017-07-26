@@ -25,11 +25,13 @@ h2+p {
     margin: 0 auto;
     text-align: center;
     &>.project-item {
-        display: flex;
-        flex-direction: row;
-        text-align: initial;
+        display: grid;
+        text-align: left;
         margin-bottom: 1em;
+        grid-template-areas: "image title links" "image text text";
+        grid-template-columns: minmax(70px, calc(70px + 1em)) 1fr 1fr;
         &>img {
+            grid-area: image;
             width: 70px;
             float: left;
             border: solid 1px currentColor;
@@ -39,19 +41,18 @@ h2+p {
         &:last-of-type {
             margin-bottom: 1em;
         }
-        &>.right {
-            &>header {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                &>h5 {
-                    margin: 0;
-                }
-            }
-            &>p {
-                margin: 0;
-                text-align: left;
-            }
+        &>h5 {
+            margin: 0;
+            grid-area: title;
+        }
+        &>ul {
+            grid-area: links;
+            text-align: right;
+        }
+        &>p {
+            margin: 0;
+            text-align: left;
+            grid-area: text;
         }
     }
 }
@@ -109,21 +110,20 @@ ol.horizontal {
 }
 
 // Small
-@media (max-width: 684px) {
-    .project-list {
-        &>.project-item {
-            &>img {
-                width: 50px;
-                height: 50px;
-            }
-        }
-    }
-} // Very small
+@media (max-width: 684px) {}
+
+// Very small
 @media (max-width: 420px) {
     .project-list {
         &>.project-item {
-            &>.right>header {
-                flex-direction: column;
+            grid-template-columns: minmax(50px, calc(50px + 1em)) 1fr 1fr;
+            grid-template-areas: "image title title" "image links links" "image text text";
+            &>ul {
+                text-align: left;
+            }
+            &>img {
+                width: 50px;
+                height: 50px;
             }
         }
     }
