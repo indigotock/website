@@ -1,3 +1,5 @@
+const PRODUCTION = process.env.NODE_ENV === 'production'
+console.log('Original node_env:', process.env.NODE_ENV);
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -22,7 +24,6 @@ require('./db').initialise()
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'hbs');
 
-const PRODUCTION = process.env.NODE_ENV === 'production'
 if (!PRODUCTION)
     process.env.NODE_ENV = 'development'
 
