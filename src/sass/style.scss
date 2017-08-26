@@ -49,8 +49,10 @@ h2+p {
             grid-area: links;
             text-align: right;
         }
-        &>p {
-            margin: 0;
+        &>div {
+            &>p {
+                margin: 0;
+            }
             text-align: left;
             grid-area: text;
         }
