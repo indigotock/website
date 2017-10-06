@@ -1,148 +1,79 @@
-@import 'sakura';
-.info {
-    font-style: italic;
+@import 'normalize';
+@import 'theme';
+
+header, h1, h2, h3{
+    font-family: $font-family-serif;
 }
 
-h2 {
-    margin-bottom: 1rem;
+.project-list{
+    display:none;
 }
 
-h2+p {
-    margin-top: 0;
+.lg-first{
+    stop-color:$color-blossom;
 }
 
-.post {
-    &>header {
-        &>h3,
-        &>h2 {
-            margin-bottom: 0;
-        }
+.lg-second{
+    stop-color:$color-fade;
+}
+
+body{
+    font-size: $font-size-base;
+    min-width:320px;
+    font-family: $font-family-sans-serif;
+    margin-left: 10vw;
+    margin-top:12px;
+    margin-right: 10vw;
+    background-color: $color-bg;
+    color: $color-text;
+    &>section{
+        max-width:960px;
     }
-}
-
-.project-list {
-    width: 90%;
-    margin: 0 auto;
-    text-align: center;
-    &>.project-item {
-        display: grid;
-        text-align: left;
-        margin-bottom: 1em;
-        grid-template-areas: "image title links" "image text text";
-        grid-template-columns: minmax(70px, calc(70px + 1em)) 1fr 1fr;
-        &>img {
-            grid-area: image;
-            width: 70px;
-            float: left;
-            border: solid 1px currentColor;
-            height: 70px;
-            margin-right: 1em;
-        }
-        &:last-of-type {
-            margin-bottom: 1em;
-        }
-        &>h5 {
-            margin: 0;
-            grid-area: title;
-        }
-        &>ul {
-            grid-area: links;
+    &>header{
+        &>nav{
             text-align: right;
-        }
-        &>div {
-            &>p {
-                margin: 0;
+            &>ul>li{
+                height:1em;
+                &>a{
+                    color:currentColor;
+                }
             }
-            text-align: left;
-            grid-area: text;
+        }
+        &>svg{
+            text-transform: uppercase;
+            font-size: 3em;
+            max-width:1024px;
+        }
+    }
+}
+@media (max-width: 684px) {
+    body{
+        &>header>nav>ul>li{
+            height:.50em;
+        }
+        &>section{
+            font-size: $font-size-base * 0.85;
         }
     }
 }
 
-body {
-    &>header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        font-family: $font-family-sans-serif;
-        nav {
-            font-size: 1.2em;
+@media (max-width: 382px) {
+    body {
+        &>header>nav{
+            font-size:.25em;
         }
-        &>h1 {
-            text-align: center;
-            margin-bottom: .3em;
+        &>section{
+            font-size: $font-size-base * 0.75;
         }
     }
-}
-
-a:not([href]) {
-    color: $color-fade;
-    &:hover {
-        border: none;
-    }
-}
-
-.emoji {
-    width: 1em;
-}
-
-p {
-    text-align: justify;
 }
 
 ul.horizontal,
-ol.horizontal {
-    margin: 0;
-    padding: 0;
-    display: inline;
-    li {
-        display: inline;
-        text-transform: lowercase;
-        &:not(:first-child) {
-            margin-left: .5em;
-        }
-        &:after {
-            content: ',';
-        }
-        &:last-child:after {
-            content: '.';
-        }
-    }
-}
-
-// Small
-@media (max-width: 684px) {}
-
-// Very small
-@media (max-width: 420px) {
-    .project-list {
-        &>.project-item {
-            grid-template-columns: minmax(50px, calc(50px + 1em)) 1fr 1fr;
-            grid-template-areas: "image title title" "image links links" "image text text";
-            &>ul {
-                text-align: left;
-            }
-            &>img {
-                width: 50px;
-                height: 50px;
-            }
-        }
-    }
-}
-
-svg.break {
-    margin: 0 auto; // width: 200px;
-    display: block;
-    circle,
-    line {
-        stroke: currentColor;
-        fill-opacity: 0;
-    }
-}
-
-.post {
-    .title {
-        margin-bottom: 0;
+li.horizontal{
+    list-style-type: none;
+    padding-left:0;
+    margin:0;
+    &>li{
+        display:inline-block;
     }
 }

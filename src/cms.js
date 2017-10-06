@@ -90,8 +90,8 @@ exp.setPublishState = function (id, published, cb) {
     })
 }
 
-exp.initialise = function () {
-    if (process.env.NODE_ENV !== 'production')
+exp.initialise = function (force) {
+    if (process.env.NODE_ENV !== 'production' && !force)
         return
     Elemeno.getCollections(null, function (err, data) {
         if (err)

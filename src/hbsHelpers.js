@@ -33,6 +33,9 @@ let exp = function (hbs) {
         else str = 'Evening'
         return str
     })
+    hbs.handlebars.registerHelper('hashedHex', function (num) {
+        return '#'+num.toString(16)
+    })
     hbs.registerPartials(path.join('..', 'views'));
 }
 module.exports = exp

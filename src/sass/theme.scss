@@ -1,16 +1,10 @@
-$color-blossom: #338618;
-$color-fade: #5e5e5e;
-$color-bg: #f9f9f9;
+@import url('https://fonts.googleapis.com/css?family=Eczar:400,700|Work+Sans:400,700&subset=latin-ext');
+
+$color-blossom: #6924a5;
+$color-fade: lighten(#052e34, 20%);
+$color-bg: #111112;
 $color-bg-alt: #C7E3BE;
-$color-text: #4a4a4a;
-$font-size-base: 1.8rem;
-$font-family-sans-serif: 'Open Sans',
-Verdana,
-Geneva,
-sans-serif;
-$font-family-serif: Cambria,
-Cochin,
-Georgia,
-Times,
-Times New Roman,
-serif;
+$color-text: #f5f5f5;
+$font-size-base: 1.6rem;
+$font-family-sans-serif: 'Work Sans', sans-serif;
+$font-family-serif: 'Eczar', serif;

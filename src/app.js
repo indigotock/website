@@ -7,8 +7,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var postcssMiddleware = require('postcss-middleware')
+var session = require('express-session')
 var sassMiddleware = require('node-sass-middleware')
 var autoprefixer = require('autoprefixer');
+var colours = require('./colours')
 
 var dateFormat = require('dateformat')
 var hbs = require('hbs')
@@ -30,7 +32,7 @@ if (!PRODUCTION)
 app.use('/css', sassMiddleware({
     src: path.join(__dirname, 'sass'),
     watch: true,
-    dest: path.join(__dirname, '..', 'public', 'css'),
+    dest: path.join(__dirname,  'css'),
     outputStyle: 'compressed',
 }));
 app.use('/css', postcssMiddleware({
@@ -38,7 +40,7 @@ app.use('/css', postcssMiddleware({
         autoprefixer()
     ],
     src: function (req) {
-        return path.join(__dirname, '..', 'public', 'css', req.url);
+        return path.join(__dirname, 'css', req.url);
     }
 }));
 
@@ -50,8 +52,30 @@ if (PRODUCTION || true) {
     app.use(express.static(path.join(__dirname, '..', '..', 'client', 'copy')));
 }
 
-
+hbs.registerHelper('octicon', require('helper-octicon'));
 require('./hbsHelpers')(hbs)
+
+// Sessions are just used to colour the header. Good idea to have changing
+// header colours? Probably not. Looks cool
+app.use(session({
+    secret: 'hurdy gurdy',
+    resave: true,
+    saveUninitialized: true
+}))
+
+app.use((req,res,nxt)=>{
+    console.log(req.sessionID)
+    require('./db').database().find({
+        collectionSlug: 'navigation'
+    }).exec((err, data)=>{
+        if(!err)
+            res.locals.navs=data
+        res.locals.headerColours=colours.getGradientPair(
+            req.sessionID.charCodeAt(0)
+        )
+        nxt()
+    })
+})
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
