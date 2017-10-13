@@ -6,15 +6,13 @@
     </p>
 </section>
 <section>
-    <h2>Projects</h2>
-    <p>I'm currently trying to consolidate all of my little ideas and toy projects to my GitHub. Here I've listed a select few:</p>
     <div class='project-list'>
         {{#each projects}}
         <article class='project-item'>
             {{#if content.image}}
             <img src='{{content.image.fileUrl}}' /> {{else}}
             <img src='./favicon.png' /> {{/if}}
-            <h5>{{title}}</h5>
+            <h3>{{title}}</h3>
             <ul class='horizontal'>{{#each content.links}} {{#if url}}
                 <li><a href='{{url}}'>{{name}}</a></li>
                 {{else}}

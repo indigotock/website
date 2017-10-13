@@ -1,14 +1,47 @@
 @import 'sakura';
+html {
+    font-size: 21px;
+    font-family: $font-family-serif;
+    line-height: 1.5;
+}
+
 .info {
     font-style: italic;
 }
 
-h2 {
-    margin-bottom: 1rem;
+h1 {
+    font-weight: 700;
+    font-size: 400%;
+    text-align: justify;
+    text-justify: inter-word;
 }
 
-h2+p {
-    margin-top: 0;
+h2 {
+    font-weight: 200%;
+    margin-bottom: .5em;
+    font-weight: 600;
+}
+
+h3 {
+    font-weight: 200%;
+    font-weight: 400;
+}
+
+h4 {
+    font-weight: 200%;
+    font-weight: 300;
+}
+
+p {
+    font-weight: 300;
+    font-size: 17px;
+}
+
+small,
+sub,
+sup,
+.small {
+    font-size: 300;
 }
 
 .post {
@@ -20,10 +53,12 @@ h2+p {
     }
 }
 
+section {
+    margin-bottom: 1.5em;
+}
+
 .project-list {
-    width: 90%;
-    margin: 0 auto;
-    text-align: center;
+    line-height: 1.2;
     &>.project-item {
         display: grid;
         text-align: left;
@@ -41,7 +76,7 @@ h2+p {
         &:last-of-type {
             margin-bottom: 1em;
         }
-        &>h5 {
+        &>h3 {
             margin: 0;
             grid-area: title;
         }
@@ -59,18 +94,19 @@ h2+p {
     }
 }
 
+code {
+    font-size: 0.9em;
+    padding: 0 0.5em;
+    background-color: $color-bg-alt;
+    white-space: pre-wrap;
+}
+
 body {
     &>header {
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: space-between;
-        font-family: $font-family-sans-serif;
-        nav {
-            font-size: 1.2em;
-        }
         &>h1 {
-            text-align: center;
             margin-bottom: .3em;
         }
     }
@@ -85,10 +121,6 @@ a:not([href]) {
 
 .emoji {
     width: 1em;
-}
-
-p {
-    text-align: justify;
 }
 
 ul.horizontal,

@@ -9,18 +9,9 @@
 
 /* Body */
 
-html {
-    font-size: 62.5%; // So that root size becomes 10px
-    //font-family: serif;
-    font-family: $font-family-serif;
-}
-
 body {
     // $font-size-base must be a rem value
-    font-size: $font-size-base;
-    line-height: 1.2;
-    max-width: 38em;
-    margin: auto;
+    max-width: 38em; // margin: auto;
     color: $color-text;
     background-color: $color-bg;
     padding: 13px;
@@ -28,13 +19,13 @@ body {
 
 @media (max-width: 684px) {
     body {
-        font-size: $font-size-base * 0.85;
+        font-size: 85%;
     }
 }
 
 @media (max-width: 382px) {
     body {
-        font-size: $font-size-base * 0.75;
+        font-size: 75%;
     }
 }
 
@@ -59,36 +50,6 @@ h6 {
     font-family: $font-family-sans-serif;
     font-weight: 700;
     @include word-wrap;
-}
-
-h1 {
-    font-size: 2.35em
-}
-
-h2 {
-    font-size: 1.7em
-}
-
-h3 {
-    font-size: 1.5em
-}
-
-h4 {
-    font-size: 1.25em
-}
-
-h5 {
-    font-size: 1.1em
-}
-
-h6 {
-    font-size: 1em
-}
-
-small,
-sub,
-sup {
-    font-size: 75%;
 }
 
 hr {
@@ -131,13 +92,6 @@ pre {
     display: block;
     padding: 1em;
     overflow-x: auto;
-}
-
-code {
-    font-size: 0.9em;
-    padding: 0 0.5em;
-    background-color: $color-bg-alt;
-    white-space: pre-wrap;
 }
 
 pre>code {
