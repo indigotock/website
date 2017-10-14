@@ -7,10 +7,21 @@ html {
 
 @media (min-width: 1080px) {
     body {
-        margin:auto;
+        margin: auto;
     }
 }
 
+.lg-first {
+    stop-color: $color-main;
+}
+
+.lg-second {
+    stop-color: $color-alt;
+}
+
+body {
+    min-width: 320px;
+}
 
 .info {
     font-style: italic;
@@ -74,6 +85,7 @@ section {
         grid-template-columns: minmax(70px, calc(70px + 1em)) 1fr 1fr;
         &>img {
             grid-area: image;
+            border-radius: 5%;
             width: 70px;
             float: left;
             border: solid 1px currentColor;
@@ -85,6 +97,7 @@ section {
         }
         &>h3 {
             margin: 0;
+            color: $color-alt;
             grid-area: title;
         }
         &>ul {
@@ -113,7 +126,20 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        &>svg {
+            font-size: 3em;
+            font-weight: bold;
+            margin-left: -8px;
+            max-width: 1024px;
+        }
         &>h1 {
+            &>a {
+                background-image: linear-gradient(to bottom right, #43e97b, #38f9d7);
+                color: transparent;
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+            margin-left: -6px;
             margin-bottom: .3em;
         }
     }
