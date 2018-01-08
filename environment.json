@@ -1,0 +1,12 @@
+{
+	"apps": [{
+		"name":"website",
+		"script":"bin/www",
+		"watch":false,
+		"ignore_Watch":["node_modules", "*.db"],
+		"env":{
+			"NODE_ENV":"production",
+		},
+		"merge_logs":true
+	}]
+}
