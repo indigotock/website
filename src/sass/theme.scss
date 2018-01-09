@@ -1,32 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=latin-ext');
-<<<<<<< HEAD
 $color-alt: lighten(#FF0604, 15%);
-$color-main: lighten(#FFDF02,
-=======
-$color-main: lighten(#b721ff,
-15%);
-$color-alt: lighten(#2180fd,
->>>>>>> a4078e4b6015b277a0017c1a4294676f8b851bdf
-15%);
-$color-fade: darken(desaturate($color-main, 80%),
-30%);
+$color-main: lighten(#FFDF02, 15%);
+$color-fade: darken(desaturate($color-main, 80%), 30%);
 $color-bg: #060808;
-<<<<<<< HEAD
 $color-bg-alt: lighten($color-bg, 10%);
 $color-text: #ffffff;
 
-=======
-$color-bg-alt: lighten(#060808,
-10%);
-$color-text: lighten(#21d4fd,
-40%);
->>>>>>> a4078e4b6015b277a0017c1a4294676f8b851bdf
+$color-bg-alt: lighten(#060808, 10%);
+$color-text: lighten(#21d4fd, 40%);
+
 $font-family-sans-serif: 'Open Sans',
-Verdana,
-Geneva,
-sans-serif;
+	Verdana,
+	Geneva,
+	sans-serif;
 
 $font-family-serif: 'Open Sans',
-Verdana,
-Geneva,
-sans-serif;
+	Verdana,
+	Geneva,
+	sans-serif;
