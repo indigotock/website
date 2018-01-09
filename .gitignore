@@ -6,3 +6,4 @@
 datastore.db
 .DS_Store
 public/css
+environment.js.save
