@@ -211,3 +211,29 @@ svg.break {
         margin-bottom: 0;
     }
 }
+
+.snake{
+	&-containr{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -100;
+		overflow: hidden;
+	}
+	
+  border-radius: 50%;
+  background-image: radial-gradient(farthest-corner, #ffe94f 0%, #ff5251 100%);
+  position: absolute;
+
+	.snake.head{
+		width:50px;
+		height:50px;
+	}
+	.snake.tail{
+	  width:30px;
+	  height:30px;
+	}
+}
+

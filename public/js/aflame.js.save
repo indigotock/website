@@ -1,0 +1,19 @@
+(function(){
+window.addEventListener('DOMContentLoaded', function(loadEvent){
+	var mouseX = 0
+        var mouseY = 0
+        function animate(){
+          var x = Date.now()
+          var wave = Math.sin(x*5*(Math.sin(x)/2))
+                      /4
+                      +(
+                         Math.cos(x*8)/8
+                       )
+          var first = 30-((window.innerWidth-mouseX)/120) * (1+wave)
+          var second = 70+((window.innerHeight-mouseY)/120) * (1+wave)
+          document.querySelector('.lg-first').setAttribute('offset', first+'%')
+          document.querySelector('.lg-second').setAttribute('offset', second+'%')
+          requestAnimationFrame(animate)
+        requestAnimationFrame(animate)
+})
+})()
