@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "es3",
+        // "outFile": "public/js/script.js",
+        "module": "amd",
+        "esModuleInterop": true,
+        "outDir": "public/js"
+    },
+    "include": [
+        "public/ts/*.ts"
+    ]
+}

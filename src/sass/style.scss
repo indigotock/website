@@ -211,3 +211,15 @@ svg.break {
         margin-bottom: 0;
     }
 }
+
+#background {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    color: transparentize($color: $color-alt, $amount: .75);
+}
