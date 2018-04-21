@@ -12,11 +12,11 @@ html {
 }
 
 .lg-first {
-    stop-color: $color-main;
+    stop-color: $color-alt;
 }
 
 .lg-second {
-    stop-color: $color-alt;
+    stop-color: $color-main;
 }
 
 body {
@@ -212,6 +212,7 @@ svg.break {
     }
 }
 
+<<<<<<< HEAD
 #background {
     width: 100vw;
     height: 100vh;
@@ -223,3 +224,30 @@ svg.break {
     bottom: 0;
     color: transparentize($color: $color-alt, $amount: .75);
 }
+=======
+.snake{
+	&-containr{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -100;
+		overflow: hidden;
+	}
+	
+  border-radius: 50%;
+  background-image: radial-gradient(farthest-corner, #ffe94f 0%, #ff5251 100%);
+  position: absolute;
+
+	.snake.head{
+		width:50px;
+		height:50px;
+	}
+	.snake.tail{
+	  width:30px;
+	  height:30px;
+	}
+}
+
+>>>>>>> 0716f1c4e028220ae2adc34720e3590cfc4a6a66
