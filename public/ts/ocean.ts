@@ -53,7 +53,7 @@ module Ocean {
 
             var segmentWidth = 10
             var segmentCount = Math.ceil(this.width() / segmentWidth) + 1
-            var heightOffs = this.noise.simplex2(this.time, 65535 + (index * 50)) * 5
+            var heightOffs = this.noise.simplex2(this.time, 65535 + (index * 50)) * 20
             var startY = heightOffs + (this.height() / 1) - yOffset
 
 
