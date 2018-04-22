@@ -34,7 +34,8 @@ var Ocean;
         OceanCanvas.prototype.drawWave = function (yOffset, index) {
             var segmentWidth = 10;
             var segmentCount = Math.ceil(this.width() / segmentWidth) + 1;
-            var startY = yOffset + (this.height() / 8 * 7);
+            var heightOffs = this.noise.simplex2(this.time, 65535 + (index * 50)) * 5;
+            var startY = heightOffs + (this.height() / 1) - yOffset;
             this.context.save();
             this.context.beginPath();
             this.context.moveTo(0, startY);
