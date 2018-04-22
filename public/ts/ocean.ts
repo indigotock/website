@@ -1,5 +1,6 @@
 module Ocean {
     export class OceanCanvas {
+        noise: any;
         turbulenceRate: number;
         canvas: HTMLCanvasElement;
         context: CanvasRenderingContext2D;
@@ -12,9 +13,13 @@ module Ocean {
 
             window.addEventListener('resize', this.resetCanvasDimensions.bind(this));
 
-            this.turbulenceRate = 4// 2 + (Math.random() * 5)
+            this.turbulenceRate = 10 + (Math.random() * 5)
 
             this.time = new Date().getTime();
+
+            this.noise = (window as any).noise
+            console.log(this.time)
+            this.noise.seed(1)
         }
 
         width() {
@@ -62,12 +67,11 @@ module Ocean {
                 function turbulence(x, y, f) {
                     var t = -.5;
                     for (; f <= this.width() / 12; f *= 2) // W = Image width in pixels
-                        t += Math.abs(noise.simplex2(x, y) / f);
+                        t += Math.abs(this.noise.simplex2(x, y) / f);
                     return t;
                 }
-                var noise = (window as any).noise
 
-                return turbulence.bind(this)(time + (index * 100), wave / 20, this.turbulenceRate) * 100
+                return turbulence.bind(this)(time + (index * 1), wave / 20, this.turbulenceRate) * 100
             }
 
             for (var i = 0; i < segmentCount; i++) {
