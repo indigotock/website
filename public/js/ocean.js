@@ -44,7 +44,7 @@ var Ocean;
             function getValue(wave, time) {
                 function applyWave(value) {
                     var intensity = this.intensityNoise.simplex2(this.time, 0) + 1.5;
-                    var scale = (this.waveNoise.simplex2(this.time + (index * .1), wave / 100) * 2);
+                    var scale = this.waveNoise.simplex2(this.time + (index * .1), wave / 300) * 2.5;
                     scale = Math.max(1, scale);
                     return (value * scale);
                 }
