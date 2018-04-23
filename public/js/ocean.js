@@ -3,10 +3,10 @@ var Ocean;
     var OceanCanvas = /** @class */ (function () {
         function OceanCanvas(canvas) {
             this.canvas = canvas;
-            this.context = canvas.getContext('2d');
+            this.context = canvas.getContext("2d");
             this.resetCanvasDimensions();
-            window.addEventListener('resize', this.resetCanvasDimensions.bind(this));
-            this.turbulenceRate = 10; //2 + (Math.random() * 5)
+            window.addEventListener("resize", this.resetCanvasDimensions.bind(this));
+            this.turbulenceRate = 10;
             this.time = new Date().getTime();
             this.baseNoise = new window.Noise(Math.random());
             this.waveNoise = new window.Noise(Math.random());
@@ -25,7 +25,7 @@ var Ocean;
         };
         OceanCanvas.prototype.draw = function () {
             this.context.clearRect(0, 0, this.width(), this.height());
-            this.context.strokeStyle = 'transparent';
+            this.context.strokeStyle = "transparent";
             this.time += .005;
             for (var i = 0; i < this.numWaves; i++) {
                 this.drawWave(i * 50, i, 1 + ((this.numWaves - i) / 2));
@@ -44,15 +44,15 @@ var Ocean;
             function getValue(wave, time) {
                 function applyWave(value) {
                     var intensity = this.intensityNoise.simplex2(this.time, 0) + 1.5;
-                    //intensity = Math.max(.5, intensity) + 1
                     var scale = (this.waveNoise.simplex2(this.time + (index * .1), wave / 100) * 2);
                     scale = Math.max(1, scale);
                     return (value * scale);
                 }
                 function turbulence(x, y, f) {
                     var t = -.5;
-                    for (; f <= segmentCount / 12; f *= 2) // W = Image width in pixels
+                    for (; f <= segmentCount / 12; f *= 2) {
                         t += Math.abs(this.baseNoise.simplex2((x), y) / f);
+                    }
                     return t;
                 }
                 var value = turbulence.bind(this)((time * speedModifier) + (index * 1), (wave) / 20, this.turbulenceRate) * 100;
@@ -71,8 +71,8 @@ var Ocean;
     }());
     Ocean.OceanCanvas = OceanCanvas;
 })(Ocean || (Ocean = {}));
-window.addEventListener('DOMContentLoaded', function () {
-    var element = document.getElementById('background');
+window.addEventListener("DOMContentLoaded", function () {
+    var element = document.getElementById("background");
     if (!element)
         return;
     var ocean = new Ocean.OceanCanvas(element);

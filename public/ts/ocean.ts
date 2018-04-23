@@ -11,12 +11,12 @@ module Ocean {
 
         constructor(canvas: HTMLCanvasElement) {
             this.canvas = canvas;
-            this.context = canvas.getContext('2d');
+            this.context = canvas.getContext("2d");
             this.resetCanvasDimensions();
 
-            window.addEventListener('resize', this.resetCanvasDimensions.bind(this));
+            window.addEventListener("resize", this.resetCanvasDimensions.bind(this));
 
-            this.turbulenceRate = 10//2 + (Math.random() * 5)
+            this.turbulenceRate = 10;
 
             this.time = new Date().getTime();
 
@@ -44,8 +44,9 @@ module Ocean {
         draw() {
             this.context.clearRect(0, 0, this.width(), this.height());
 
-            this.context.strokeStyle = 'transparent';
-            this.time += .005
+            this.context.strokeStyle = "transparent";
+
+            this.time += .005;
 
             for (var i = 0; i < this.numWaves; i++) {
                 this.drawWave(i * 50, i, 1 + ((this.numWaves - i) / 2));
@@ -56,38 +57,38 @@ module Ocean {
         drawWave(yOffset, index, speedModifier) {
 
             var segmentWidth = 10
-            var segmentCount = Math.ceil(this.width() / segmentWidth) + 1
-            var heightOffs = this.baseNoise.simplex2(this.time, 65535 + (index * 50)) * 20
-            var startY = heightOffs + (this.height() / 1) - yOffset
+            var segmentCount = Math.ceil(this.width() / segmentWidth) + 1;
+            var heightOffs = this.baseNoise.simplex2(this.time, 65535 + (index * 50)) * 20;
+            var startY = heightOffs + (this.height() / 1) - yOffset;
 
 
             this.context.save();
 
             this.context.beginPath();
             this.context.moveTo(0, startY);
-            this.context.fillStyle = window.getComputedStyle(this.canvas).color
+            this.context.fillStyle = window.getComputedStyle(this.canvas).color;
 
 
             function getValue(wave, time) {
 
                 function applyWave(value) {
-                    var intensity = this.intensityNoise.simplex2(this.time, 0) + 1.5
-                    //intensity = Math.max(.5, intensity) + 1
-                    var scale = (this.waveNoise.simplex2(this.time + (index * .1), wave / 100) * 2)
-                    scale = Math.max(1, scale)
-                    return (value * scale)
+                    var intensity = this.intensityNoise.simplex2(this.time, 0) + 1.5;
+                    var scale = (this.waveNoise.simplex2(this.time + (index * .1), wave / 100) * 2);
+                    scale = Math.max(1, scale);
+                    return (value * scale);
                 }
 
                 function turbulence(x, y, f) {
                     var t = -.5;
-                    for (; f <= segmentCount / 12; f *= 2) // W = Image width in pixels
+                    for (; f <= segmentCount / 12; f *= 2) {
                         t += Math.abs(this.baseNoise.simplex2((x), y) / f);
+                    }
                     return t;
                 }
 
-                var value = turbulence.bind(this)((time * speedModifier) + (index * 1), (wave) / 20, this.turbulenceRate) * 100
+                var value = turbulence.bind(this)((time * speedModifier) + (index * 1), (wave) / 20, this.turbulenceRate) * 100;
 
-                return applyWave.bind(this)(value)
+                return applyWave.bind(this)(value);
             }
 
             for (var i = 0; i < segmentCount; i++) {
@@ -99,18 +100,18 @@ module Ocean {
 
             this.context.clip();
 
-            this.context.fillRect(0, 0, this.width(), this.height())
+            this.context.fillRect(0, 0, this.width(), this.height());
 
             this.context.restore();
         }
     }
 }
 
-window.addEventListener('DOMContentLoaded', function () {
-    var element = document.getElementById('background')
+window.addEventListener("DOMContentLoaded", function () {
+    var element = document.getElementById("background");
     if (!element)
         return;
-    var ocean = new Ocean.OceanCanvas(element as HTMLCanvasElement)
+    var ocean = new Ocean.OceanCanvas(element as HTMLCanvasElement);
 
-    ocean.draw()
-})
+    ocean.draw();
+});
