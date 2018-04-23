@@ -73,8 +73,9 @@ var Ocean;
 })(Ocean || (Ocean = {}));
 window.addEventListener("DOMContentLoaded", function () {
     var element = document.getElementById("background");
-    if (!element)
+    if (!element) {
         return;
+    }
     var ocean = new Ocean.OceanCanvas(element);
     ocean.draw();
 });
