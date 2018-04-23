@@ -45,6 +45,7 @@ module Ocean {
             this.context.clearRect(0, 0, this.width(), this.height());
 
             this.context.strokeStyle = 'transparent';
+
             this.time += .005
 
             for (var i = 0; i < this.numWaves; i++) {
