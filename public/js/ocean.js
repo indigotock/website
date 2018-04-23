@@ -6,11 +6,12 @@ var Ocean;
             this.context = canvas.getContext('2d');
             this.resetCanvasDimensions();
             window.addEventListener('resize', this.resetCanvasDimensions.bind(this));
-            this.turbulenceRate = 10 + (Math.random() * 5);
+            this.turbulenceRate = 10; //2 + (Math.random() * 5)
             this.time = new Date().getTime();
             this.noise = window.noise;
             console.log(this.time);
             this.noise.seed(1);
+            this.numWaves = 4;
         }
         OceanCanvas.prototype.width = function () {
             return window.innerWidth;
@@ -26,12 +27,12 @@ var Ocean;
             this.context.clearRect(0, 0, this.width(), this.height());
             this.context.strokeStyle = 'transparent';
             this.time += .005;
-            for (var i = 0; i < 4; i++) {
-                this.drawWave(i * 50, i);
+            for (var i = 0; i < this.numWaves; i++) {
+                this.drawWave(i * 50, i, 1 + ((this.numWaves - i) / 2));
             }
             window.requestAnimationFrame(this.draw.bind(this));
         };
-        OceanCanvas.prototype.drawWave = function (yOffset, index) {
+        OceanCanvas.prototype.drawWave = function (yOffset, index, speedModifier) {
             var segmentWidth = 10;
             var segmentCount = Math.ceil(this.width() / segmentWidth) + 1;
             var heightOffs = this.noise.simplex2(this.time, 65535 + (index * 50)) * 20;
@@ -43,11 +44,11 @@ var Ocean;
             function getValue(wave, time) {
                 function turbulence(x, y, f) {
                     var t = -.5;
-                    for (; f <= this.width() / 12; f *= 2) // W = Image width in pixels
-                        t += Math.abs(this.noise.simplex2(x, y) / f);
+                    for (; f <= segmentCount / 12; f *= 2) // W = Image width in pixels
+                        t += Math.abs(this.noise.simplex2((x), y) / f);
                     return t;
                 }
-                return turbulence.bind(this)(time + (index * 1), wave / 20, this.turbulenceRate) * 100;
+                return turbulence.bind(this)((time * speedModifier) + (index * 1), (wave) / 20, this.turbulenceRate) * 100;
             }
             for (var i = 0; i < segmentCount; i++) {
                 this.context.lineTo(i * segmentWidth, startY + getValue.bind(this)(i, this.time));
