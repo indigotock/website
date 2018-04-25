@@ -30,8 +30,12 @@ var Ocean;
             this.time = Date.now();
             this.context.clearRect(0, 0, this.width(), this.height());
             this.context.strokeStyle = "transparent";
-            for (var i = 0; i < this.numWaves; i++) {
-                this.drawWave(i * 50, i, .8 + ((this.numWaves / (i + 1)) * .33));
+            function offset(i) {
+                var diff = 1 + ((((this.numWaves - i) / 5)));
+                return ((i) * diff) * 20;
+            }
+            for (var i = 0; i < this.numWaves + 1; i++) {
+                this.drawWave(offset.bind(this)(i), i, .8 + ((this.numWaves / (i + 1)) * .33));
             }
             window.requestAnimationFrame(this.draw.bind(this));
         };
@@ -39,7 +43,7 @@ var Ocean;
             var segmentWidth = 10;
             var segmentCount = Math.ceil(this.width() / segmentWidth) + 1;
             var heightOffs = this.baseNoise.simplex2(this.scaledTime(), 65535 + (index * 50)) * 20;
-            var startY = heightOffs + (this.height() / 1) - yOffset;
+            var startY = (heightOffs + (this.height() / 1) - yOffset) + 20;
             this.context.save();
             this.context.beginPath();
             this.context.moveTo(0, startY);
