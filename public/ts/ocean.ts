@@ -24,7 +24,7 @@ module Ocean {
             this.waveNoise = new (window as any).Noise(Math.random())
             this.intensityNoise = new (window as any).Noise(Math.random())
 
-            this.numWaves = 4;
+            this.numWaves = 5;
 
         }
 
@@ -36,20 +36,24 @@ module Ocean {
             return window.innerHeight;
         }
 
+        scaledTime(){
+            return this.time / 2500
+        }
+
         resetCanvasDimensions() {
             this.canvas.width = this.width();
             this.canvas.height = this.height();
         }
 
         draw() {
+
+            this.time = Date.now();
             this.context.clearRect(0, 0, this.width(), this.height());
 
             this.context.strokeStyle = "transparent";
 
-            this.time += .005;
-
             for (var i = 0; i < this.numWaves; i++) {
-                this.drawWave(i * 50, i, 1 + ((this.numWaves - i) / 2));
+                this.drawWave(i * 50, i, .8 + ((this.numWaves / (i+1)) *.33));
             }
             window.requestAnimationFrame(this.draw.bind(this));
         }
@@ -58,7 +62,7 @@ module Ocean {
 
             var segmentWidth = 10
             var segmentCount = Math.ceil(this.width() / segmentWidth) + 1;
-            var heightOffs = this.baseNoise.simplex2(this.time, 65535 + (index * 50)) * 20;
+            var heightOffs = this.baseNoise.simplex2(this.scaledTime(), 65535 + (index * 50)) * 20;
             var startY = heightOffs + (this.height() / 1) - yOffset;
 
 
@@ -72,15 +76,15 @@ module Ocean {
             function getValue(wave, time) {
 
                 function applyWave(value) {
-                    var intensity = this.intensityNoise.simplex2(this.time, 0) + 1.5;
-                    var scale = (this.waveNoise.simplex2(this.time + (index * .1), wave / 100) * 2);
+                    var intensity = this.intensityNoise.simplex2(time, 0) + 1.5;
+                    var scale = (this.waveNoise.simplex2(time + (index * .1), wave / 100) * 2);
                     scale = Math.max(1, scale);
                     return (value * scale);
                 }
 
                 function turbulence(x, y, f) {
                     var t = -.5;
-                    for (; f <= segmentCount / 12; f *= 2) {
+                    for (; f <= 192 / 12; f *= 2) {
                         t += Math.abs(this.baseNoise.simplex2((x), y) / f);
                     }
                     return t;
@@ -92,7 +96,7 @@ module Ocean {
             }
 
             for (var i = 0; i < segmentCount; i++) {
-                this.context.lineTo(i * segmentWidth, startY + getValue.bind(this)(i, this.time));
+                this.context.lineTo(i * segmentWidth, startY + getValue.bind(this)(i, this.scaledTime()));
             }
 
             this.context.lineTo(this.width(), this.height());
