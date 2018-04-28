@@ -5,7 +5,7 @@ var _db = require('./db'),
 var debug = require('debug'),
     debugx = debug('site:cms')
 
-if (!process.env.ELEMENO_KEY) {
+if (!!process.env.ELEMENO_KEY) {
     throw new Error('No environment variable \'ELEMENO_KEY\'. Is the .env file setup correctly?')
 }
 
@@ -91,7 +91,7 @@ exp.setPublishState = function (id, published, cb) {
 }
 
 exp.initialise = function (force) {
-    if (process.env.NODE_ENV !== 'production' && force!==true)
+    if (process.env.NODE_ENV !== 'production' && force !== true)
         return
     Elemeno.getCollections(null, function (err, data) {
         if (err)

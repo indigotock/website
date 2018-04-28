@@ -20,23 +20,23 @@ module Ocean {
 
             this.time = new Date().getTime();
 
-            this.baseNoise = new (window as any).Noise(Math.random())
-            this.waveNoise = new (window as any).Noise(Math.random())
-            this.intensityNoise = new (window as any).Noise(Math.random())
+            this.baseNoise = new (window as any).Noise(Math.random());
+            this.waveNoise = new (window as any).Noise(Math.random());
+            this.intensityNoise = new (window as any).Noise(Math.random());
 
             this.numWaves = 5;
 
         }
 
-        width() {
+        width(): number {
             return window.innerWidth;
         }
 
-        height() {
+        height(): number {
             return window.innerHeight;
         }
 
-        scaledTime(){
+        scaledTime() {
             return this.time / 2500
         }
 
@@ -52,23 +52,23 @@ module Ocean {
 
             this.context.strokeStyle = "transparent";
 
-            function offset(i){
-                var diff = 1+((((this.numWaves - i)/5)))
-                return ((i)*diff)*20
+            function offset(i) {
+                var diff = 1 + ((((this.numWaves - i) / 5)))
+                return ((i) * diff) * 20
             }
 
-            for (var i = 0; i < this.numWaves+1; i++) {
-                this.drawWave(offset.bind(this)(i), i, .8 + ((this.numWaves / (i+1)) *.33));
+            for (var i = 0; i < this.numWaves + 1; i++) {
+                this.drawWave(offset.bind(this)(i), i, .8 + ((this.numWaves / (i + 1)) * .33));
             }
             window.requestAnimationFrame(this.draw.bind(this));
         }
 
-        drawWave(yOffset, index, speedModifier) {
+        drawWave(yOffset: number, index: number, speedModifier: number): void {
 
             var segmentWidth = 10
             var segmentCount = Math.ceil(this.width() / segmentWidth) + 1;
             var heightOffs = this.baseNoise.simplex2(this.scaledTime(), 65535 + (index * 50)) * 20;
-            var startY = (heightOffs + (this.height() / 1) - yOffset)+20;
+            var startY = (heightOffs + (this.height() / 1) - yOffset) + 20;
 
 
             this.context.save();
@@ -94,7 +94,7 @@ module Ocean {
                     return t;
                 }
 
-                var value = turbulence.bind(this)((time * speedModifier) + (index * 1), (wave) / 20, this.turbulenceRate) * 100;
+                var value: number = turbulence.bind(this)((time * speedModifier) + (index * 1), (wave) / 20, this.turbulenceRate) * 100;
 
                 return applyWave.bind(this)(value);
             }
@@ -115,11 +115,12 @@ module Ocean {
     }
 }
 
-window.addEventListener("DOMContentLoaded", function () {
-    var element = document.getElementById("background");
-    if (!element)
+window.addEventListener("DOMContentLoaded", () => {
+    var element: HTMLElement = document.getElementById("background");
+    if (!element) {
         return;
-    var ocean = new Ocean.OceanCanvas(element as HTMLCanvasElement);
+    }
+    var ocean: Ocean.OceanCanvas = new Ocean.OceanCanvas(element as HTMLCanvasElement);
 
     ocean.draw();
 });

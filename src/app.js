@@ -43,6 +43,11 @@ app.use('/css', postcssMiddleware({
     }
 }));
 
+app.use('/ts', function (req, res, next) {
+    res.contentType('text/x-typescript')
+    next()
+});
+
 console.log('Starting server in ' + process.env.NODE_ENV)
 if (PRODUCTION || true) {
     app.use(express.static(path.join(__dirname, '..', 'public')));
