@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KPU</title>
+    <script type="module" src="js/index.js"></script>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+
+    <!-- <script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script> -->
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/kpu.css">
+
+</head>
+
+
+<body>
+    <template id="template-register">
+        <div class="register">
+            <label class="register__label">
+                {{registerLabel(id)}}:
+            </label>
+            <span class="register__input">{{value|toHex(4)}}</span>&nbsp;&nbsp;
+        </div>
+    </template>
+    <template id="template-datatable">
+        <textarea :cols="cols" :rows="rows-1" id="ram" disabled>{{formatted}}</textarea>
+    </template>
+    <header></header>
+    <main>
+        <textarea name="code" id="code" class="textarea" v-model="code">push 3 push 5</textarea>
+        <div id="actionBar">
+            <button @click="compileAndRun" id="compileAndRun" type="button" class="compileAndRun">Run</button>
+            <button @click="stop" id="stop" type="button" class="stop">Stop</button>
+            <span class="notice">KPU v{{version}}</span>
+        </div>
+        <div id="registers">
+            <register class="register" v-for="(rval, index) of registers" :key="index" :id="index" :value="rval" />
+        </div>
+        <datatable :data="memory" cols="4" rows="8" />
+    </main>
+    <footer></footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let cpu = new window.KPU.KPU(0xff + 1);
+            window.cpu = cpu
+            const TICKS_PER_SECOND = 1 / 1000
+
+
+
+            function getCpu() {
+                return cpu
+            }
+
+            var intervalId
+
+            function stop() {
+                clearInterval(intervalId)
+            }
+
+            function compile(code) {
+                const verbosely = true
+                var parser = new KPU.Parser(cpu)
+                var excluded = ['Whitespace', 'NewLine']
+                var tokens = KPU.Tokenise(code).filter(e => excluded.indexOf(e.type) == -1)
+                var res = parser.parse(tokens)
+                writeInstructions(cpu, res.result, 64)
+                intervalId = setInterval(function () {
+                    var pc = cpu.registers[KPU.Register.PC];
+                    var instruction = KPU.Instruction.build(cpu, pc);
+                    if (!instruction || instruction.op == KPU.getOpcode('NOP')) {
+                        stop()
+                    }
+                    cpu.registers[KPU.Register.PC] += instruction.length;
+                    instruction.execute(cpu);
+                    if (verbosely) {
+                        cpu.printOut();
+                    }
+                }, TICKS_PER_SECOND)
+
+                requestAnimationFrame(anim)
+
+                function anim() {
+                    Vue.nextTick(() => {
+                        Vue.set(app, 'registers', cpu.registers)
+                        Vue.set(app, 'memory', cpu.memory)
+                        app.updateMemory(0, cpu.memory[0])
+                        app.setRegister(0, cpu.registers[0])
+                    })
+                    requestAnimationFrame(anim)
+                }
+            }
+
+            function toHex(value, len = 0) {
+                if (isNaN(value))
+                    return null
+                var ret = (+value).toString(16)
+                while (ret.length < len)
+                    ret = '0' + ret
+                return ret
+            }
+            Vue.filter('toHex', toHex);
+            Vue.component('register', {
+                template: '#template-register',
+                props: ['id', 'value'],
+                computed: {
+                    asHex: function () {
+                        return toHex(this.value, 2)
+                    }
+                },
+                methods: {
+                    registerLabel: function (id) {
+                        return window.KPU.Register[id]
+                    },
+                    registerValue: function (id) {
+                        return cpu.getRegister(id)
+                    }
+                }
+            });
+            Vue.component('datatable', {
+                template: '#template-datatable',
+                props: ['cols', 'rows', 'data'],
+                data: function () {
+                    return {
+                        page: 0
+                    }
+                },
+                computed: {
+                    pageSize: function () {
+                        return this.rows * this.cols
+                    },
+                    twodtooned: function (x, y) {
+                        return y * this.rows + y
+                    },
+                    formatted: function () {
+                        var i = 0;
+                        return this.data.map(e => toHex(e, 4)).join('')
+                    }
+                },
+                methods: {
+                    getRowAddress: function (row) {
+                        let ipp = +this.rows * +this.cols
+
+                        return (+this.page * ipp) + (+this.row * +this.cols)
+                    }
+                }
+            })
+
+
+            function writeInstructions(cpu, lexemes, position = 0) {
+                lexemes.forEach(lexeme => {
+                    lexeme.write(cpu, position);
+                    position += lexeme.length;
+                });
+            }
+
+            window.app = new Vue({
+                el: 'main',
+                data: function () {
+                    return {
+                        name: 'kyle',
+                        items: new Array(100),
+                        resetStateOnLoad: false,
+                        code: `add a 1 mov pc 64`,
+                        memory: new Array(100),
+                        registers: new Array(5),
+                        version: "0.1"
+                    }
+                },
+                mounted: function () {
+                    Vue.set(this, 'registers', cpu.registers)
+                    Vue.set(this, 'memory', cpu.memory)
+                },
+                methods: {
+                    compileAndRun: function () {
+                        compile(this.code)
+                    },
+                    stop: function () {
+                        stop()
+                    },
+                    updateMemory: function (index, value) {
+                        Vue.nextTick(() => {
+                            this.memory.splice(index, 1, value)
+                        })
+                    },
+                    setRegister: function (index, value) {
+                        Vue.nextTick(() => {
+                            this.registers.splice(index, 1, value)
+
+                        })
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

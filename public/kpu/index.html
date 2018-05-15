@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+        content="ie=edge">
+    <title>KPU</title>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
+
+    <script type="module" src="js/index.js"></script>
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/kpu.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+</head>
+
+
+<body>
+    <template id="template-menu-item">
+        <li class="top-menu__item" @click="clickHandle">
+            <button :disabled="isDisabled"
+                :title="tooltip">
+                <span class="top-menu__item-icon"
+                    :class="'fa fa-'+iconClass"></span>{{label}}
+            </button>
+        </li>
+    </template>
+    <template id="template-memory-dump">
+        <div class="memory-dump">
+            <menu class="memory-dump__menu">
+                <li class="memory-dump__menu-item">
+                    <button title="Previous page" @click="previousPage">
+                        <span class="memory-dump__menu-item-icon fa fa-chevron-left"></span>Prev.
+                    </button>
+                </li>
+                <span>
+                    <input type="number" v-model="page"
+                        width="4" :max="maxPages"
+                        min="0" class="memory-dump__page-input"
+                    /> / {{maxPages}}</span>
+                <li class="memory-dump__menu-item menu-item--margin-left">
+                    <button title="Next page" @click="nextPage">
+                        <span class="memory-dump__menu-item-icon fa fa-chevron-right"></span>Next
+                    </button>
+                </li>
+            </menu>
+            <table border="0" class="memory-dump__table">
+                <thead class="memory-dump__head">
+                    <tr>
+                        <th>Loc.</th>
+                        <th v-for="(col, colIndex) in cols">+{{colIndex|toHex(2)}}</th>
+                    </tr>
+                </thead>
+                <tbody class="memory-dump__body">
+                    <tr class="memory-dump__row" v-for="(row, rowIndex) in rows">
+                        <th class="memory-dump__row-head">{{getRowLocation(rowIndex)|toHex(4)}}</th>
+                        <td v-for="(col, colIndex) in cols">
+                            <span v-if="!shouldHighlight(rowIndex,colIndex)">
+                                {{getValue(rowIndex,colIndex)|toHex(4)}}
+                            </span>
+                            <span class="memory-dump__cell--highlight"
+                                v-if="shouldHighlight(rowIndex,colIndex)">
+                                {{getValue(rowIndex,colIndex)|toHex(4)}}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+    <main id="kpu-app">
+        <header v-once>
+            <h1>{{title}}</h1>
+            <small>(v{{version}})</small>
+        </header>
+        <menu class="top-menu">
+            <menu-item :key="itemIndex" :label="item.label"
+                :title="item.tooltip"
+                :icon-class="item.iconClass"
+                :execute-event="item.executeEvent"
+                :disable-condition="item.disableCondition"
+                @action-event="receiveActionEvent"
+                v-for="(item, itemIndex) in menuItems"
+            />
+        </menu>
+        <textarea :disabled="isRunning"
+            class="code-input" v-model="code"></textarea>
+        <memory-dump :rows="8" :cols="8"
+            :program-counter="registers[0]"
+            :data="memory" />
+    </main>
+</body>
+
+</html>
