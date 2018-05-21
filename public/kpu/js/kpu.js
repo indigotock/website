@@ -18,6 +18,7 @@ export class KPU {
     constructor(ramSize, wordSize = 16) {
         this.ramSize = ramSize;
         this.wordSize = wordSize;
+        this.maxWord = parseInt(new Array(16).fill('1').join(''), 2)
         this.memory = new Array(ramSize).fill(0);
         this.registers = new Array(Object.keys(Register).length / 2).fill(0);
         this.registers[Register.PC] = 0;
@@ -25,10 +26,10 @@ export class KPU {
         this.registerCallbacks = []
     }
     setRegister(reg, newvalue) {
-        Vue.set(this.registers, reg, newvalue)
+        Vue.set(this.registers, reg, newvalue & this.maxWord)
     }
     setMemory(index, newvalue) {
-        Vue.set(this.memory, reg, newvalue)
+        Vue.set(this.memory, reg, newvalue & this.maxWord)
     }
     runUntilNOP(verbosely) {
         while (true) {
