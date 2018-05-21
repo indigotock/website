@@ -13,52 +13,12 @@ import {
     Tokenise
 } from "./lexer.js";
 
-let cpu = new KPU(0xffff + 1);
+import {
+    KPULifecycle
+} from "./lifecycle.js";
 
-window.cpu = function () {
-    return cpu
-}
 
-function debounce(func, delay = 1000) {
-    let inDebounce
-    return function () {
-        const context = this
-        const args = arguments
-        clearTimeout(inDebounce)
-        inDebounce = setTimeout(() =>
-            func.apply(context, args), delay)
-    }
-}
-
-const TICKS_PER_SECOND = 1000 / 1
-
-var intervalId
-
-function runUntilNop() {
-
-    intervalId = setInterval(function () {
-        var pc = cpu.registers[Register.PC]
-        var instruction = Instruction.build(cpu, pc)
-        if (!instruction || instruction.op == getOpcode('NOP')) {
-            Vue.nextTick(function () {
-                kpuApp.stop()
-            })
-            return
-        }
-        Vue.set(kpuApp, 'registers', cpu.registers)
-        Vue.set(kpuApp, 'memory', cpu.memory)
-        console.log(instruction)
-        cpu.setRegister(Register.PC, cpu.registers[Register.PC] + instruction.length)
-        instruction.execute(cpu)
-    }, TICKS_PER_SECOND)
-
-    requestAnimationFrame(anim)
-
-    function anim() {
-        if (intervalId)
-            requestAnimationFrame(anim)
-    }
-}
+window.lifecycle = new KPULifecycle()
 
 function toHex(number = 0, places = 1) {
     let ret = number.toString(16)
@@ -69,14 +29,7 @@ function toHex(number = 0, places = 1) {
 
 Vue.filter('toHex', toHex)
 
-function writeInstructions(cpu, lexemes, position = 0) {
-    lexemes.forEach(lexeme => {
-        lexeme.write(cpu, position, function (arr, ind, val) {
-            Vue.set(arr, ind, val)
-        });
-        position += lexeme.length;
-    });
-}
+function writeInstructions(cpu, lexemes, position = 0) {}
 
 Vue.component('virtual-list', VirtualScrollList)
 
@@ -153,7 +106,7 @@ window.kpuApp = new Vue({
         return {
             title: 'KPU Simulator',
             version: '2.0.1b',
-            code: 'mov a 1\nmul a a\nmul a a',
+            code: 'add a 1\nmul a a\nmul a a\nmov pc 1',
             menuItems: [{
                 label: "Build",
                 iconClass: "download",
@@ -186,20 +139,29 @@ window.kpuApp = new Vue({
                 executeEvent: "reset",
                 tooltip: "Resets the KPU to an empty state"
             }],
-            isRunning: false,
-            memory: new Array(cpu.memory.length),
-            registers: new Array(cpu.registers.length),
+            lifecycle: new KPULifecycle(this)
         }
     },
     computed: {
-        programCounter: function () {
-            return cpu.registers[Register.PC]
+        memory: function () {
+            return this.lifecycle.cpu.memory
+        },
+        registers: function () {
+            return this.lifecycle.cpu.registers
+        },
+        isRunning: function () {
+            return this.lifecycle.isRunning
+        },
+        clockSpeed: {
+            get: function () {
+                return this.lifecycle.frequency
+            },
+            set: function (value) {
+                this.lifecycle.frequency = value
+            }
         }
     },
-    mounted: function () {
-        this.hookCpuEvents(cpu)
-        this.reset()
-    },
+    mounted: function () {},
     methods: {
         hookCpuEvents: function (cpu) {
             var that = this
@@ -211,46 +173,23 @@ window.kpuApp = new Vue({
             //     Vue.set(that.registers, reg, newv)
             // })
         },
+        getRegisterName: function (ind) {
+            return Register[ind]
+        },
         receiveActionEvent: function (action) {
+            if (['reset', 'build'].includes(action)) {
+                this.lifecycle.reset()
+            }
             if (action == 'build') {
-                this.reset()
-                this.compile(this.code)
-            } else if (action == 'reset') {
-                this.reset()
+                this.lifecycle.load(this.code)
             } else if (action == 'run') {
-                this.isRunning = true
-                runUntilNop()
+                this.lifecycle.runUntilNop()
             } else if (action == 'stop') {
-                this.stop()
+                this.lifecycle.stop()
+            } else if (action == 'step') {
+                this.lifecycle.step()
             }
             console.log(arguments, action)
-        },
-        stop: function () {
-            this.isRunning = false
-            clearInterval(intervalId)
-            intervalId = false
-        },
-        compile: function () {
-            let parser = new Parser(cpu)
-            let excluded = ['Whitespace', 'NewLine']
-            let tokens = Tokenise(this.code).filter(e => excluded.indexOf(e.type) == -1)
-            console.log(tokens)
-            let res = parser.parse(tokens)
-            console.log(res)
-            writeInstructions(cpu, res.result, 0)
-            var that = this
-            console.log(JSON.stringify(cpu.memory))
-            that.memory = cpu.memory.filter(function (item) {
-                return true
-            })
-        },
-        reset: function () {
-            cpu = new KPU(0xffff + 1)
-            this.hookCpuEvents(cpu)
-            this.memory = new Array(cpu.memory.length);
-            this.registers = new Array(cpu.registers.length)
-            this.registers.fill(0)
-            this.memory.fill(0)
         }
     }
 });

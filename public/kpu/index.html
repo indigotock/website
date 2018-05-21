@@ -79,20 +79,49 @@
             <small>(v{{version}})</small>
         </header>
         <menu class="top-menu">
+            <span class="top-menu__clock">
+                <label>Hz:
+                    <input class="top-menu__clock-input"
+                        type="number"
+                        min="1" v-model="lifecycle.frequency">
+                </label>
+            </span>
             <menu-item :key="itemIndex" :label="item.label"
                 :title="item.tooltip"
                 :icon-class="item.iconClass"
                 :execute-event="item.executeEvent"
                 :disable-condition="item.disableCondition"
                 @action-event="receiveActionEvent"
-                v-for="(item, itemIndex) in menuItems"
-            />
+                v-for="(item, itemIndex) in menuItems">
+            </menu-item>
         </menu>
         <textarea :disabled="isRunning"
             class="code-input" v-model="code"></textarea>
         <memory-dump :rows="8" :cols="8"
             :program-counter="registers[0]"
-            :data="memory" />
+            :data="memory"></memory-dump>
+        <div class="registers">
+            <table class="registers__table">
+                <thead class="registers__head">
+                    <tr>
+                        <th>Reg.</th>
+                        <th>Hex.</th>
+                        <th>Dec.</th>
+                    </tr>
+                </thead>
+                <tbody class="registers__body">
+                    <tr class="registers__row" v-for="(reg, regIndex) in registers">
+                        <th class="registers__row-head">{{getRegisterName(regIndex)}}</th>
+                        <td class="registers__cell">
+                            {{registers[regIndex]|toHex(4)}}
+                        </td>
+                        <td class="registers__cell">
+                            {{registers[regIndex]}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 </body>
 

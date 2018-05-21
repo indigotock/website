@@ -23,7 +23,7 @@ body {
     }
   }
   display: grid;
-  grid-template-areas: "header header" "menu menu" "code dump";
+  grid-template-areas: "header header" "menu menu" "code dump" "registers output";
   grid-template-columns: 1fr 3fr;
   grid-gap: 1rem;
   header {
@@ -42,13 +42,20 @@ body {
     &__item {
       @include menu-button();
     }
+    &__clock {
+      float: right;
+      &-input {
+        width: 8ch;
+      }
+    }
   }
   .code-input {
     grid-area: code;
     resize: none;
     height: 100%;
   }
-  .memory-dump {
+  .memory-dump,
+  .registers {
     grid-area: dump;
     &__table {
       width: 100%;
@@ -78,6 +85,9 @@ body {
     &__page-input {
       width: 5rem;
     }
+  }
+  .registers {
+    grid-area: registers;
   }
 }
 

@@ -15,7 +15,7 @@ var regexps = {
     whitespace: /^\s+\b/,
     newline: /^\r?\n/,
     restOfLine: /^.*\r?\n/,
-    decimalInt: /^[1-9][0-9]*\b/,
+    decimalInt: /^[0-9]+\b/,
     hexadecimalInt: /^0X[0-9a-fA-F]+\b/,
     binaryInt: /^0B[01]+\b/,
     identifier: /^[A-Z_]+\b/,
@@ -129,10 +129,9 @@ export function Tokenise(code) {
             context.position++;
             continue;
         } else {}
-        if (parseResult && parseResult.value) {
+        if (parseResult && parseResult.value != undefined) {
             results.push(parseResult);
         } else {}
     }
     return results;
 }
-//# sourceMappingURL=lexer.js.map

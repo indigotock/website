@@ -9,6 +9,8 @@ export var Register;
     Register[Register["SR"] = 2] = "SR";
     Register[Register["A"] = 3] = "A";
     Register[Register["B"] = 4] = "B";
+    Register[Register["IOX"] = 5] = "IOX";
+    Register[Register["IOD"] = 6] = "IOD";
 })(Register || (Register = {}));
 
 
@@ -23,12 +25,10 @@ export class KPU {
         this.registerCallbacks = []
     }
     setRegister(reg, newvalue) {
-        this.updateRegisterCallbacks(reg, newvalue, this.registers[Register[reg]])
-        this.registers[reg] = newvalue
+        Vue.set(this.registers, reg, newvalue)
     }
     setMemory(index, newvalue) {
-        this.updateMemoryCallbacks(index, newvalue, this.memory[index])
-        this.memory[index] = newvalue
+        Vue.set(this.memory, reg, newvalue)
     }
     runUntilNOP(verbosely) {
         while (true) {
@@ -43,14 +43,12 @@ export class KPU {
             }
         }
     }
-    tick() {
-        var pc = this.registers[Register.PC];
-        var instruction = Instruction.build(this, pc);
-        this.registers[Register.PC] += instruction.length;
-        instruction.execute(this);
-    }
     getRegister(name) {
         return Register[name];
+    }
+    reset() {
+        this.memory = new Array(this.ramSize).fill(0);
+        this.registers = new Array(Object.keys(Register).length / 2).fill(0);
     }
     get maxValue() {
         return Math.pow(2, this.wordSize) - 1;
@@ -72,4 +70,3 @@ export class KPU {
         this.memoryCallbacks.push(callback)
     }
 }
-//# sourceMappingURL=kpu.js.map

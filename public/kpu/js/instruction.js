@@ -40,7 +40,7 @@ export class RegisterOperand extends Operand {
         this.isLValue = true;
     }
     setValue(newValue) {
-        this.cpu.registers[this.rawValue] = Math.floor(newValue);
+        this.cpu.setRegister(this.rawValue, Math.floor(newValue));
     }
     compute() {
         return this.cpu.registers[this.rawValue];
@@ -60,10 +60,21 @@ export class Instruction {
         return 1 + this.operands.filter(e => !e.isInline).length;
     }
     execute(cpu) {
+        const ORIGINALPC = cpu.registers[0]
+
+        function shouldIncrementPC() {
+            return ORIGINALPC === cpu.registers[0]
+        }
         this.op.execute(cpu, this.operands);
+        if (shouldIncrementPC()) {
+            console.log('incrementing')
+            cpu.setRegister(0, cpu.registers[0] + this.length)
+            return
+        }
+        console.log('not incrementing')
     }
     static build(cpu, index) {
-        var w = cpu.memory[index];
+        var w = cpu.memory[index] || 0;
         var opc = getOpcodeFromCode(w & 0b11111);
         var numOperands = 0;
         if ((w & 0b11100000) > 0) {
@@ -201,4 +212,3 @@ export function getOpcode(mnemonic) {
 export function getOpcodeFromCode(code) {
     return Opcodes.find(e => e.code == code) || Opcodes[0];
 }
-//# sourceMappingURL=instruction.js.map
