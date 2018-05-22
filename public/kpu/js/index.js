@@ -18,7 +18,6 @@ import {
 } from "./lifecycle.js";
 
 
-window.lifecycle = new KPULifecycle()
 
 function toHex(number = 0, places = 1) {
     let ret = number.toString(16)
@@ -31,14 +30,11 @@ Vue.filter('toHex', toHex)
 
 function writeInstructions(cpu, lexemes, position = 0) {}
 
-Vue.component('virtual-list', VirtualScrollList)
-
 Vue.component('menu-item', {
     template: "#template-menu-item",
     props: ['label', 'iconClass', 'executeEvent', 'disableCondition', 'tooltip'],
     methods: {
         clickHandle: function (ev) {
-            console.log(this.label, 'event:', this.executeEvent)
             this.$emit('action-event', this.executeEvent)
         }
     },
@@ -106,7 +102,7 @@ window.kpuApp = new Vue({
         return {
             title: 'KPU Simulator',
             version: '2.0.1b',
-            code: 'add a 1\nmul a a\nmul a a\nmov pc 1',
+            code: `cmp 1 7`,
             menuItems: [{
                 label: "Build",
                 iconClass: "download",
@@ -139,7 +135,9 @@ window.kpuApp = new Vue({
                 executeEvent: "reset",
                 tooltip: "Resets the KPU to an empty state"
             }],
-            lifecycle: new KPULifecycle(this)
+            lifecycle: new KPULifecycle(this),
+            output: '',
+            consoleInput: ''
         }
     },
     computed: {
@@ -165,16 +163,24 @@ window.kpuApp = new Vue({
     methods: {
         hookCpuEvents: function (cpu) {
             var that = this
-            // cpu.onUpdateMemory(function (ind, newv, oldv) {
-            //     Vue.set(that.memory, ind, newv)
-            // })
-            // cpu.onUpdateRegister(function (reg, newv, oldv) {
-            //     console.log('Changing register', arguments)
-            //     Vue.set(that.registers, reg, newv)
-            // })
+        },
+        addOutput(value) {
+            this.output += value
         },
         getRegisterName: function (ind) {
             return Register[ind]
+        },
+        submitConsole: function (ev) {
+            ev.preventDefault()
+            let input = this.consoleInput.trim()
+            this.consoleInput = ''
+            if (!input)
+                return
+
+            this.addOutput("#> " + input + '\n')
+
+            let ele = document.querySelector('.console__output')
+            ele.scrollTop = ele.scrollHeight;
         },
         receiveActionEvent: function (action) {
             if (['reset', 'build'].includes(action)) {
@@ -189,7 +195,7 @@ window.kpuApp = new Vue({
             } else if (action == 'step') {
                 this.lifecycle.step()
             }
-            console.log(arguments, action)
         }
     }
 });
+window.lifecycle = new KPULifecycle(kpuApp)

@@ -12,18 +12,24 @@ export class Token {
     }
 }
 var regexps = {
-    whitespace: /^\s+\b/,
+    whitespace: /^\s+/,
     newline: /^\r?\n/,
     restOfLine: /^.*\r?\n/,
-    decimalInt: /^[0-9]+\b/,
-    hexadecimalInt: /^0X[0-9a-fA-F]+\b/,
-    binaryInt: /^0B[01]+\b/,
-    identifier: /^[A-Z_]+\b/,
-    error: /^.+\b/,
+    decimalInt: /^[0-9]+/,
+    hexadecimalInt: /^0X[0-9a-fA-F]+/,
+    binaryInt: /^0B[01]+/,
+    identifier: /^[A-Z_]+/,
+    error: /^.+/,
+    indirectStart: /^\[/,
+    indirectEnd: /^\]/
 };
+
+function next(context) {
+    return context.code.substr(context.position)
+}
 const parsers = [
-    function newLine(next, restOfLine, context) {
-        var m = regexps.newline.exec(next);
+    function newLine(context) {
+        var m = regexps.newline.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('NewLine', m[0], context.line, context.column, context.position, m[0]);
             context.line++;
@@ -33,8 +39,8 @@ const parsers = [
         }
         return null;
     },
-    function whitespace(next, restOfLine, context) {
-        var m = regexps.whitespace.exec(next);
+    function whitespace(context) {
+        var m = regexps.whitespace.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('Whitespace', null, context.line, context.column, context.position, m[0]);
             context.column += ret.length;
@@ -43,8 +49,8 @@ const parsers = [
         }
         return null;
     },
-    function decimalInteger(next, restOfLine, context) {
-        var m = regexps.decimalInt.exec(next);
+    function decimalInteger(context) {
+        var m = regexps.decimalInt.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('IntegerLiteral', parseInt(m[0], 10), context.line, context.column, context.position, m[0]);
             context.column += ret.length;
@@ -53,8 +59,8 @@ const parsers = [
         }
         return null;
     },
-    function hexadecimalInteger(next, restOfLine, context) {
-        var m = regexps.hexadecimalInt.exec(next);
+    function hexadecimalInteger(context) {
+        var m = regexps.hexadecimalInt.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('IntegerLiteral', parseInt(m[0].replace('0X', ''), 16), context.line, context.column, context.position, m[0]);
             context.column += ret.length;
@@ -63,8 +69,8 @@ const parsers = [
         }
         return null;
     },
-    function binaryInteger(next, restOfLine, context) {
-        var m = regexps.binaryInt.exec(next);
+    function binaryInteger(context) {
+        var m = regexps.binaryInt.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('IntegerLiteral', parseInt(m[0].replace('0B', ''), 2), context.line, context.column, context.position, m[0]);
             context.column += ret.length;
@@ -73,8 +79,8 @@ const parsers = [
         }
         return null;
     },
-    function identifier(next, restOfLine, context) {
-        var m = regexps.identifier.exec(next);
+    function identifier(context) {
+        var m = regexps.identifier.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('Identifier', m[0], context.line, context.column, context.position, m[0]);
             context.column += ret.length;
@@ -83,8 +89,50 @@ const parsers = [
         }
         return null;
     },
-    function error(next, restOfLine, context) {
-        var m = regexps.error.exec(next);
+    function indirectStart(context) {
+        var m = regexps.indirectStart.exec(next(context));
+        if (m && m[0]) {
+            var ret = new Token('IndirectStart', m[0], context.line, context.column, context.position, m[0]);
+            context.column += ret.length;
+            context.position += ret.length;
+            return ret;
+        }
+        return null;
+    },
+    function indirectEnd(context) {
+        var m = regexps.indirectEnd.exec(next(context));
+        if (m && m[0]) {
+            var ret = new Token('IndirectEnd', m[0], context.line, context.column, context.position, m[0]);
+            context.column += ret.length;
+            context.position += ret.length;
+            return ret;
+        }
+        return null;
+    },
+    // function indirect(context) {
+    //     var m = regexps.indirectStart.exec(next(context));
+    //     if (m && m[0]) {
+    //         let ocol = context.column;
+    //         let opos = context.position;
+    //         context.column += m[0].length;
+    //         context.position += m[0].length;
+    //         var parseResult = tokeniseItem(context)
+    //         if (!parseResult) {
+    //             return null
+    //         }
+    //         let nxt = next(context)
+    //         var m2 = regexps.indirectEnd.exec(nxt);
+    //         if (m2 && m2[0]) {
+    //             var ret = new Token('Indirect', parseResult, context.line, ocol, opos, m[0] + parseResult.raw + m2[0]);
+    //             context.column += m2[0].length;
+    //             context.position += m2[0].length;
+    //             return ret;
+    //         }
+    //     }
+    //     return null;
+    // },
+    function error(context) {
+        var m = regexps.error.exec(next(context));
         if (m && m[0]) {
             var ret = new Token('Error', m[0], context.line, context.column, context.position, m[0]);
             context.column += ret.length;
@@ -98,10 +146,27 @@ export function getParser(name) {
     var names = parsers.filter(e => e['name'] == name);
     return names[0];
 }
+
+
+function tokeniseItem(context) {
+    let parseResult;
+    for (let i = 0; i < parsers.length; i++) {
+        let p = parsers[i];
+        if (!p)
+            continue;
+        var res = p(context);
+        if (res) {
+            parseResult = res;
+            break;
+        }
+    }
+    return parseResult
+}
 export function Tokenise(code) {
     code = code.toUpperCase();
     let results = [];
     var context = {
+        code: code,
         column: 0,
         line: 0,
         position: 0,
@@ -109,22 +174,7 @@ export function Tokenise(code) {
         value: null
     };
     while (context.position < code.length) {
-        let next = code.substr(context.position);
-        var lineregex = regexps.restOfLine.exec(next);
-        let restOfLine = "";
-        if (lineregex && lineregex[0])
-            restOfLine = lineregex[0];
-        let parseResult;
-        for (let i = 0; i < parsers.length; i++) {
-            let p = parsers[i];
-            if (!p)
-                continue;
-            var res = p(next, restOfLine, context);
-            if (res) {
-                parseResult = res;
-                break;
-            }
-        }
+        var parseResult = tokeniseItem(context)
         if (!parseResult) {
             context.position++;
             continue;
@@ -133,5 +183,6 @@ export function Tokenise(code) {
             results.push(parseResult);
         } else {}
     }
+    console.log(results)
     return results;
 }

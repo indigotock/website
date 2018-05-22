@@ -7,16 +7,13 @@
     <meta http-equiv="X-UA-Compatible"
         content="ie=edge">
     <title>KPU</title>
-    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
-    <script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
 
+    <script src="/lib/vue.js"></script>
     <script type="module" src="js/index.js"></script>
 
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/kpu.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="/lib/font-awesome.css">
 </head>
 
 
@@ -79,13 +76,6 @@
             <small>(v{{version}})</small>
         </header>
         <menu class="top-menu">
-            <span class="top-menu__clock">
-                <label>Hz:
-                    <input class="top-menu__clock-input"
-                        type="number"
-                        min="1" v-model="lifecycle.frequency">
-                </label>
-            </span>
             <menu-item :key="itemIndex" :label="item.label"
                 :title="item.tooltip"
                 :icon-class="item.iconClass"
@@ -94,6 +84,16 @@
                 @action-event="receiveActionEvent"
                 v-for="(item, itemIndex) in menuItems">
             </menu-item>
+            <span class="top-menu__clock">
+                <label>Hz:
+                    <input class="top-menu__clock-input"
+                        type="number"
+                        :disabled="isRunning"
+                        min="1" v-model="lifecycle.frequency">
+                </label>
+                <!-- <span class="fa fa-fw fa-info-circle top-menu__clock-info"
+                    title="asd"></span> -->
+            </span>
         </menu>
         <textarea :disabled="isRunning"
             class="code-input" v-model="code"></textarea>
@@ -122,6 +122,13 @@
                 </tbody>
             </table>
         </div>
+        <form @submit="submitConsole" class="console">
+            <textarea readonly="readonly" v-model="output"
+                class="console__output"></textarea>
+            <input v-model="consoleInput" placeholder="&gt;"
+                type="text" class="console__input">
+            <button class="console__submit">Return</button>
+        </form>
     </main>
 </body>
 

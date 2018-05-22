@@ -18,6 +18,12 @@ export class Operand {
     get isInline() {
         return this.rawValue <= (this.operandIndex == 0 ? 0b111 : 0b11);
     }
+    get isIndirect() {
+        return false
+    }
+    get rawValueWord() {
+        return this.rawValue
+    }
 }
 export class LiteralOperand extends Operand {
     constructor(cpu, value, index) {
@@ -49,6 +55,32 @@ export class RegisterOperand extends Operand {
         return false;
     }
 }
+export class IndirectOperand extends Operand {
+    constructor(cpu, value, index) {
+        super(cpu, "IndirectOperand", value, index);
+        this.isLValue = true;
+    }
+    setValue(newValue) {
+        var ind = this.rawValue.compute()
+        this.cpu.setMemory(ind, Math.floor(newValue))
+    }
+    compute() {
+        var ind = this.rawValue.compute()
+        return this.cpu.memory[ind];
+    }
+    get isLiteral() {
+        return this.rawValue.isLiteral;
+    }
+    get rawValueWord() {
+        return this.rawValue.rawValue
+    }
+    get isInline() {
+        return this.rawValue.rawValue <= (this.operandIndex == 0 ? 0b111 : 0b11);
+    }
+    get isIndirect() {
+        return true
+    }
+}
 export class Instruction {
     constructor(op, operands) {
         this.op = op;
@@ -67,17 +99,14 @@ export class Instruction {
         }
         this.op.execute(cpu, this.operands);
         if (shouldIncrementPC()) {
-            console.log('incrementing')
             cpu.setRegister(0, cpu.registers[0] + this.length)
-            return
         }
-        console.log('not incrementing')
     }
     static build(cpu, index) {
         var w = cpu.memory[index] || 0;
         var opc = getOpcodeFromCode(w & 0b11111);
         var numOperands = 0;
-        if ((w & 0b11100000) > 0) {
+        if ((w & 0b00011100000) > 0) {
             numOperands++;
         }
         if ((w & 0b11100000000) > 0) {
@@ -87,6 +116,7 @@ export class Instruction {
         var skip = 0;
         for (var i = 0; i < numOperands; i++) {
             let isInline = w & (i == 0 ? 128 : 1024);
+            let isIndirect = w & (i == 0 ? 64 : 512);
             let isLiteral = w & (i == 0 ? 32 : 256);
             skip += (!isInline ? 1 : 0);
             var val = 0;
@@ -102,6 +132,8 @@ export class Instruction {
             } else {
                 opa = new RegisterOperand(cpu, val, i);
             }
+            if (isIndirect)
+                opa = new IndirectOperand(cpu, opa, i)
             ops.push(opa);
         }
         return new Instruction(opc, ops);
@@ -118,15 +150,16 @@ export class Instruction {
             this.operands.forEach((e, i) => {
                 var descriptor = 0b000;
                 descriptor |= (e.isInline ? 0b100 : 0);
+                descriptor |= (e.isIndirect ? 0b010 : 0);
                 descriptor |= (e.isLiteral ? 0b001 : 0);
                 descriptor <<= i == 0 ? 5 : 8;
                 setFunction(cpu.memory, index, cpu.memory[index] |= descriptor)
                 skip += (!e.isInline ? 1 : 0);
                 if (e.isInline) {
-                    var inv = e.rawValue << (i == 0 ? 11 : 14);
+                    var inv = e.rawValueWord << (i == 0 ? 11 : 14);
                     setFunction(cpu.memory, index, cpu.memory[index] | inv)
                 } else {
-                    setFunction(cpu.memory, index + skip, e.rawValue)
+                    setFunction(cpu.memory, index + skip, e.rawValueWord)
                 }
             });
         }
@@ -165,8 +198,8 @@ let Opcodes = [{
             return null;
         },
         execute: (cpu, ops) => {
-            var sp = cpu.registers[Register.SP]++;
-            cpu.memory[sp] = ops[0].compute();
+            var sp = --cpu.registers[Register.SP];
+            cpu.setMemory(sp, ops[0].compute())
         }
     },
     {
@@ -178,7 +211,7 @@ let Opcodes = [{
                 `First operand cannot be of type ${operands[0].type}`;
         },
         execute: (cpu, ops) => {
-            var sp = --cpu.registers[Register.SP];
+            var sp = cpu.registers[Register.SP]++;
             var val = cpu.memory[sp];
             ops[0].setValue(val);
         }
@@ -202,6 +235,55 @@ let Opcodes = [{
     arithematicOp("MOD", (a, b) => a % b),
     arithematicOp("SHL", (a, b) => a << b),
     arithematicOp("SHR", (a, b) => a >> b),
+    {
+        mnemonic: "CMP",
+        numOperands: 2,
+        validateOperands: (operands) => {
+            return null
+        },
+        execute: (cpu, ops) => {
+            let a = ops[0].compute()
+            let b = ops[1].compute()
+            let res = a < b ? 0 : a == b ? 1 : 2
+            cpu.setRegister(Register.SR, res)
+        }
+    },
+    {
+        mnemonic: "JLE",
+        numOperands: 1,
+        validateOperands: (operands) => {
+            return null
+        },
+        execute: (cpu, ops) => {
+            if (cpu.registers[Register.SR] <= 1) {
+                cpu.setRegister(Register.PC, ops[0].compute())
+            }
+        }
+    },
+    {
+        mnemonic: "JGT",
+        numOperands: 1,
+        validateOperands: (operands) => {
+            return null
+        },
+        execute: (cpu, ops) => {
+            if (cpu.registers[Register.SR] > 1) {
+                cpu.setRegister(Register.PC, ops[0].compute())
+            }
+        }
+    },
+    {
+        mnemonic: "JSR",
+        numOperands: 1,
+        validateOperands: (operands) => {
+            return null
+        },
+        execute: (cpu, ops) => {
+            var sp = --cpu.registers[Register.SP];
+            cpu.setMemory(sp, cpu.registers[Register.PC])
+            cpu.setRegister(Register.PC, ops[0].compute());
+        }
+    },
 ];
 Opcodes.forEach((e, i) => {
     e.code = i;

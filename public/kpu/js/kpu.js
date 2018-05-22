@@ -19,9 +19,6 @@ export class KPU {
         this.ramSize = ramSize;
         this.wordSize = wordSize;
         this.maxWord = parseInt(new Array(16).fill('1').join(''), 2)
-        this.memory = new Array(ramSize).fill(0);
-        this.registers = new Array(Object.keys(Register).length / 2).fill(0);
-        this.registers[Register.PC] = 0;
         this.memoryCallbacks = []
         this.registerCallbacks = []
     }
@@ -29,7 +26,7 @@ export class KPU {
         Vue.set(this.registers, reg, newvalue & this.maxWord)
     }
     setMemory(index, newvalue) {
-        Vue.set(this.memory, reg, newvalue & this.maxWord)
+        Vue.set(this.memory, index, newvalue & this.maxWord)
     }
     runUntilNOP(verbosely) {
         while (true) {
@@ -50,6 +47,7 @@ export class KPU {
     reset() {
         this.memory = new Array(this.ramSize).fill(0);
         this.registers = new Array(Object.keys(Register).length / 2).fill(0);
+        this.setRegister(Register.SP, this.memory.length - 1)
     }
     get maxValue() {
         return Math.pow(2, this.wordSize) - 1;

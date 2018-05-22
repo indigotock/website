@@ -27,7 +27,7 @@ app.set('view engine', 'hbs');
 if (!PRODUCTION)
     process.env.NODE_ENV = 'development'
 
-
+app.use('/', require('./routes/libMapper'))
 app.use('/css', sassMiddleware({
     src: path.join(__dirname, 'sass'),
     watch: true,

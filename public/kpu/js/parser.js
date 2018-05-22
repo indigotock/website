@@ -2,7 +2,8 @@ import {
     Instruction,
     getOpcode,
     LiteralOperand,
-    RegisterOperand
+    RegisterOperand,
+    IndirectOperand
 } from "./instruction.js";
 import {
     DataValue
@@ -47,6 +48,12 @@ export class Parser {
         switch (token.type) {
             case "IntegerLiteral":
                 return new LiteralOperand(this.cpu, this.parseAsData(context).value, ind);
+            case "IndirectStart":
+                var ret;
+                this.offset += 1;
+                var val = this.parseAsOperand(context, ind)
+                this.offset += 1;
+                return new IndirectOperand(this.cpu, val, ind);
             case "Identifier":
                 return this.parseAsRegisterOperand(context, ind);
         }
@@ -121,6 +128,7 @@ export class Parser {
     parseAsError(context) {
         var token = context.tokens[context.position + this.offset];
         this.offset += 1;
+        debugger
         throw ({
             token: token,
             name: "Unknown token",
@@ -149,6 +157,7 @@ export class Parser {
             context.position += Math.max(1, this.offset);
             this.offset = 0;
         }
+        console.log(context)
         return context;
     }
 }

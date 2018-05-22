@@ -19,11 +19,11 @@ export class KPULifecycle {
         this.vueApp = vueApp
         this.isRunning = false
         this.frequency = 1000
+        this.reset()
 
     }
 
     reset() {
-        Vue.set(this.cpu.registers, Register.PC, 0)
         this.isRunning = false
         this.cpu.reset()
     }
@@ -59,12 +59,16 @@ export class KPULifecycle {
             }
             executed = this.step()
             if (executed = null) {
-                this.isRunning = false
+                this.clearRunning()
             }
         }
 
 
         interval = setInterval(tick.bind(this), 1 / (HERTZ / 1000))
+    }
+
+    clearRunning() {
+        this.isRunning = false
     }
 
     step() {
@@ -76,10 +80,6 @@ export class KPULifecycle {
         console.log(instruction)
         let opc = this.cpu.registers[Register.PC]
         // this.cpu.setRegister(Register.PC, this.cpu.registers[Register.PC] + instruction.length)
-        console.log(JSON.stringify({
-            reg: this.cpu.registers,
-            mem: this.cpu.memory
-        }))
         instruction.execute(this.cpu)
         return instruction
     }
