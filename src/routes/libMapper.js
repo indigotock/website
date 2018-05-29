@@ -7,7 +7,8 @@ const BASE = path.join(__dirname, '../../node_modules/')
 
 const LIBRARY_MAP = {
     'vue.js': path.join(BASE, 'vue/dist/vue.js'),
-    'font-awesome.css': path.join(BASE, 'font-awesome/css/font-awesome.css')
+    'font-awesome.css': path.join(BASE, 'font-awesome/css/font-awesome.css'),
+    'noise.js': path.join(BASE, 'noisejs/index.js')
 }
 
 /* GET home page. */
