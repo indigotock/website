@@ -1,0 +1,3 @@
+[submodule "public/kpu/js"]
+	path = public/kpu/js
+	url = github:indigotock/kpu
