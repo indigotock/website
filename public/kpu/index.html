@@ -9,7 +9,7 @@
     <title>KPU</title>
 
     <script src="/lib/vue.js"></script>
-    <script type="module" src="js/index.js"></script>
+    <script type="module" src="index.js"></script>
 
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/kpu.css">
@@ -71,7 +71,7 @@
         </div>
     </template>
     <main id="kpu-app">
-        <header v-once>
+        <header>
             <h1>{{title}}</h1>
             <small>(v{{version}})</small>
         </header>
@@ -87,9 +87,8 @@
             <span class="top-menu__clock">
                 <label>Hz:
                     <input class="top-menu__clock-input"
-                        type="number"
-                        :disabled="isRunning"
-                        min="1" v-model="lifecycle.frequency">
+                        type="number" min="1" max="10000"
+                        :disabled="isRunning" v-model.number="clockSpeed"/>
                 </label>
                 <!-- <span class="fa fa-fw fa-info-circle top-menu__clock-info"
                     title="asd"></span> -->

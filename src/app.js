@@ -44,6 +44,7 @@ app.use('/css', postcssMiddleware({
 }));
 
 
+app.use('/', require('./routes/moduleMimeSetter'));
 console.log('Starting server in ' + process.env.NODE_ENV);
 if (PRODUCTION || true) {
     app.use(express.static(path.join(__dirname, '..', 'public')));
