@@ -1,14 +1,60 @@
 * {
   box-sizing: border-box;
   font-family: monospace;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: none;
+  font-size: 1rem;
+  outline: none;
+}
+
+input {
+  border-bottom: solid var(--line-weight) var(--foreground);
+}
+
+textarea{
+  border: solid var(--line-weight) var(--foreground);
+}
+
+button {
+  border-bottom: solid var(--line-weight) transparent;
+  &:hover {
+    border-bottom: solid var(--line-weight) var(--foreground);
+  }
+  &:active {
+    border-bottom: solid var(--line-weight) var(--secondary);
+  }
+  &:disabled {
+    &>span::after {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      bottom: 50%;
+      border-top: solid calc(var(--line-weight) / 2) var(--foreground);
+      border-bottom: solid calc(var(--line-weight) / 2) var(--foreground);
+      content: '';
+    }
+    position: relative;
+    border-bottom: none;
+  }
+}
+
+html {
+  --background: black;
+  --foreground: #eee;
+  --secondary: rgb(68, 160, 68);
+  --line-weight: 2px;
+  // font-size: 28px;
+  font-size:2.85714286vmin;
 }
 
 body {
-  margin: 2em auto;
-  max-width: 43em;
+  margin: 2rem auto;
+  max-width: 43rem;
 }
-
 #kpu-app {
+  
   .menu-item--margin-left {
     margin-left: 1rem;
   }
@@ -23,8 +69,8 @@ body {
     }
   }
   display: grid;
-  grid-template-areas: "header header" "menu menu" "code dump" "registers output";
-  grid-template-columns: 1fr 3fr;
+  grid-template-areas: "header header header" "menu menu menu" "code code dump" "registers output output";
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 1rem;
   header {
     grid-area: header;
@@ -69,8 +115,6 @@ body {
       padding: 0;
       margin: 0;
     }
-    &__input,
-    &__submit {}
     &__submit {
       display: inline-block;
       padding: 0;

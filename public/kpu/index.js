@@ -19,7 +19,7 @@ import {
 import * as Store from "./js/store.mjs";
 
 
-window.lifecycle = new KPULifecycle(1000)
+window.lifecycle = new KPULifecycle(1)
 
 
 
@@ -105,7 +105,7 @@ window.kpuApp = new Vue({
     data: function () {
         return {
             title: 'KPU Simulator',
-            version: [1, 2],
+            version: '2.1',
             code: `add a 1 add a 1 mov pc 0`,
             menuItems: [{
                 label: "Build",
@@ -136,11 +136,11 @@ window.kpuApp = new Vue({
                     return this.isRunning
                 },
                 tooltip: "Executes the next instruction"
-            }, {
-                label: "Reset",
-                iconClass: "undo",
-                executeEvent: "reset",
-                tooltip: "Resets the KPU to an empty state"
+            // }, {
+            //     label: "Reset",
+            //     iconClass: "undo",
+            //     executeEvent: "reset",
+            //     tooltip: "Resets the KPU to an empty state"
             }],
             output: '',
             consoleInput: '',
@@ -165,9 +165,7 @@ window.kpuApp = new Vue({
                 return lifecycle.hertz
             },
             set: function (value) {
-                console.log(value,lifecycle.hertz)
                 lifecycle.hertz = value
-                console.log(value,lifecycle.hertz, lifecycle._hertz)
             }
         }
     },
@@ -219,7 +217,6 @@ window.kpuApp = new Vue({
                 this.isRunning = false
             }
             if (action == 'build') {
-                lifecycle.stop()
                 lifecycle.load(kpuApp.code)
             } else if (action == 'run') {
                 lifecycle.stop()
